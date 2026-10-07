@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.2.0 — Supabase Cloud Sync Reliability Update
+- Dashboard now shows live Cloud connection status.
+- Existing Supabase Auth session is restored when the app starts.
+- First connection no longer enables auto-sync automatically.
+- Auto-sync starts only after a successful explicit Upload or Download.
+- Cloud Upload/Download status now clearly reports the sync state.
+- Existing schema version remains `1`; no database migration is required.
+
+
 ## v1.0.0 — ONLINE_FREE_READY
 - Online-ready architecture for Supabase Free.
 - Existing Hall Ticket, QR, Student Database, Result, Fee, Bus Fee, Reports and Hall Ticket Receipt features retained.

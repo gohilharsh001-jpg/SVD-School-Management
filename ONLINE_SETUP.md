@@ -26,9 +26,11 @@ Project URL પહેલેથી ભરેલું છે.
 
 પછી **Connect / Login** દબાવો.
 
-Connect થયા પછી:
-1. **Download Cloud Data** — જો cloudમાં પહેલેથી data હોય.
-2. અથવા પ્રથમ વખત તમારા હાલના browser dataને cloudમાં મોકલવા **Upload Current Data** દબાવો.
+Connect થયા પછી dashboard પર **Cloud: Connected** દેખાશે.
+પ્રથમ sync માટે:
+1. Cloudમાં પહેલેથી data હોય તો **Download Cloud Data** પસંદ કરો.
+2. Cloudમાં data ન હોય અને આ browserનું data સાચવવું હોય તો **Upload Current Data** પસંદ કરો.
+3. પ્રથમ successful Upload/Download પછી જ **Auto-sync ON** થશે. આથી પ્રથમ login વખતે cloud data અજાણતાં overwrite નહીં થાય.
 
 > પ્રથમ વખત Upload કરતાં પહેલાં backup download કરી રાખવો સારું છે.
 
