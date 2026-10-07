@@ -565,7 +565,7 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
         <label>Admin Email</label>
         <input id="resetEmail" type="email" placeholder="admin@example.com">
         <div class="btn-row" style="margin-top:14px">
-          <button class="btn btn-primary" id="btnSendReset">📧 Send Reset Link</button>
+          <button class="btn btn-primary" id="btnSendReset" onclick="sendAuthPasswordReset()">📧 Send Reset Link</button>
           <button class="btn btn-light" id="btnCancelReset">Close</button>
         </div>
         <div id="resetStatus" class="muted" style="margin-top:12px"></div>
@@ -721,11 +721,12 @@ async function sendAuthPasswordReset(){
     const r=await client.auth.resetPasswordForEmail(email,{redirectTo});
     if(r.error)throw r.error;
     const e=document.getElementById('resetStatus');
-    if(e)e.textContent='Reset link Gmail પર મોકલાઈ છે. Gmailમાં link ખોલો અને નવો password set કરો.';
+    if(e)e.textContent='✅ Reset link Gmail પર મોકલાઈ છે. Gmailમાં link ખોલો અને નવો password set કરો.';
+    alert('✅ Reset link Gmail પર મોકલાઈ છે. Gmailમાં નવી email તપાસો.');
   }catch(err){
     const e=document.getElementById('resetStatus');
-    if(e)e.textContent='Error: '+err.message;
-    else alert(err.message);
+    if(e)e.textContent='❌ Error: '+err.message;
+    alert('❌ Reset link મોકલવામાં error: '+err.message);
   }
 }
 function openCloudReset(){
