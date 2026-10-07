@@ -1,0 +1,18 @@
+HALL TICKET SYSTEM - RELEASE CHECKLIST
+
+[ ] Export/backup current data
+[ ] Record current application version
+[ ] Test new release on a test copy
+[ ] Apply only new migration files
+[ ] Do not delete/recreate production database
+[ ] Verify Admin Login
+[ ] Verify Student Database + CTS ID
+[ ] Verify Hall Ticket + QR
+[ ] Verify Hall Ticket Receipt/Signature List
+[ ] Verify Result
+[ ] Verify Student Fee
+[ ] Verify Bus Fee
+[ ] Verify Advanced Student Reports
+[ ] Verify Student Portal
+[ ] Update VERSION.json + CHANGELOG.md
+[ ] Keep previous release ZIP for rollback

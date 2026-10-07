@@ -1,0 +1,15 @@
+{
+  "product": "School Hall Ticket & Student Management System",
+  "version": "1.1.2",
+  "release": "Admin Login Close Button Fix",
+  "schema_version": "1",
+  "update_strategy": "versioned",
+  "data_location": "Supabase or browser-local fallback",
+  "preserve_on_update": [
+    "portal_config.js",
+    "supabase_schema.sql",
+    "updates/",
+    "user data in Supabase"
+  ],
+  "notes": "Added visible X and Close buttons to the Admin Login popup; closing the popup returns to the dashboard without authenticating."
+}

@@ -1,0 +1,993 @@
+<!doctype html>
+<html lang="gu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hall Ticket Database System - Free</title>
+<style>
+:root{--blue:#1f4e78;--blue2:#17365d;--light:#eaf3f8;--green:#70ad47;--red:#c00000;--bg:#f4f7fb;--border:#c9d8e6}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Nirmala UI","Segoe UI",Arial,sans-serif;background:var(--bg);color:#1d2a35}
+.app{display:flex;min-height:100vh}
+.sidebar{width:240px;background:linear-gradient(180deg,#17365d,#1f4e78);color:#fff;padding:18px 12px;position:fixed;top:0;bottom:0;left:0}
+.brand{padding:10px 12px 22px;border-bottom:1px solid rgba(255,255,255,.2);margin-bottom:12px}
+.brand h1{font-size:19px;margin:0 0 4px}.brand p{margin:0;font-size:12px;opacity:.82}
+.nav button{display:block;width:100%;border:0;background:transparent;color:#fff;text-align:left;padding:12px 14px;border-radius:8px;margin:5px 0;font-size:14px;cursor:pointer}
+.nav button:hover,.nav button.active{background:rgba(255,255,255,.15)}
+.main{margin-left:240px;width:calc(100% - 240px);padding:22px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.topbar h2{margin:0;color:var(--blue2)}
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:0 3px 14px rgba(20,40,60,.06);margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+label{font-size:12px;font-weight:700;color:#415466;display:block;margin-bottom:5px}
+input,select,textarea{width:100%;border:1px solid #b9c9d6;border-radius:7px;padding:9px 10px;font:inherit;background:#fff}
+textarea{min-height:130px;resize:vertical}
+.btn{border:0;border-radius:7px;padding:10px 14px;font-weight:700;cursor:pointer}
+.btn-primary{background:var(--blue);color:#fff}.btn-green{background:var(--green);color:#fff}.btn-light{background:var(--light);color:var(--blue2)}.btn-danger{background:#f5dada;color:#9d0000}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.stat{padding:16px;border-radius:10px;background:#fff;border:1px solid var(--border);text-align:center}
+.stat b{font-size:26px;color:var(--blue)}.stat span{font-size:12px;color:#5d6b78;display:block;margin-top:3px}
+.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:9px}
+table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;border-bottom:1px solid #e5edf4;font-size:13px;text-align:left}th{background:var(--light);color:var(--blue2);font-weight:800}
+.thumb{width:55px;height:65px;object-fit:cover;border-radius:4px;border:1px solid #c8d4df;background:#f4f7fb}
+.muted{font-size:12px;color:#667784}
+.hidden{display:none!important}
+.notice{padding:12px;border-radius:8px;background:#fff7d6;border:1px solid #ead58c;font-size:13px}
+.success{padding:12px;border-radius:8px;background:#e6f4df;border:1px solid #b9d9a9;font-size:13px}
+.section-title{margin:0 0 10px;color:var(--blue2)}
+.kv{display:grid;grid-template-columns:160px 1fr;gap:8px;margin-bottom:7px}
+.kv b{color:#506273}
+.photo-box{border:2px dashed #b9c9d6;border-radius:8px;padding:10px;text-align:center;background:#fafcfe}
+.photo-box img{max-width:150px;max-height:180px;object-fit:contain}
+.logo-preview{margin-top:8px;min-height:10px}.logo-preview img{max-width:180px;max-height:80px;object-fit:contain}.check{display:flex;align-items:center;gap:7px;padding:10px;background:#f7fafc;border:1px solid var(--border);border-radius:8px}.check input{width:auto}
+
+/* Hall ticket preview / print */
+.ticket-area{background:#e7edf3;padding:20px;overflow:auto}
+.ticket{width:794px;min-height:1123px;background:#fff;margin:0 auto;padding:28px;border:2px solid var(--blue);box-shadow:0 2px 12px rgba(0,0,0,.08);color:#17212b}
+.ticket-head{display:flex;align-items:center;justify-content:center;gap:15px}.ticket-logo{max-width:90px;max-height:70px;object-fit:contain}.ticket .school-name{text-align:center;font-size:25px;font-weight:900;color:var(--blue2)}
+.ticket .school-address{text-align:center;font-size:12px;font-weight:700;color:#35516a}
+.ticket .exam-banner{margin-top:10px;background:var(--blue);color:white;text-align:center;font-size:18px;font-weight:900;padding:10px;border-radius:4px}
+.student-block{display:grid;grid-template-columns:1fr 150px;gap:12px;margin-top:14px}
+.info-table{width:100%;border-collapse:collapse}.info-table td{border:1px solid #9db6c9;padding:8px}.info-table td:nth-child(odd){background:#f1f6fa;font-weight:800;color:var(--blue2);width:18%}
+.photo{border:1px solid #9db6c9;min-height:175px;display:flex;align-items:center;justify-content:center;background:#f8fbfd}
+.photo img{max-width:145px;max-height:170px;object-fit:contain}
+.photo span{font-weight:800;color:#537086;font-size:12px;text-align:center}
+.schedule-title{margin-top:14px;background:var(--blue);color:white;padding:8px;text-align:center;font-weight:900}
+.ticket table.schedule{width:100%;border-collapse:collapse}.ticket table.schedule th,.ticket table.schedule td{border:1px solid #9db6c9;padding:8px;text-align:center}.ticket table.schedule th{background:#e6f0f6}
+.footer-block{display:grid;grid-template-columns:1fr 180px;gap:12px;margin-top:18px}.footer-note{border:1px solid #9db6c9;padding:12px;font-weight:700;font-size:12px;min-height:78px}.principal{border:1px solid #9db6c9;padding:40px 12px 10px;text-align:center;font-weight:900;color:var(--blue2)}
+
+/* print */
+@media print{
+  body{background:#fff}
+  .sidebar,.topbar,.no-print{display:none!important}
+  .main{margin:0;width:100%;padding:0}
+  .ticket-area{padding:0;background:#fff;overflow:visible}
+  .ticket{width:auto;min-height:0;margin:0;border:2px solid var(--blue);box-shadow:none;page-break-after:always}
+}
+@media(max-width:900px){
+  .sidebar{position:static;width:100%;height:auto}.app{display:block}.main{margin:0;width:100%;padding:12px}.grid,.grid-4{grid-template-columns:1fr}
+}
+
+.fee-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}.fee-stat{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px}.fee-stat b{font-size:22px;display:block}.fee-table{width:100%;border-collapse:collapse}.fee-table th,.fee-table td{border:1px solid #b8cbd8;padding:7px;text-align:left}.fee-table th{background:#e6f0f6}.fee-receipt{max-width:800px;margin:0 auto;background:#fff;padding:24px;border:1px solid #b8cbd8}.fee-receipt-head{text-align:center;border-bottom:2px solid var(--blue);padding-bottom:12px;margin-bottom:14px}.fee-receipt-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.fee-paid{color:#167a25;font-weight:800}.fee-pending{color:#a00000;font-weight:800}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+.searchbar{display:flex;gap:8px;flex-wrap:wrap}.searchbar input,.searchbar select{flex:1;min-width:160px}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--light);color:var(--blue2);font-size:11px;font-weight:700}.danger-text{color:#a00000;font-weight:800}.login-overlay{position:fixed;inset:0;background:rgba(10,30,50,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}.login-box{width:min(420px,100%);background:#fff;border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3)}.login-box h2{margin-top:0;color:var(--blue2)}.modal{position:fixed;inset:0;background:rgba(10,30,50,.6);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px}.modal-card{background:#fff;border-radius:14px;padding:20px;width:min(900px,100%);max-height:90vh;overflow:auto}.qr-box{display:flex;justify-content:center;align-items:center;padding:10px}.receipt-sign{min-width:150px;height:28px;border-bottom:1px solid #222;display:inline-block}.received-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#e8f5e9;color:#176b2c;font-weight:700;font-size:12px}.pending-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#fff3cd;color:#856404;font-weight:700;font-size:12px}.receipt-print-title{display:none} @media print{.receipt-print-title{display:block;text-align:center;margin-bottom:12px}.hall-receipt-table{width:100%;border-collapse:collapse}.hall-receipt-table th,.hall-receipt-table td{border:1px solid #333;padding:6px;font-size:11px}.hall-receipt-table .no-print{display:none!important}} 
+.allocation-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.allocation-card{border:1px solid var(--border);border-radius:10px;padding:12px;background:#fff}.public-portal{max-width:900px;margin:30px auto;padding:20px}.status-ok{color:#167a25;font-weight:800}.status-warn{color:#9b6500;font-weight:800}.result-sheet{max-width:900px;margin:0 auto;background:#fff;padding:24px;border:1px solid #ccd8e0}.result-head{text-align:center;border-bottom:2px solid var(--blue);padding-bottom:12px;margin-bottom:14px}.result-head h2{margin:4px 0;color:var(--blue2)}.result-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}.result-table{width:100%;border-collapse:collapse}.result-table th,.result-table td{border:1px solid #9db6c9;padding:7px;text-align:center}.result-table th{background:#e6f0f6}.result-total{display:flex;justify-content:flex-end;margin-top:12px}.result-grade{font-size:18px;font-weight:900}.result-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.marks-input{width:90px;min-width:70px;padding:6px}.portal-result-card{margin-top:16px}.portal-mode .sidebar,.portal-mode .topbar,.portal-mode .login-overlay{display:none!important}.portal-mode .main{margin:0;max-width:1000px}.portal-mode #page-portal{display:block!important}.portal-mode main section{display:none!important}.portal-mode #page-portal{min-height:100vh}
+</style>
+</head>
+<body>
+<div id="loginOverlay" class="login-overlay hidden no-print"><div class="login-box" style="position:relative"><button type="button" id="btnCloseLogin" aria-label="Close" title="Close" style="position:absolute;right:10px;top:10px;border:0;background:transparent;font-size:26px;line-height:1;cursor:pointer;color:#667;z-index:2">×</button><h2>🔐 Admin Login</h2><p class="muted">Hall Ticket System access માટે password દાખલ કરો.</p><label>Admin Password</label><input id="adminPassword" type="password" autocomplete="current-password"><div class="btn-row"><button class="btn btn-primary" id="btnLogin">Login</button><button type="button" class="btn btn-light" id="btnCloseLogin2">Close</button></div><div id="loginError" class="danger-text" style="margin-top:10px"></div><div class="muted" style="margin-top:12px">First use: Settingsમાં Admin Password set કરો.</div></div></div>
+<div class="app">
+  <aside class="sidebar no-print">
+    <div class="brand">
+      <h1>Hall Ticket System</h1>
+      <p>Free Database Version</p>
+    </div>
+    <div class="nav">
+      <button data-page="dashboard" class="active" id="navDashboard">🏠 Dashboard</button>
+      <button data-page="rooms" id="navRooms">🪑 Rooms / Seats</button>
+      <button data-page="portal" id="navPortal">🌐 Student Portal</button>
+      <button data-page="results" id="navResults">📊 Result / Marks</button>
+      <button data-page="students" id="navStudents">👨‍🎓 Student Entry</button>
+      <button data-page="database" id="navDatabase">🗂️ Student Database</button>
+      <button data-page="studentreports" id="navStudentReports">📈 Student Reports</button>
+      <button data-page="fees" id="navFees">💰 Fee Collection</button><button data-page="busfees" id="navBusFees">🚌 Bus Fee</button>
+      <button data-page="schedule" id="navSchedule">📅 Exam Schedule</button>
+      <button data-page="school" id="navSchool">🏫 School Settings</button>
+      <button data-page="ticket" id="navTicket">🎫 Hall Ticket</button>
+      <button data-page="hallreceipt" id="navHallReceipt">✍️ Hall Ticket Receipt</button>
+      <button data-page="backup" id="navBackup">💾 Backup / Import</button>
+      <button data-page="online" id="navOnline">☁️ Online Sync</button>
+      <button data-page="customize" id="navCustomize">⚙️ Customize / Settings</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar no-print">
+      <h2 id="pageTitle">Dashboard</h2>
+      <div style="display:flex;gap:10px;align-items:center"><div class="muted">Data automatically saves in this browser.</div><button class="btn btn-light" id="btnLogout">Logout</button></div>
+    </div>
+
+    <section id="page-dashboard">
+      <div class="grid-4">
+        <div class="stat"><b id="statStudents">0</b><span>Students</span></div>
+        <div class="stat"><b id="statExams">0</b><span>Exam Subjects</span></div>
+        <div class="stat"><b id="statPhotos">0</b><span>Photos Added</span></div>
+        <div class="stat"><b id="statStd">-</b><span>Standard</span></div>
+        <div class="stat"><b id="statGenerated">0</b><span>Generated</span></div>
+        <div class="stat"><b id="statPending">0</b><span>Pending</span></div>
+      </div>
+      <div class="card">
+        <h3 class="section-title">Quick Actions</h3>
+        <div class="btn-row"><button class="btn btn-primary" onclick="showPage('students')">➕ Add Student</button><button class="btn btn-light" onclick="showPage('database')">🗂️ Student Database</button><button class="btn btn-green" onclick="showPage('ticket')">🎫 Generate Hall Tickets</button><button class="btn btn-light" onclick="showPage('hallreceipt')">✍️ Hall Ticket Receipt</button><button class="btn btn-light" onclick="showPage('rooms')">🪑 Allocate Rooms</button><button class="btn btn-light" onclick="showPage('backup')">💾 Backup</button><button class="btn btn-light" onclick="showPage('results')">📊 Enter Marks</button><button class="btn btn-light" onclick="showPage('fees')">💰 Fee Collection</button><button class="btn btn-light" onclick="showPage('busfees')">🚌 Bus Fee</button></div>
+      </div>
+      <div class="card">
+        <h3 class="section-title">How to use</h3>
+        <ol>
+          <li>Student Entryમાં student data નાખો.</li>
+          <li>દરેક student માટે Photo select કરો અથવા Bulk Photos આપો.</li>
+          <li>Exam Scheduleમાં dates/time/subjects નાખો.</li>
+          <li>Hall Ticketમાં Roll No. select કરો અને Preview/Print કરો.</li>
+          <li>બધા students માટે “Print All” કરો અને Windows Print dialogમાં “Save as PDF” પસંદ કરો.</li>
+        </ol>
+        <div class="notice">આ version completely free છે. MS Access અથવા Excel VBAની જરૂર નથી.</div>
+      </div>
+    </section>
+
+    <section id="page-database" class="hidden">
+      <div class="card">
+        <h3 class="section-title">🗂️ School Student Database Management</h3>
+        <p class="muted">એક જ databaseમાંથી student profile, CTS ID, class/division, parent/contact details અને admission status manage કરો. આ માહિતી Hall Ticket અને Result સાથે જોડાયેલી રહેશે.</p>
+        <div class="searchbar">
+          <input id="dbSearch" placeholder="Search Name / CTS ID / GR / Roll / Admission No. / Parent Mobile">
+          <select id="dbStd"><option value="">All Standards</option></select>
+          <select id="dbDiv"><option value="">All Divisions</option></select>
+          <select id="dbStatus"><option value="">All Status</option><option>Active</option><option>Left School</option><option>Alumni</option><option>Inactive</option></select>
+          <button class="btn btn-light" id="btnDbClear">Clear</button>
+        </div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn btn-primary" onclick="showPage('students')">➕ Add / Edit Student</button>
+          <button class="btn btn-green" id="btnDbExportCsv">📥 Export CSV</button>
+          <button class="btn btn-light" id="btnDbPrint">🖨️ Print Student List</button>
+        </div>
+      </div>
+      <div class="grid-4">
+        <div class="stat"><b id="dbTotal">0</b><span>Total Students</span></div>
+        <div class="stat"><b id="dbActive">0</b><span>Active</span></div>
+        <div class="stat"><b id="dbWithCTS">0</b><span>CTS ID Added</span></div>
+        <div class="stat"><b id="dbWithPhoto">0</b><span>Photos Added</span></div>
+      </div>
+      <div class="card"><div class="table-wrap"><table id="dbTable"><thead><tr><th>Roll</th><th>Student Name</th><th>Std</th><th>Div</th><th>Admission No.</th><th>GR No.</th><th>CTS ID</th><th>DOB</th><th>Gender</th><th>Parent / Guardian</th><th>Parent Mobile</th><th>Status</th><th>Actions</th></tr></thead><tbody id="dbTableBody"></tbody></table></div></div>
+    </section>
+
+    <section id="page-students" class="hidden">
+      <div class="card">
+        <h3 class="section-title">Student Entry</h3>
+        <div class="grid">
+          <div><label id="lblStudentName">Student Name</label><input id="sName"></div>
+          <div><label id="lblStandard">Standard</label><input id="sStd" type="number" value="9"></div>
+          <div><label id="lblDivision">Division</label><input id="sDiv" value="A"></div>
+          <div><label id="lblRollNo">Roll No.</label><input id="sRoll" type="number"></div>
+          <div><label id="lblGRNo">GR No.</label><input id="sGR" type="number"></div>
+          <div><label id="lblMobile">Student Mobile</label><input id="sMobile"></div>
+          <div><label id="lblCTSId">CTS ID</label><input id="sCTSId" placeholder="Unique CTS ID"></div>
+          <div><label>Admission No.</label><input id="sAdmissionNo"></div>
+          <div><label>Date of Birth</label><input id="sDOB" type="date"></div>
+          <div><label>Gender</label><select id="sGender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+          <div><label>Category</label><select id="sCategory"><option value="">Select</option><option>General</option><option>OBC</option><option>SEBC</option><option>SC</option><option>ST</option><option>EWS</option><option>Other</option></select></div>
+          <div><label>Religion</label><select id="sReligion"><option value="">Select</option><option>Hindu</option><option>Muslim</option><option>Christian</option><option>Sikh</option><option>Jain</option><option>Buddhist</option><option>Other</option></select></div>
+          <div><label>Village</label><input id="sVillage" placeholder="Village / City"></div>
+          <div><label>Parent / Guardian</label><input id="sParent"></div>
+          <div><label>Parent Mobile</label><input id="sParentMobile"></div>
+          <div><label>Emergency Contact</label><input id="sEmergency"></div>
+          <div><label>Address</label><input id="sAddress"></div>
+          <div><label>Email</label><input id="sEmail" type="email"></div>
+          <div><label>Blood Group</label><select id="sBlood"><option value="">Select</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+          <div><label>Admission Date</label><input id="sAdmissionDate" type="date"></div>
+          <div><label>Status</label><select id="sStatus"><option>Active</option><option>Left School</option><option>Alumni</option><option>Inactive</option></select></div>
+        </div>
+        <div style="margin-top:12px" class="grid">
+          <div>
+            <label id="lblStudentPhoto">Student Photo</label>
+            <input id="sPhoto" type="file" accept="image/*">
+            <div class="muted">Photo is resized automatically for safe local storage.</div>
+          </div>
+          <div class="photo-box">
+            <img id="photoPreview" class="hidden">
+            <span id="photoEmpty">No photo selected</span>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btnSaveStudent">Save Student</button>
+          <button class="btn btn-light" id="btnClearStudent">Clear</button>
+          <button class="btn btn-light" id="btnBulkPhotos">Bulk Photos</button>
+          <input id="bulkPhotos" type="file" multiple accept="image/*" class="hidden">
+          <button class="btn btn-light" id="btnImportPaste">Paste from Excel</button>
+        </div>
+      </div>
+
+      <div id="pasteBox" class="card hidden">
+        <h3 class="section-title">Paste Student Data from Excel</h3>
+        <div class="muted">Excelમાં rows select કરો અને Copy (Ctrl+C) → અહીં Paste (Ctrl+V). Header હોવો જરૂરી નથી.</div>
+        <textarea id="studentPaste" placeholder="Student Name&#9;Std&#9;Div&#9;Roll No&#9;GR No&#9;Mobile&#9;CTS ID&#9;Admission No.&#9;DOB&#9;Gender&#9;Category&#9;Religion&#9;Village&#9;Parent/Guardian&#9;Parent Mobile&#9;Address&#9;Status&#9;Photo File Name"></textarea>
+        <div class="btn-row">
+          <button class="btn btn-green" id="btnPasteImport">Import Rows</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="section-title">🔎 Student Search</h3>
+        <div class="searchbar"><input id="studentSearch" placeholder="Name / Roll No. / GR No. / Mobile"><select id="studentSearchStd"><option value="">All Standards</option></select><select id="studentSearchDiv"><option value="">All Divisions</option></select><button class="btn btn-light" id="btnClearSearch">Clear</button></div>
+      </div>
+      <div class="card">
+        <div class="btn-row" style="justify-content:space-between;align-items:center">
+          <h3 class="section-title" style="margin:0">Students</h3>
+          <div class="muted" id="studentCountLabel"></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Photo</th><th>Roll</th><th>Student Name</th><th>Std</th><th>Div</th><th>GR No.</th><th>CTS ID</th><th>Mobile</th><th>Actions</th></tr></thead>
+            <tbody id="studentTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-schedule" class="hidden">
+      <div class="card">
+        <h3 class="section-title">Exam Schedule</h3>
+        <div class="grid">
+          <div><label id="lblExamDate">Exam Date</label><input id="eDate"></div>
+          <div><label id="lblTime">Time</label><input id="eTime"></div>
+          <div><label id="lblSubject">Subject</label><input id="eSubject"></div>
+          <div><label>Standard</label><input id="eStd" type="number"></div>
+          <div><label>Division</label><input id="eDiv" value="A"></div>
+          <div><label>Room No.</label><input id="eRoom" placeholder="101"></div>
+          <div><label>Seat Start</label><input id="eSeatStart" type="number" value="1"></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btnSaveExam">Add Exam</button>
+          <button class="btn btn-light" id="btnClearExam">Clear</button>
+          <button class="btn btn-light" id="btnImportExamPaste">Paste from Excel</button>
+        </div>
+      </div>
+
+      <div id="examPasteBox" class="card hidden">
+        <h3 class="section-title">Paste Exam Schedule from Excel</h3>
+        <textarea id="examPaste" placeholder="22-10-2026&#9;9:30 am To 12:30 pm&#9;MATHS"></textarea>
+        <div class="btn-row"><button class="btn btn-green" id="btnExamPasteImport">Import Rows</button></div>
+      </div>
+
+      <div class="card"><div class="notice">Exam-wise Hall Ticket: દરેક examમાં Standard, Division અને Room/Seat માહિતી રાખી શકાય છે.</div></div>
+      <div class="card">
+        <h3 class="section-title">Current Exam Schedule</h3>
+        <div class="table-wrap">
+          <table><thead><tr><th>#</th><th>Date</th><th>Time</th><th>Subject</th><th>Std/Div</th><th>Room</th><th>Action</th></tr></thead>
+          <tbody id="examTable"></tbody></table>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-school" class="hidden">
+      <div class="card">
+        <h3 class="section-title">School / Exam Settings</h3>
+        <div class="grid">
+          <div><label id="lblSchoolName">School Name</label><input id="schoolName"></div>
+          <div><label id="lblSchoolPhone">School Phone</label><input id="schoolPhone"></div>
+          <div style="grid-column:1/-1"><label id="lblAddress">Address</label><input id="schoolAddress"></div>
+          <div><label id="lblExamName">Exam Name</label><input id="examName"></div>
+          <div><label id="lblPrincipal">Principal</label><input id="principal"></div>
+          <div style="grid-column:1/-1"><label id="lblFooterInstruction">Footer Instruction</label><textarea id="footerInstruction"></textarea></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-primary" id="btnSaveSchool">Save Settings</button></div>
+      </div>
+    </section>
+
+    <section id="page-ticket" class="hidden">
+      <div class="card no-print">
+        <div class="grid">
+          <div><label>Select Roll No.</label><select id="ticketRoll"></select></div>
+          <div style="display:flex;align-items:end;gap:8px">
+            <button class="btn btn-primary" id="btnPrintCurrent">Print Current</button>
+            <button class="btn btn-green" id="btnPrintAll">Print All</button>
+          </div>
+        </div>
+      </div>
+      <div class="ticket-area" id="ticketArea"></div>
+    </section>
+
+
+    <section id="page-rooms" class="hidden">
+      <div class="card"><h3 class="section-title">🪑 Room / Seat Allocation</h3><div class="grid"><div><label>Exam</label><select id="allocExam"></select></div><div><label>Room No.</label><input id="allocRoom" placeholder="101"></div><div><label>Students per Room</label><input id="allocCapacity" type="number" value="30" min="1"></div><div><label>Starting Seat</label><input id="allocStart" type="number" value="1" min="1"></div></div><div class="btn-row"><button class="btn btn-primary" id="btnAutoAllocate">⚡ Auto Allocate</button><button class="btn btn-light" id="btnClearAlloc">Clear Allocations</button></div></div>
+      <div class="card"><h3 class="section-title">Allocation Preview</h3><div id="allocationPreview" class="allocation-grid"></div></div>
+    </section>
+
+    <section id="page-portal" class="hidden">
+      <div class="card public-portal"><h3 class="section-title">🌐 Student Portal — Hall Ticket & Result</h3><p class="muted">CTS ID દ્વારા વિદ્યાર્થી પોતાનું Hall Ticket અને Result જોઈ શકે છે. Real multi-device online use માટે backend/database connection જરૂરી રહેશે.</p><div class="searchbar"><input id="portalCTS" placeholder="Enter CTS ID"><input id="portalRoll" placeholder="Roll No. (optional)"><input id="portalGR" placeholder="GR No. (optional)"><button class="btn btn-primary" id="btnPortalSearch">Find Student</button></div><div id="portalResult" class="portal-result-card"></div></div>
+    </section>
+
+
+    <section id="page-fees" class="hidden">
+      <div class="card"><h3 class="section-title">💰 School Fee Collection</h3>
+        <div class="fee-summary">
+          <div class="fee-stat"><b id="feeTotalDemand">₹0</b><span>Total Demand</span></div>
+          <div class="fee-stat"><b id="feeTotalPaid">₹0</b><span>Total Collected</span></div>
+          <div class="fee-stat"><b id="feeTotalPending">₹0</b><span>Total Pending</span></div>
+          <div class="fee-stat"><b id="feePaidStudents">0</b><span>Students Paid</span></div>
+          <div class="fee-stat"><b id="feePendingStudents">0</b><span>Students Pending</span></div>
+        </div>
+      </div>
+      <div class="card"><h3 class="section-title">🧾 Fee Entry / Collection</h3>
+        <div class="grid">
+          <div><label>Student</label><select id="feeStudent"></select></div>
+          <div><label>Academic Year</label><input id="feeYear" value="2026-27"></div>
+          <div><label>Fee Type</label><select id="feeType"><option>Tuition Fee</option><option>Term Fee</option><option>Exam Fee</option><option>Computer Fee</option><option>Other</option></select></div>
+          <div><label>Amount Due</label><input id="feeDue" type="number" min="0" value="0"></div>
+          <div><label>Discount / Concession</label><input id="feeDiscount" type="number" min="0" value="0"></div>
+          <div><label>Amount Paid</label><input id="feePaid" type="number" min="0" value="0"></div>
+          <div><label>Payment Date</label><input id="feeDate" type="date"></div>
+          <div><label>Payment Mode</label><select id="feeMode"><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Cheque</option><option>Online</option></select></div>
+          <div><label>Receipt No.</label><input id="feeReceiptNo" placeholder="Auto generated"></div>
+          <div><label>Remarks</label><input id="feeRemarks" placeholder="Optional"></div>
+        </div>
+        <div class="btn-row" style="margin-top:12px"><button class="btn btn-primary" id="btnSaveFee">💾 Save Fee Entry</button><button class="btn btn-light" id="btnClearFee">Clear</button><button class="btn btn-green" id="btnFeeReceipt">🧾 Print Receipt</button></div>
+      </div>
+      <div class="card"><h3 class="section-title">🔎 Fee Search & Reports</h3>
+        <div class="searchbar"><input id="feeSearch" placeholder="Search Student / CTS ID / GR / Receipt No."><select id="feeFilterMode"><option value="">All Payment Modes</option><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Cheque</option><option>Online</option></select><select id="feeFilterStatus"><option value="">All Status</option><option value="Paid">Paid</option><option value="Partial">Partial</option><option value="Pending">Pending</option></select><button class="btn btn-light" id="btnFeePrintList">🖨️ Fee Collection Report</button><button class="btn btn-light" id="btnStudentFeeReport">👨‍🎓 Student Fee Report</button></div>
+        <div class="table-wrap"><table class="fee-table"><thead><tr><th>Date</th><th>Receipt</th><th>Student</th><th>CTS ID</th><th>Fee Type</th><th>Due</th><th>Discount</th><th>Paid</th><th>Balance</th><th>Mode</th><th>Status</th><th>Actions</th></tr></thead><tbody id="feeTableBody"></tbody></table></div>
+      </div>
+      <div id="feeReceiptPreview" style="margin-top:12px"></div>
+    </section>
+
+    <section id="page-busfees" class="hidden">
+      <div class="card"><h3 class="section-title">🚌 Student Bus Fee Collection</h3>
+        <div class="fee-summary">
+          <div class="fee-stat"><b id="busTotalDemand">₹0</b><span>Bus Fee Demand</span></div>
+          <div class="fee-stat"><b id="busTotalPaid">₹0</b><span>Bus Fee Collected</span></div>
+          <div class="fee-stat"><b id="busTotalPending">₹0</b><span>Bus Fee Pending</span></div>
+          <div class="fee-stat"><b id="busPaidStudents">0</b><span>Students Paid</span></div>
+          <div class="fee-stat"><b id="busPendingStudents">0</b><span>Students Pending</span></div>
+        </div>
+      </div>
+      <div class="card"><h3 class="section-title">🚌 Bus Fee Entry</h3>
+        <div class="grid">
+          <div><label>Student</label><select id="busStudent"></select></div>
+          <div><label>Academic Year</label><input id="busYear" value="2026-27"></div>
+          <div><label>Route / Bus No.</label><input id="busRoute" placeholder="Bus-01 / Route A"></div>
+          <div><label>Bus Stop</label><input id="busStop" placeholder="Village / Stop"></div>
+          <div><label>Month / Period</label><input id="busPeriod" placeholder="June 2026 or Jun-Sep"></div>
+          <div><label>Amount Due</label><input id="busDue" type="number" min="0" value="0"></div>
+          <div><label>Discount / Concession</label><input id="busDiscount" type="number" min="0" value="0"></div>
+          <div><label>Amount Paid</label><input id="busPaid" type="number" min="0" value="0"></div>
+          <div><label>Payment Date</label><input id="busDate" type="date"></div>
+          <div><label>Payment Mode</label><select id="busMode"><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Cheque</option><option>Online</option></select></div>
+          <div><label>Receipt No.</label><input id="busReceiptNo" placeholder="Auto generated"></div>
+          <div><label>Remarks</label><input id="busRemarks" placeholder="Optional"></div>
+        </div>
+        <div class="btn-row" style="margin-top:12px"><button class="btn btn-primary" id="btnSaveBusFee">💾 Save Bus Fee</button><button class="btn btn-light" id="btnClearBusFee">Clear</button><button class="btn btn-green" id="btnBusReceipt">🧾 Print Receipt</button></div>
+      </div>
+      <div class="card"><h3 class="section-title">🔎 Bus Fee Search & Reports</h3>
+        <div class="searchbar"><input id="busSearch" placeholder="Search Student / CTS ID / GR / Receipt / Route"><select id="busFilterMode"><option value="">All Payment Modes</option><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Cheque</option><option>Online</option></select><select id="busFilterStatus"><option value="">All Status</option><option value="Paid">Paid</option><option value="Partial">Partial</option><option value="Pending">Pending</option></select><button class="btn btn-light" id="btnBusPrintList">🖨️ Bus Fee Report</button></div>
+        <div class="table-wrap"><table class="fee-table"><thead><tr><th>Date</th><th>Receipt</th><th>Student</th><th>CTS ID</th><th>Route</th><th>Stop</th><th>Period</th><th>Net Due</th><th>Paid</th><th>Balance</th><th>Mode</th><th>Status</th><th>Actions</th></tr></thead><tbody id="busFeeTableBody"></tbody></table></div>
+      </div>
+      <div id="busReceiptPreview" style="margin-top:12px"></div>
+    </section>
+
+    <section id="page-results" class="hidden">
+      <div class="card">
+        <h3 class="section-title">📊 Result & Marks Entry</h3>
+        <div class="grid">
+          <div><label>Exam / Subject</label><select id="resultExam"></select></div>
+          <div><label>Standard</label><select id="resultStd"><option value="">All</option></select></div>
+          <div><label>Division</label><select id="resultDiv"><option value="">All</option></select></div>
+          <div><label>Max Marks</label><input id="resultMaxMarks" type="number" min="1" value="100"></div>
+          <div><label>Pass Marks</label><input id="resultPassMarks" type="number" min="0" value="33"></div>
+        </div>
+        <div class="result-actions" style="margin-top:12px"><button class="btn btn-primary" id="btnLoadMarks">Load Students</button><button class="btn btn-green" id="btnSaveMarks">💾 Save Marks</button><button class="btn btn-light" id="btnResultPrintAll">🖨️ Print All Results</button></div>
+        <div class="muted">Admin અહીંથી marks ઉમેરવા/સુધારવા શકે છે. Marks save થયા પછી Result Printમાં બધા subjectsનું કુલ, percentage, grade અને Pass/Fail દેખાશે.</div>
+      </div>
+      <div class="card"><div class="table-wrap"><table><thead><tr><th>Roll</th><th>CTS ID</th><th>Student Name</th><th>Marks</th><th>Remarks</th></tr></thead><tbody id="marksTable"></tbody></table></div></div>
+      <div class="card">
+        <h3 class="section-title">🖨️ Student Result Print</h3>
+        <div class="searchbar"><select id="resultStudent"></select><button class="btn btn-primary" id="btnPreviewResult">Preview Result</button><button class="btn btn-light" id="btnPrintResult">Print Result</button></div>
+      </div>
+      <div id="resultPreview" style="margin-top:12px"></div>
+    </section>
+
+    <section id="page-customize" class="hidden">
+      <div class="card">
+        <h3 class="section-title">⚙️ Customize / Settings</h3>
+        <p class="muted">અહીંથી તમે button text, form labels, hall ticket text, colors, fields અને logo જાતે બદલી શકો છો. Save કર્યા પછી સમગ્ર systemમાં તરત લાગુ થશે.</p>
+      </div>
+      <div class="card">
+        <h3 class="section-title">1. Navigation / Button Text</h3>
+        <div class="grid">
+          <div><label>Dashboard Button</label><input id="cNavDashboard"></div>
+          <div><label>Student Entry Button</label><input id="cNavStudents"></div><div><label>Student Database Button</label><input id="cNavDatabase"></div>
+          <div><label>Result / Marks Button</label><input id="cNavResults"></div>
+          <div><label>Exam Schedule Button</label><input id="cNavSchedule"></div>
+          <div><label>School Settings Button</label><input id="cNavSchool"></div>
+          <div><label>Hall Ticket Button</label><input id="cNavTicket"></div>
+          <div><label>Backup / Import Button</label><input id="cNavBackup"></div>
+          <div><label>Customize Button</label><input id="cNavCustomize"></div>
+          <div><label>Save Student Button</label><input id="cBtnSaveStudent"></div>
+          <div><label>Clear Button</label><input id="cBtnClear"></div>
+          <div><label>Bulk Photos Button</label><input id="cBtnBulk"></div>
+          <div><label>Paste from Excel Button</label><input id="cBtnPaste"></div>
+          <div><label>Add Exam Button</label><input id="cBtnAddExam"></div>
+          <div><label>Print Current Button</label><input id="cBtnPrintCurrent"></div>
+          <div><label>Print All Button</label><input id="cBtnPrintAll"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 class="section-title">2. Form Labels</h3>
+        <div class="grid">
+          <div><label>Student Name</label><input id="cStudentName"></div>
+          <div><label>Standard</label><input id="cStandard"></div>
+          <div><label>Division</label><input id="cDivision"></div>
+          <div><label>Roll No.</label><input id="cRollNo"></div>
+          <div><label>GR No.</label><input id="cGRNo"></div>
+          <div><label>Student Mobile</label><input id="cMobile"></div>
+          <div><label>CTS ID</label><input id="cCTSId"></div>
+          <div><label>Student Photo</label><input id="cStudentPhoto"></div>
+          <div><label>Exam Date</label><input id="cExamDate"></div>
+          <div><label>Time</label><input id="cTime"></div>
+          <div><label>Subject</label><input id="cSubject"></div>
+          <div><label>School Name</label><input id="cSchoolName"></div>
+          <div><label>School Phone</label><input id="cSchoolPhone"></div>
+          <div><label>Address</label><input id="cAddress"></div>
+          <div><label>Exam Name</label><input id="cExamName"></div>
+          <div><label>Principal</label><input id="cPrincipal"></div>
+          <div><label>Footer Instruction</label><input id="cFooter"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 class="section-title">3. Hall Ticket Text</h3>
+        <div class="grid">
+          <div><label>Exam Banner Prefix / Title</label><input id="cTicketTitle"></div>
+          <div><label>Exam Schedule Heading</label><input id="cScheduleTitle"></div>
+          <div><label>Photo Placeholder</label><input id="cPhotoPlaceholder"></div>
+          <div><label>Supervisor Sign Heading</label><input id="cSupervisor"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 class="section-title">4. Design</h3>
+        <div class="grid">
+          <div><label>Primary Blue</label><input id="cPrimaryColor" type="color"></div>
+          <div><label>Dark Blue</label><input id="cDarkColor" type="color"></div>
+          <div><label>Button Green</label><input id="cGreenColor" type="color"></div>
+          <div><label>Light Background</label><input id="cLightColor" type="color"></div>
+          <div><label>Font Family</label><select id="cFont"><option value="Nirmala UI,Segoe UI,Arial,sans-serif">Nirmala UI / Segoe UI</option><option value="Arial,sans-serif">Arial</option><option value="Tahoma,sans-serif">Tahoma</option><option value="Verdana,sans-serif">Verdana</option></select></div>
+          <div><label>Hall Ticket Font Size</label><input id="cTicketFont" type="number" min="10" max="24"></div>
+        </div>
+        <div style="margin-top:12px"><label>School Logo</label><input id="cLogo" type="file" accept="image/*"><div class="muted">Logo browserમાં locally save થશે અને Hall Ticketના top પર દેખાશે.</div><div class="logo-preview"><img id="logoPreview" class="hidden"></div></div>
+      </div>
+      <div class="card">
+        <h3 class="section-title">5. Security & System</h3>
+        <div class="grid"><div><label>Admin Password</label><input id="cAdminPassword" type="password" placeholder="Set admin password"></div><div><label>Auto Roll Number</label><select id="cAutoRoll"><option value="true">ON</option><option value="false">OFF</option></select></div><div><label>Online Portal</label><select id="cPortal"><option value="true">ON</option><option value="false">OFF</option></select></div></div>
+        <div class="muted" style="margin-top:8px">નોંધ: આ standalone HTMLમાં password browser-local છે. Production security માટે server-side authentication જરૂરી છે.</div>
+      </div>
+      <div class="card">
+        <h3 class="section-title">6. Show / Hide Fields</h3>
+        <div class="grid-4">
+          <label class="check"><input type="checkbox" id="cShowDiv"> Division</label>
+          <label class="check"><input type="checkbox" id="cShowGR"> GR No.</label>
+          <label class="check"><input type="checkbox" id="cShowMobile"> Mobile</label>
+          <label class="check"><input type="checkbox" id="cShowPhoto"> Photo</label>
+          <label class="check"><input type="checkbox" id="cShowQR"> QR Code</label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btnSaveCustomize">💾 Save Customization</button>
+          <button class="btn btn-light" id="btnResetCustomize">↩ Reset Customization</button>
+        </div>
+        <div class="success" style="margin-top:12px">Tip: Gujarati/English કોઈપણ text અહીં લખી શકો છો. Example: “વિદ્યાર્થી પ્રવેશપત્ર”, “વિદ્યાર્થીનું નામ”, “પરીક્ષા સમયપત્રક”.</div>
+      </div>
+    </section>
+
+    <section id="page-studentreports" class="hidden">
+      <div class="card">
+        <h3 class="section-title">📈 Advanced Student Reports</h3>
+        <p class="muted">Category, Gender, Standard, Village અને Religion પ્રમાણે student count તથા detailed list જુઓ, print કરો અથવા CSV export કરો.</p>
+        <div class="searchbar">
+          <select id="reportType">
+            <option value="category">Category-wise</option><option value="gender">Gender-wise</option><option value="standard">Standard-wise</option><option value="village">Village-wise</option><option value="religion">Religion-wise</option>
+          </select>
+          <select id="reportCategory"><option value="">All Categories</option></select>
+          <select id="reportGender"><option value="">All Genders</option></select>
+          <select id="reportStd"><option value="">All Standards</option></select>
+          <select id="reportVillage"><option value="">All Villages</option></select>
+          <select id="reportReligion"><option value="">All Religions</option></select>
+          <select id="reportStatus"><option value="">All Status</option><option>Active</option><option>Left School</option><option>Alumni</option><option>Inactive</option></select>
+          <input id="reportSearch" placeholder="Search Name / CTS ID / GR No.">
+          <button class="btn btn-primary" id="btnGenerateStudentReport">Generate Report</button>
+          <button class="btn btn-light" id="btnPrintStudentReport">🖨️ Print Report</button>
+          <button class="btn btn-light" id="btnExportStudentReport">📥 Export CSV</button>
+        </div>
+      </div>
+      <div class="grid-4" id="reportStats"></div>
+      <div class="card">
+        <h3 class="section-title" id="reportHeading">Category-wise Student Report</h3>
+        <div class="table-wrap"><table id="studentReportTable"><thead><tr><th>Group</th><th>Students</th><th>Male</th><th>Female</th><th>Other</th><th>Percentage</th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <div class="card">
+        <h3 class="section-title">👨‍🎓 Detailed Student List</h3>
+        <div class="table-wrap"><table id="studentReportDetail"><thead><tr><th>#</th><th>Name</th><th>Std</th><th>Div</th><th>Roll</th><th>GR No.</th><th>CTS ID</th><th>Gender</th><th>Category</th><th>Religion</th><th>Village</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="page-hallreceipt" class="hidden">
+      <div class="card">
+        <div class="section-head"><div><h3 class="section-title">✍️ Hall Ticket Receipt / Distribution List</h3><p class="muted">જે વિદ્યાર્થીએ Hall Ticket મેળવી લીધું હોય તેમને Mark Received કરો અને printed list પર વિદ્યાર્થીની signature લઈ શકો છો.</p></div><div class="btn-row no-print"><button class="btn btn-primary" onclick="printHallReceiptList()">🖨️ Print Receipt List</button><button class="btn btn-light" onclick="clearHallReceiptMarks()">↩ Clear Received Marks</button></div></div>
+        <div class="searchbar no-print"><input id="hallReceiptSearch" placeholder="Search Name / Roll / GR / CTS ID"><select id="hallReceiptStatus"><option value="all">All Students</option><option value="received">Received Only</option><option value="pending">Pending Only</option></select><select id="hallReceiptStd"><option value="">All Standards</option></select><select id="hallReceiptDiv"><option value="">All Divisions</option></select></div>
+        <div class="grid-4 no-print" style="margin-top:12px"><div class="stat"><b id="hallReceiptTotal">0</b><span>Total</span></div><div class="stat"><b id="hallReceiptReceived">0</b><span>Received</span></div><div class="stat"><b id="hallReceiptPending">0</b><span>Pending</span></div><div class="stat"><b id="hallReceiptPercent">0%</b><span>Received %</span></div></div>
+        <div id="hallReceiptTable" class="table-wrap" style="margin-top:14px"></div>
+      </div>
+    </section>
+
+    <section id="page-online" class="hidden">
+      <div class="card">
+        <h3 class="section-title">☁️ Online / Cloud Sync — Free Setup</h3>
+        <p class="muted">Supabase Free સાથે આ systemનું data Mobile + PC પરથી sync કરી શકાય છે. પ્રથમ એક વખત Project URL, Anon Key અને Admin account setup કરો.</p>
+        <div class="form-grid">
+          <div><label>Supabase Project URL</label><input id="sbUrl" value="https://cfxwwvcjqbahidgpkcwp.supabase.co" placeholder="https://YOUR-PROJECT.supabase.co"></div>
+          <div><label>Supabase Publishable Key</label><input id="sbKey" placeholder="sb_publishable_..." type="password"></div>
+          <div><label>School Key</label><input id="sbSchoolKey" value="main-school" placeholder="main-school"></div>
+          <div><label>Admin Email</label><input id="sbEmail" type="email" placeholder="admin@example.com"></div>
+          <div><label>Admin Password</label><input id="sbPassword" type="password" placeholder="Supabase Auth password"></div>
+        </div>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn btn-primary" id="btnCloudConnect">☁️ Connect / Login</button>
+          <button class="btn btn-green" id="btnCloudPush">⬆ Upload Current Data</button>
+          <button class="btn btn-light" id="btnCloudPull">⬇ Download Cloud Data</button>
+          <button class="btn btn-light" id="btnCloudLogout">Logout Cloud</button>
+        </div>
+        <div id="cloudStatus" class="muted" style="margin-top:12px">Not connected.</div><div class="notice" style="margin-top:10px">🔐 Publishable Key browserમાં વાપરી શકાય છે. Secret / service-role key અહીં ક્યારેય ન નાખશો.</div>
+        <hr style="margin:18px 0">
+        <div class="card" style="background:#f8fbfd">
+          <b>🌐 Online Student Portal</b>
+          <p class="muted">Setup થયા પછી Student Portal URL અહીં આપેલી URLથી publish કરી શકાશે. Student CTS ID નાખીને Hall Ticket / Result જોઈ શકશે.</p>
+          <input id="sbPortalUrl" placeholder="https://YOUR-SITE/student_portal.html">
+          <button class="btn btn-light" id="btnSavePortalUrl" style="margin-top:8px">Save Portal URL</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-backup" class="hidden">
+      <div class="card">
+        <h3 class="section-title">Backup / Import</h3>
+        <p class="muted">Backupમાં student data, photos, schedule અને school settings સાચવાશે.</p>
+        <div class="btn-row">
+          <button class="btn btn-green" id="btnExportBackup">Download Backup</button>
+          <label class="btn btn-light" style="display:inline-block;cursor:pointer">
+            Restore Backup
+            <input id="backupFile" type="file" accept=".json" style="display:none">
+          </label>
+          <button class="btn btn-danger" id="btnReset">Reset Demo Data</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const STORAGE_KEY='hall_ticket_free_db_v3';
+const SESSION_KEY='hall_ticket_admin_session_v1';
+
+const defaultCustomize={navDashboard:'🏠 Dashboard',navRooms:'🪑 Rooms / Seats',navPortal:'🌐 Student Portal',navStudents:'👨‍🎓 Student Entry',navDatabase:'🗂️ Student Database',navFees:'💰 Fee Collection',navResults:'📊 Result / Marks',navSchedule:'📅 Exam Schedule',navSchool:'🏫 School Settings',navTicket:'🎫 Hall Ticket',navHallReceipt:'✍️ Hall Ticket Receipt',navBackup:'💾 Backup / Import',navOnline:'☁️ Online Sync',navCustomize:'⚙️ Customize / Settings',btnSaveStudent:'Save Student',btnClear:'Clear',btnBulk:'Bulk Photos',btnPaste:'Paste from Excel',btnAddExam:'Add Exam',btnPrintCurrent:'Print Current',btnPrintAll:'Print All',studentName:'Student Name',standard:'Standard',division:'Division',rollNo:'Roll No.',grNo:'GR No.',mobile:'Student Mobile',ctsId:'CTS ID',studentPhoto:'Student Photo',examDate:'Exam Date',time:'Time',subject:'Subject',schoolName:'School Name',schoolPhone:'School Phone',address:'Address',examName:'Exam Name',principal:'Principal',footer:'Footer Instruction',ticketTitle:'',scheduleTitle:'EXAM SCHEDULE',photoPlaceholder:'STUDENT|PHOTO',supervisor:'Supervisor Sign',primaryColor:'#1f4e78',darkColor:'#17365d',greenColor:'#70ad47',lightColor:'#eaf3f8',font:'Nirmala UI,Segoe UI,Arial,sans-serif',ticketFont:12,logo:null,showDiv:true,showGR:true,showMobile:true,showPhoto:true,showQR:true,adminPassword:'1234',autoRoll:true,portal:true};
+
+const demo = {
+  school:{
+    name:'Shree S.V.Doshi Highschool Kumbhan',
+    address:'Kumbhan, Ta. Maliya, Dist. Morbi (Gujarat) - 363620',
+    phone:'9714301933',
+    examName:'First Term - 2026',
+    principal:'Principal',
+    footer:'ઉપર દર્શાવેલ દિવસ સિવાય અન્ય દિવસે પરીક્ષા આપવા માટે પ્રવેશ આપવામાં આવશે નહીં.'
+  },
+  students:[
+    {id:1,name:'Rathod Hetalben Dineshbhai',std:9,div:'A',roll:1,gr:477,mobile:'6353682122',photo:null,photoFileName:'1.jpg'},
+    {id:2,name:'Rathod Hetalben Dineshbhai',std:9,div:'A',roll:2,gr:2,mobile:'6353682122',photo:null,photoFileName:''}
+  ],
+  exams:[
+    {id:1,date:'22-10-2026',time:'9:30 am To 12:30 pm',subject:'MATHS'},
+    {id:2,date:'23-10-2026',time:'9:30 am To 12:30 pm',subject:'GUJARATI'},
+    {id:3,date:'24-10-2026',time:'8:30 am To 11:30 am',subject:'HINDI'},
+    {id:4,date:'26-10-2026',time:'9:30 am To 12:30 pm',subject:'SCIENCE'},
+    {id:5,date:'27-10-2026',time:'9:30 am To 12:30 pm',subject:'ENGLISH'},
+    {id:6,date:'28-10-2026',time:'9:30 am To 12:30 pm',subject:'SOCIAL SCIENCE'},
+    {id:7,date:'29-10-2026',time:'9:30 am To 12:30 pm',subject:'SANSKRIT'}
+  ]
+};
+
+let db = loadDB();
+let editingStudentId = null;
+let selectedPhotoData = null;
+
+function loadDB(){
+  try{
+    const s=localStorage.getItem(STORAGE_KEY)||localStorage.getItem('hall_ticket_free_db_v2');
+    const old=s?JSON.parse(s):structuredClone(demo);
+    old.customize={...structuredClone(defaultCustomize),...(old.customize||{})};
+    old.students=Array.isArray(old.students)?old.students:[]; old.exams=Array.isArray(old.exams)?old.exams:[];
+    old.rooms=Array.isArray(old.rooms)?old.rooms:[];
+    old.generated=Array.isArray(old.generated)?old.generated:[]; old.busFees=Array.isArray(old.busFees)?old.busFees:[]; old.results=(old.results&&typeof old.results==='object')?old.results:{}; old.fees=Array.isArray(old.fees)?old.fees:[]; old.students.forEach(st=>{if(st.ctsId===undefined)st.ctsId='';if(st.admissionNo===undefined)st.admissionNo='';if(st.dob===undefined)st.dob='';if(st.gender===undefined)st.gender='';if(st.parent===undefined)st.parent='';if(st.parentMobile===undefined)st.parentMobile='';if(st.emergency===undefined)st.emergency='';if(st.address===undefined)st.address='';if(st.email===undefined)st.email='';if(st.blood===undefined)st.blood='';if(st.admissionDate===undefined)st.admissionDate='';if(st.status===undefined)st.status='Active';if(st.category===undefined)st.category='';if(st.religion===undefined)st.religion='';if(st.village===undefined)st.village='';}); old.exams.forEach(ex=>{if(ex.maxMarks===undefined)ex.maxMarks=100;if(ex.passMarks===undefined)ex.passMarks=33;});
+    return old;
+  }catch(e){ const d=structuredClone(demo); d.customize=structuredClone(defaultCustomize); return d; }
+}
+function saveDB(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); renderAll(); if(localStorage.getItem('hall_ticket_cloud_autosync')==='1' && typeof cloudPush==='function'){clearTimeout(window._cloudPushTimer);window._cloudPushTimer=setTimeout(()=>cloudPush(),500);} }
+function nextId(arr){ return arr.length?Math.max(...arr.map(x=>Number(x.id)||0))+1:1; }
+function esc(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+
+function showPage(page){
+  document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
+  document.getElementById('page-'+page).classList.remove('hidden');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+  const titles={dashboard:'Dashboard',students:'Student Entry',schedule:'Exam Schedule',school:'School Settings',ticket:'Hall Ticket',backup:'Backup / Import',customize:'Customize / Settings',rooms:'Rooms / Seats',portal:'Student Portal',results:'Result / Marks',fees:'Fee Collection',busfees:'Bus Fee',database:'Student Database',studentreports:'Student Reports',hallreceipt:'Hall Ticket Receipt',online:'Online Sync'};
+  document.getElementById('pageTitle').textContent=titles[page]||'Hall Ticket System';
+  if(page==='ticket') renderTicket(); if(page==='hallreceipt') renderHallReceiptPage();
+  if(page==='customize') loadCustomizeForm(); if(page==='online') loadCloudForm(); if(page==='results') renderResultPage(); if(page==='fees') renderFeesPage(); if(page==='busfees') renderBusFeesPage();
+}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+
+function setVal(id,v){const el=document.getElementById(id);if(el)el.value=v??'';}
+function applyCustomize(){
+  const c=db.customize||defaultCustomize;
+  const nav={navDashboard:'navDashboard',navRooms:'navRooms',navPortal:'navPortal',navResults:'navResults',navStudents:'navStudents',navDatabase:'navDatabase',navSchedule:'navSchedule',navSchool:'navSchool',navTicket:'navTicket',navHallReceipt:'navHallReceipt',navBackup:'navBackup',navOnline:'navOnline',navCustomize:'navCustomize'};
+  Object.entries(nav).forEach(([k,id])=>{const e=document.getElementById(id);if(e)e.textContent=c[k]||'';});
+  const labels={lblStudentName:c.studentName,lblStandard:c.standard,lblDivision:c.division,lblRollNo:c.rollNo,lblGRNo:c.grNo,lblMobile:c.mobile,lblCTSId:c.ctsId,lblStudentPhoto:c.studentPhoto,lblExamDate:c.examDate,lblTime:c.time,lblSubject:c.subject,lblSchoolName:c.schoolName,lblSchoolPhone:c.schoolPhone,lblAddress:c.address,lblExamName:c.examName,lblPrincipal:c.principal,lblFooterInstruction:c.footer};
+  Object.entries(labels).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.textContent=v||'';});
+  const buttons={btnSaveStudent:c.btnSaveStudent,btnClearStudent:c.btnClear,btnBulkPhotos:c.btnBulk,btnImportPaste:c.btnPaste,btnSaveExam:c.btnAddExam,btnPrintCurrent:c.btnPrintCurrent,btnPrintAll:c.btnPrintAll};
+  Object.entries(buttons).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.textContent=v||'';});
+  document.documentElement.style.setProperty('--blue',c.primaryColor);document.documentElement.style.setProperty('--blue2',c.darkColor);document.documentElement.style.setProperty('--green',c.greenColor);document.documentElement.style.setProperty('--light',c.lightColor);document.body.style.fontFamily=c.font;
+  const show=(id,on)=>{const e=document.getElementById(id);if(e)e.classList.toggle('hidden',!on);};
+  show('lblDivision',c.showDiv);show('sDiv',c.showDiv);show('lblGRNo',c.showGR);show('sGR',c.showGR);show('lblMobile',c.showMobile);show('sMobile',c.showMobile);show('lblStudentPhoto',c.showPhoto);show('sPhoto',c.showPhoto);
+  const qrNav=document.getElementById('navPortal');if(qrNav)qrNav.classList.toggle('hidden',c.portal===false);
+  const logo=document.getElementById('logoPreview');if(logo){logo.src=c.logo||'';logo.classList.toggle('hidden',!c.logo);}
+}
+function loadCustomizeForm(){
+  const c=db.customize||defaultCustomize;
+  const map={cNavDashboard:'navDashboard',cNavStudents:'navStudents',cNavDatabase:'navDatabase',cNavResults:'navResults',cNavSchedule:'navSchedule',cNavSchool:'navSchool',cNavTicket:'navTicket',cNavBackup:'navBackup',cNavCustomize:'navCustomize',cBtnSaveStudent:'btnSaveStudent',cBtnClear:'btnClear',cBtnBulk:'btnBulk',cBtnPaste:'btnPaste',cBtnAddExam:'btnAddExam',cBtnPrintCurrent:'btnPrintCurrent',cBtnPrintAll:'btnPrintAll',cStudentName:'studentName',cStandard:'standard',cDivision:'division',cRollNo:'rollNo',cGRNo:'grNo',cMobile:'mobile',cCTSId:'ctsId',cStudentPhoto:'studentPhoto',cExamDate:'examDate',cTime:'time',cSubject:'subject',cSchoolName:'schoolName',cSchoolPhone:'schoolPhone',cAddress:'address',cExamName:'examName',cPrincipal:'principal',cFooter:'footer',cTicketTitle:'ticketTitle',cScheduleTitle:'scheduleTitle',cPhotoPlaceholder:'photoPlaceholder',cSupervisor:'supervisor',cPrimaryColor:'primaryColor',cDarkColor:'darkColor',cGreenColor:'greenColor',cLightColor:'lightColor',cFont:'font',cTicketFont:'ticketFont'};
+  Object.entries(map).forEach(([id,key])=>setVal(id,c[key]));
+  ['cShowDiv','cShowGR','cShowMobile','cShowPhoto','cShowQR'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.checked=[c.showDiv,c.showGR,c.showMobile,c.showPhoto,c.showQR][i];});
+  setVal('cAdminPassword',c.adminPassword||'1234');setVal('cAutoRoll',String(c.autoRoll!==false));setVal('cPortal',String(c.portal!==false));
+  const lp=document.getElementById('logoPreview');lp.src=c.logo||'';lp.classList.toggle('hidden',!c.logo);
+}
+function saveCustomize(){
+  const c={};
+  const map={cNavDashboard:'navDashboard',cNavStudents:'navStudents',cNavDatabase:'navDatabase',cNavResults:'navResults',cNavSchedule:'navSchedule',cNavSchool:'navSchool',cNavTicket:'navTicket',cNavBackup:'navBackup',cNavCustomize:'navCustomize',cBtnSaveStudent:'btnSaveStudent',cBtnClear:'btnClear',cBtnBulk:'btnBulk',cBtnPaste:'btnPaste',cBtnAddExam:'btnAddExam',cBtnPrintCurrent:'btnPrintCurrent',cBtnPrintAll:'btnPrintAll',cStudentName:'studentName',cStandard:'standard',cDivision:'division',cRollNo:'rollNo',cGRNo:'grNo',cMobile:'mobile',cCTSId:'ctsId',cStudentPhoto:'studentPhoto',cExamDate:'examDate',cTime:'time',cSubject:'subject',cSchoolName:'schoolName',cSchoolPhone:'schoolPhone',cAddress:'address',cExamName:'examName',cPrincipal:'principal',cFooter:'footer',cTicketTitle:'ticketTitle',cScheduleTitle:'scheduleTitle',cPhotoPlaceholder:'photoPlaceholder',cSupervisor:'supervisor',cPrimaryColor:'primaryColor',cDarkColor:'darkColor',cGreenColor:'greenColor',cLightColor:'lightColor',cFont:'font',cTicketFont:'ticketFont'};
+  Object.entries(map).forEach(([id,key])=>c[key]=document.getElementById(id).value);
+  c.ticketFont=Math.max(10,Math.min(24,Number(c.ticketFont)||12));c.showDiv=document.getElementById('cShowDiv').checked;c.showGR=document.getElementById('cShowGR').checked;c.showMobile=document.getElementById('cShowMobile').checked;c.showPhoto=document.getElementById('cShowPhoto').checked;c.showQR=document.getElementById('cShowQR').checked;c.adminPassword=document.getElementById('cAdminPassword').value||'1234';c.autoRoll=document.getElementById('cAutoRoll').value==='true';c.portal=document.getElementById('cPortal').value==='true';c.logo=db.customize?.logo||null;
+  db.customize={...structuredClone(defaultCustomize),...c};saveDB();alert('Customization saved. હવે Hall Ticket અને labelsમાં પણ આ ફેરફાર લાગુ છે.');showPage('customize');loadCustomizeForm();
+}
+document.getElementById('btnSaveCustomize').addEventListener('click',saveCustomize);
+document.getElementById('btnResetCustomize').addEventListener('click',()=>{if(confirm('Reset all customization to default?')){db.customize=structuredClone(defaultCustomize);saveDB();loadCustomizeForm();}});
+document.getElementById('cLogo').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;resizePhoto(f,d=>{db.customize.logo=d;document.getElementById('logoPreview').src=d;document.getElementById('logoPreview').classList.remove('hidden');});});
+let cloudClient=null;
+function cloudConfig(){return {url:(document.getElementById('sbUrl')?.value||localStorage.getItem('hall_ticket_sb_url')||'').trim(),key:(document.getElementById('sbKey')?.value||localStorage.getItem('hall_ticket_sb_key')||'').trim(),schoolKey:(document.getElementById('sbSchoolKey')?.value||localStorage.getItem('hall_ticket_online_school_key')||'main-school').trim()||'main-school'};}
+function cloudStatus(msg,ok=false){const e=document.getElementById('cloudStatus');if(e){e.textContent=msg;e.className=ok?'status-ok':'muted';}}
+function initCloud(){const c=cloudConfig(); if(!c.url||!c.key||!window.supabase)return null; if(!cloudClient)cloudClient=window.supabase.createClient(c.url,c.key); return cloudClient;}
+async function cloudConnect(){try{const c=cloudConfig();if(!c.url||!c.key)throw new Error('Supabase URL અને Anon Key આપો.');localStorage.setItem('hall_ticket_sb_url',c.url);localStorage.setItem('hall_ticket_sb_key',c.key);localStorage.setItem('hall_ticket_online_school_key',c.schoolKey);const client=initCloud();const email=document.getElementById('sbEmail').value.trim(),password=document.getElementById('sbPassword').value;if(email&&password){const r=await client.auth.signInWithPassword({email,password});if(r.error)throw r.error;}const s=await client.auth.getSession();if(!s.data.session)throw new Error('Supabase Admin login જરૂરી છે. પ્રથમ Authentication → Users માં user બનાવો.');cloudStatus('Connected as '+s.data.session.user.email,true);localStorage.setItem('hall_ticket_cloud_autosync','1');}catch(e){cloudStatus('Error: '+e.message);alert(e.message);}}
+async function cloudPush(){try{const c=cloudConfig(),client=initCloud();if(!client)throw new Error('પહેલા Connect કરો.');const sess=await client.auth.getSession();if(!sess.data.session)throw new Error('Cloud login જરૂરી છે.');const payload={school_key:c.schoolKey,owner_id:sess.data.session.user.id,data:db,updated_at:new Date().toISOString()};const r=await client.from('school_state').upsert(payload,{onConflict:'school_key'});if(r.error)throw r.error;cloudStatus('Data uploaded successfully • '+new Date().toLocaleString('en-IN'),true);}catch(e){cloudStatus('Upload error: '+e.message);alert(e.message);}}
+async function cloudPull(){try{const c=cloudConfig(),client=initCloud();if(!client)throw new Error('પહેલા Connect કરો.');const sess=await client.auth.getSession();if(!sess.data.session)throw new Error('Cloud login જરૂરી છે.');const r=await client.from('school_state').select('data,updated_at').eq('school_key',c.schoolKey).single();if(r.error)throw r.error;if(!r.data?.data)throw new Error('Cloud data મળ્યો નથી.');if(!confirm('Cloud data download કરીને હાલના browser dataને replace કરવું?'))return;db=r.data.data;db.customize={...structuredClone(defaultCustomize),...(db.customize||{})};localStorage.setItem(STORAGE_KEY,JSON.stringify(db));renderAll();applyCustomize();cloudStatus('Cloud data downloaded • '+new Date(r.data.updated_at).toLocaleString('en-IN'),true);alert('Cloud data restored successfully.');}catch(e){cloudStatus('Download error: '+e.message);alert(e.message);}}
+async function cloudLogout(){if(cloudClient)await cloudClient.auth.signOut();localStorage.removeItem('hall_ticket_cloud_autosync');cloudStatus('Cloud logged out.');}
+document.getElementById('btnCloudConnect')?.addEventListener('click',cloudConnect);document.getElementById('btnCloudPush')?.addEventListener('click',cloudPush);document.getElementById('btnCloudPull')?.addEventListener('click',cloudPull);document.getElementById('btnCloudLogout')?.addEventListener('click',cloudLogout);document.getElementById('btnSavePortalUrl')?.addEventListener('click',()=>{localStorage.setItem('hall_ticket_online_portal_url',document.getElementById('sbPortalUrl').value.trim());localStorage.setItem('hall_ticket_online_school_key',document.getElementById('sbSchoolKey').value.trim()||'main-school');alert('Portal URL saved.');});
+function loadCloudForm(){const c=cloudConfig();document.getElementById('sbUrl').value=c.url;document.getElementById('sbKey').value=c.key;document.getElementById('sbSchoolKey').value=c.schoolKey;document.getElementById('sbPortalUrl').value=localStorage.getItem('hall_ticket_online_portal_url')||'';}
+function renderAll(){
+  applyCustomize();
+  document.getElementById('statStudents').textContent=db.students.length;
+  document.getElementById('statExams').textContent=db.exams.length;
+  document.getElementById('statPhotos').textContent=db.students.filter(s=>s.photo).length;
+  const stds=[...new Set(db.students.map(s=>s.std).filter(Boolean))];
+  document.getElementById('statStd').textContent=stds.join(', ')||'-';
+  document.getElementById('statGenerated').textContent=db.generated?.length||0; document.getElementById('statPending').textContent=Math.max(0,db.students.length-(db.generated?.length||0));
+  renderStudents(); renderStudentDatabase(); renderStudentReports(); renderExams(); renderSchool(); renderRolls();
+}
+
+function renderStudents(){
+  const tb=document.getElementById('studentTable');
+  const q=(document.getElementById('studentSearch')?.value||'').trim().toLowerCase(); const ss=document.getElementById('studentSearchStd')?.value||''; const sd=document.getElementById('studentSearchDiv')?.value||'';
+  const list=db.students.filter(s=>(!q||[s.name,s.roll,s.gr,s.mobile,s.ctsId].some(v=>String(v??'').toLowerCase().includes(q)))&&(!ss||String(s.std)===ss)&&(!sd||String(s.div)===sd));
+  document.getElementById('studentCountLabel').textContent=list.length+' / '+db.students.length+' students';
+  const stdSel=document.getElementById('studentSearchStd'),divSel=document.getElementById('studentSearchDiv'); if(stdSel){const cur=stdSel.value;stdSel.innerHTML='<option value="">All Standards</option>'+[...new Set(db.students.map(s=>s.std).filter(Boolean))].sort().map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');stdSel.value=cur;} if(divSel){const cur=divSel.value;divSel.innerHTML='<option value="">All Divisions</option>'+[...new Set(db.students.map(s=>s.div).filter(Boolean))].sort().map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');divSel.value=cur;}
+  tb.innerHTML=list.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(s=>`
+    <tr>
+      <td>${s.photo?`<img class="thumb" src="${s.photo}" alt="">`:'—'}</td>
+      <td>${esc(s.roll)}</td><td>${esc(s.name)}</td><td>${esc(s.std)}</td><td>${esc(s.div)}</td>
+      <td>${esc(s.gr)}</td><td>${esc(s.ctsId||'')}</td><td>${esc(s.mobile)}</td>
+      <td>
+        <button class="btn btn-light" onclick="editStudent(${s.id})">Edit</button>
+        <button class="btn btn-danger" onclick="deleteStudent(${s.id})">Delete</button>
+      </td>
+    </tr>`).join('') || `<tr><td colspan="9" class="muted">No students yet.</td></tr>`;
+}
+function editStudent(id){
+  const s=db.students.find(x=>x.id===id); if(!s)return;
+  editingStudentId=id;
+  sName.value=s.name;sStd.value=s.std;sDiv.value=s.div;sRoll.value=s.roll;sGR.value=s.gr;sMobile.value=s.mobile;sCTSId.value=s.ctsId||'';sAdmissionNo.value=s.admissionNo||'';sDOB.value=s.dob||'';sGender.value=s.gender||'';sCategory.value=s.category||'';sReligion.value=s.religion||'';sVillage.value=s.village||'';sParent.value=s.parent||'';sParentMobile.value=s.parentMobile||'';sEmergency.value=s.emergency||'';sAddress.value=s.address||'';sEmail.value=s.email||'';sBlood.value=s.blood||'';sAdmissionDate.value=s.admissionDate||'';sStatus.value=s.status||'Active';
+  selectedPhotoData=s.photo||null;
+  photoPreview.src=selectedPhotoData||'';photoPreview.classList.toggle('hidden',!selectedPhotoData);photoEmpty.classList.toggle('hidden',!!selectedPhotoData);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function deleteStudent(id){
+  if(confirm('Delete this student?')){db.students=db.students.filter(s=>s.id!==id);saveDB();}
+}
+function clearStudentForm(){
+  editingStudentId=null; selectedPhotoData=null;
+  ['sName','sRoll','sGR','sMobile','sCTSId','sAdmissionNo','sDOB','sVillage','sParent','sParentMobile','sEmergency','sAddress','sEmail','sAdmissionDate'].forEach(id=>document.getElementById(id).value='');
+  sStd.value=9;sDiv.value='A';sGender.value='';sCategory.value='';sReligion.value='';sBlood.value='';sStatus.value='Active';sPhoto.value='';
+  photoPreview.src='';photoPreview.classList.add('hidden');photoEmpty.classList.remove('hidden');
+}
+function resizePhoto(file, cb){
+  const r=new FileReader();
+  r.onload=()=>{const img=new Image();img.onload=()=>{
+    const maxW=360,maxH=460;let w=img.width,h=img.height;
+    const scale=Math.min(1,maxW/w,maxH/h);w=Math.round(w*scale);h=Math.round(h*scale);
+    const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+    cb(c.toDataURL('image/jpeg',0.68));
+  };img.src=r.result;};r.readAsDataURL(file);
+}
+sPhoto.addEventListener('change',e=>{const f=e.target.files[0];if(f)resizePhoto(f,d=>{selectedPhotoData=d;photoPreview.src=d;photoPreview.classList.remove('hidden');photoEmpty.classList.add('hidden');});});
+btnSaveStudent.addEventListener('click',()=>{
+  const name=sName.value.trim(); let roll=Number(sRoll.value); if(db.customize.autoRoll!==false&&!roll) roll=db.students.length?Math.max(...db.students.map(s=>Number(s.roll)||0))+1:1;
+  if(!name||!roll){alert('Student Name અને Roll No. required છે.');return;}
+  const ctsId=sCTSId.value.trim();
+  if(ctsId && db.students.some(s=>String(s.ctsId||'').toLowerCase()===ctsId.toLowerCase() && s.id!==editingStudentId)){alert('Duplicate CTS ID already exists.');return;}
+  const duplicate=db.students.find(s=>Number(s.roll)===roll && s.id!==editingStudentId);
+  if(duplicate){alert('આ Roll No. પહેલેથી છે.');return;}
+  const payload={name,std:Number(sStd.value)||'',div:sDiv.value.trim(),roll,gr:Number(sGR.value)||'',mobile:sMobile.value.trim(),ctsId:sCTSId.value.trim(),admissionNo:sAdmissionNo.value.trim(),dob:sDOB.value,gender:sGender.value,category:sCategory.value,religion:sReligion.value,village:sVillage.value.trim(),parent:sParent.value.trim(),parentMobile:sParentMobile.value.trim(),emergency:sEmergency.value.trim(),address:sAddress.value.trim(),email:sEmail.value.trim(),blood:sBlood.value,admissionDate:sAdmissionDate.value,status:sStatus.value||'Active',photo:selectedPhotoData,photoFileName:sPhoto.files[0]?.name||''};
+  if(editingStudentId){const s=db.students.find(x=>x.id===editingStudentId);Object.assign(s,payload);}
+  else {db.students.push({id:nextId(db.students),...payload});}
+  saveDB();clearStudentForm();alert('Student saved.');
+});
+btnClearStudent.addEventListener('click',clearStudentForm);
+
+btnBulkPhotos.addEventListener('click',()=>bulkPhotos.click());
+bulkPhotos.addEventListener('change',async e=>{
+  const files=[...e.target.files];let done=0;
+  for(const f of files){
+    const stem=f.name.replace(/\.[^.]+$/,'').trim();
+    const target=db.students.find(s=>String(s.roll)===stem || String(s.gr)===stem);
+    if(target){await new Promise(res=>resizePhoto(f,d=>{target.photo=d;target.photoFileName=f.name;done++;res();}));}
+  }
+  saveDB();alert(done+' photos matched by Roll No./GR No.');
+  bulkPhotos.value='';
+});
+
+btnImportPaste.addEventListener('click',()=>pasteBox.classList.toggle('hidden'));
+btnPasteImport.addEventListener('click',()=>{
+  const rows=studentPaste.value.trim().split(/\r?\n/).filter(Boolean);
+  let added=0;
+  for(const row of rows){
+    const c=row.split('\t'); if(c.length<4)continue;
+    const [name,std,div,roll,gr,mobile,ctsId,admissionNo,dob,gender,category,religion,village,parent,parentMobile,address,status,photoFileName]=c;
+    if(!name||!roll)continue;
+    if(db.students.some(s=>Number(s.roll)===Number(roll)))continue;
+    db.students.push({id:nextId(db.students),name,std:Number(std)||'',div:div||'',roll:Number(roll),gr:Number(gr)||'',mobile:mobile||'',ctsId:ctsId||'',admissionNo:admissionNo||'',dob:dob||'',gender:gender||'',category:category||'',religion:religion||'',village:village||'',parent:parent||'',parentMobile:parentMobile||'',emergency:'',address:address||'',email:'',blood:'',admissionDate:'',status:status||'Active',photo:null,photoFileName:photoFileName||''});
+    added++;
+  }
+  saveDB();studentPaste.value='';alert(added+' students imported.');
+});
+
+
+function renderStudentDatabase(){
+  const q=(document.getElementById('dbSearch')?.value||'').trim().toLowerCase();
+  const std=(document.getElementById('dbStd')?.value||''); const div=(document.getElementById('dbDiv')?.value||''); const status=(document.getElementById('dbStatus')?.value||'');
+  const list=db.students.filter(s=>(!q||[s.name,s.ctsId,s.gr,s.roll,s.admissionNo,s.parentMobile,s.parent].some(v=>String(v??'').toLowerCase().includes(q)))&&(!std||String(s.std)===std)&&(!div||String(s.div)===div)&&(!status||String(s.status||'Active')===status));
+  document.getElementById('dbTotal').textContent=db.students.length; document.getElementById('dbActive').textContent=db.students.filter(s=>(s.status||'Active')==='Active').length; document.getElementById('dbWithCTS').textContent=db.students.filter(s=>s.ctsId).length; document.getElementById('dbWithPhoto').textContent=db.students.filter(s=>s.photo).length;
+  const ss=document.getElementById('dbStd'),ds=document.getElementById('dbDiv'); const sv=ss.value,dv=ds.value; ss.innerHTML='<option value="">All Standards</option>'+[...new Set(db.students.map(s=>s.std).filter(Boolean))].sort((a,b)=>Number(a)-Number(b)).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');ds.innerHTML='<option value="">All Divisions</option>'+[...new Set(db.students.map(s=>s.div).filter(Boolean))].sort().map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');ss.value=sv;ds.value=dv;
+  document.getElementById('dbTableBody').innerHTML=list.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(s=>`<tr><td>${esc(s.roll)}</td><td>${esc(s.name)}</td><td>${esc(s.std)}</td><td>${esc(s.div)}</td><td>${esc(s.admissionNo)}</td><td>${esc(s.gr)}</td><td>${esc(s.ctsId)}</td><td>${esc(s.dob)}</td><td>${esc(s.gender)}</td><td>${esc(s.parent)}</td><td>${esc(s.parentMobile)}</td><td><span class="pill">${esc(s.status||'Active')}</span></td><td><button class="btn btn-light" onclick="editStudent(${s.id});showPage('students')">Edit</button></td></tr>`).join('')||'<tr><td colspan="13" class="muted">No students found.</td></tr>';
+}
+function exportStudentCSV(){
+  const headers=['Student Name','Standard','Division','Roll No','GR No','CTS ID','Admission No','DOB','Gender','Parent/Guardian','Parent Mobile','Emergency Contact','Address','Email','Blood Group','Admission Date','Status','Category','Religion','Village'];
+  const rows=db.students.map(s=>[s.name,s.std,s.div,s.roll,s.gr,s.ctsId,s.admissionNo,s.dob,s.gender,s.parent,s.parentMobile,s.emergency,s.address,s.email,s.blood,s.admissionDate,s.status||'Active',s.category,s.religion,s.village]);
+  const csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n'); const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='School_Student_Database.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function printStudentDatabase(){ const rows=[...document.querySelectorAll('#dbTable tbody tr')].map(tr=>tr.outerHTML).join(''); const w=window.open('','_blank'); if(!w)return; w.document.write(`<html><head><title>Student Database</title><style>body{font-family:Arial;padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #777;padding:6px;font-size:11px}th{background:#eee}</style></head><body><h2>${esc(db.school.name)}</h2><h3>Student Database</h3><table><thead>${document.querySelector('#dbTable thead').innerHTML}</thead><tbody>${rows}</tbody></table></body></html>`);w.document.close();w.print();}
+
+function getReportStudents(){
+  const cat=document.getElementById('reportCategory')?.value||'', gen=document.getElementById('reportGender')?.value||'', std=document.getElementById('reportStd')?.value||'', village=document.getElementById('reportVillage')?.value||'', religion=document.getElementById('reportReligion')?.value||'', status=document.getElementById('reportStatus')?.value||'', q=(document.getElementById('reportSearch')?.value||'').trim().toLowerCase();
+  return db.students.filter(s=>(!cat||String(s.category||'')===cat)&&(!gen||String(s.gender||'')===gen)&&(!std||String(s.std||'')===std)&&(!village||String(s.village||'')===village)&&(!religion||String(s.religion||'')===religion)&&(!status||String(s.status||'Active')===status)&&(!q||[s.name,s.ctsId,s.gr,s.roll].some(v=>String(v??'').toLowerCase().includes(q))));
+}
+function fillReportFilters(){
+  const vals=(key)=>[...new Set(db.students.map(s=>s[key]).filter(v=>String(v??'').trim()!=='').map(v=>String(v)))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  const configs=[['reportCategory','category','All Categories'],['reportGender','gender','All Genders'],['reportStd','std','All Standards'],['reportVillage','village','All Villages'],['reportReligion','religion','All Religions']];
+  configs.forEach(([id,key,placeholder])=>{const el=document.getElementById(id);if(!el)return;const cur=el.value;el.innerHTML=`<option value="">${placeholder}</option>`+vals(key).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(vals(key).includes(cur))el.value=cur;});
+}
+function renderStudentReports(){
+  fillReportFilters(); const list=getReportStudents(); const type=document.getElementById('reportType')?.value||'category';
+  const labels={category:['Category','Category-wise Student Report','category'],gender:['Gender','Gender-wise Student Report','gender'],standard:['Standard','Standard-wise Student Report','std'],village:['Village','Village-wise Student Report','village'],religion:['Religion','Religion-wise Student Report','religion']};
+  const [label,title,key]=labels[type]; document.getElementById('reportHeading').textContent=title;
+  const groups={}; list.forEach(s=>{const g=String(s[key]??'').trim()||'Not Specified';if(!groups[g])groups[g]={count:0,male:0,female:0,other:0};groups[g].count++;if(s.gender==='Male')groups[g].male++;else if(s.gender==='Female')groups[g].female++;else groups[g].other++;});
+  const total=list.length; const rows=Object.entries(groups).sort((a,b)=>b[1].count-a[1].count).map(([g,v])=>`<tr><td>${esc(g)}</td><td>${v.count}</td><td>${v.male}</td><td>${v.female}</td><td>${v.other}</td><td>${total?((v.count/total)*100).toFixed(1):'0.0'}%</td></tr>`).join('');
+  document.querySelector('#studentReportTable tbody').innerHTML=rows||'<tr><td colspan="6" class="muted">No students found.</td></tr>';
+  document.querySelector('#studentReportDetail tbody').innerHTML=list.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map((s,i)=>`<tr><td>${i+1}</td><td>${esc(s.name)}</td><td>${esc(s.std)}</td><td>${esc(s.div)}</td><td>${esc(s.roll)}</td><td>${esc(s.gr)}</td><td>${esc(s.ctsId)}</td><td>${esc(s.gender)}</td><td>${esc(s.category)}</td><td>${esc(s.religion)}</td><td>${esc(s.village)}</td><td>${esc(s.status||'Active')}</td></tr>`).join('')||'<tr><td colspan="12" class="muted">No students found.</td></tr>';
+  const male=list.filter(s=>s.gender==='Male').length, female=list.filter(s=>s.gender==='Female').length, other=list.length-male-female;
+  document.getElementById('reportStats').innerHTML=`<div class="stat"><b>${list.length}</b><span>Students</span></div><div class="stat"><b>${male}</b><span>Male</span></div><div class="stat"><b>${female}</b><span>Female</span></div><div class="stat"><b>${other}</b><span>Other / Not Set</span></div>`;
+}
+function printStudentReports(){
+  renderStudentReports(); const title=document.getElementById('reportHeading').textContent; const summary=document.getElementById('studentReportTable').outerHTML; const detail=document.getElementById('studentReportDetail').outerHTML; const w=window.open('','_blank');if(!w)return;w.document.write(`<html><head><title>${esc(title)}</title><style>body{font-family:Arial,sans-serif;padding:20px}h2{text-align:center}table{width:100%;border-collapse:collapse;margin:12px 0 24px}th,td{border:1px solid #777;padding:6px;font-size:11px}th{background:#eee}</style></head><body><h2>${esc(db.school.name)}</h2><h3>${esc(title)}</h3>${summary}<h3>Detailed Student List</h3>${detail}</body></html>`);w.document.close();w.print();}
+function exportStudentReports(){
+  const list=getReportStudents(), type=document.getElementById('reportType').value; const headers=['Student Name','Standard','Division','Roll No','GR No','CTS ID','Gender','Category','Religion','Village','Status']; const rows=list.map(s=>[s.name,s.std,s.div,s.roll,s.gr,s.ctsId,s.gender,s.category,s.religion,s.village,s.status||'Active']); const csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n'); const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`Student_Report_${type}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+['reportType','reportCategory','reportGender','reportStd','reportVillage','reportReligion','reportStatus','reportSearch'].forEach(id=>document.getElementById(id)?.addEventListener('input',renderStudentReports));
+document.getElementById('btnGenerateStudentReport')?.addEventListener('click',renderStudentReports);document.getElementById('btnPrintStudentReport')?.addEventListener('click',printStudentReports);document.getElementById('btnExportStudentReport')?.addEventListener('click',exportStudentReports);
+
+function renderExams(){
+  examTable.innerHTML=db.exams.map((e,i)=>`<tr><td>${i+1}</td><td>${esc(e.date)}</td><td>${esc(e.time)}</td><td>${esc(e.subject)}</td><td>${esc(e.std||'All')} / ${esc(e.div||'All')}</td><td>${esc(e.room||'-')}</td><td><button class="btn btn-danger" onclick="deleteExam(${e.id})">Delete</button></td></tr>`).join('')||`<tr><td colspan="7" class="muted">No exams.</td></tr>`;
+}
+function deleteExam(id){if(confirm('Delete this exam?')){db.exams=db.exams.filter(e=>e.id!==id);saveDB();}}
+btnSaveExam.addEventListener('click',()=>{
+  const date=eDate.value.trim(),time=eTime.value.trim(),subject=eSubject.value.trim(); const std=eStd.value.trim(),div=eDiv.value.trim(),room=eRoom.value.trim(),seatStart=Number(eSeatStart.value)||1;
+  if(!date||!time||!subject){alert('Date, Time and Subject required.');return;}
+  db.exams.push({id:nextId(db.exams),date,time,subject,std,div,room,seatStart});saveDB();
+  eDate.value='';eTime.value='';eSubject.value='';eStd.value='';eDiv.value='A';eRoom.value='';eSeatStart.value=1;
+});
+btnClearExam.addEventListener('click',()=>{eDate.value='';eTime.value='';eSubject.value='';eStd.value='';eDiv.value='A';eRoom.value='';eSeatStart.value=1;});
+btnImportExamPaste.addEventListener('click',()=>examPasteBox.classList.toggle('hidden'));
+btnExamPasteImport.addEventListener('click',()=>{
+  const rows=examPaste.value.trim().split(/\r?\n/).filter(Boolean);let n=0;
+  for(const row of rows){const c=row.split('\t');if(c.length<3)continue;db.exams.push({id:nextId(db.exams),date:c[0],time:c[1],subject:c[2]});n++;}
+  saveDB();examPaste.value='';alert(n+' exams imported.');
+});
+
+function renderSchool(){
+  schoolName.value=db.school.name;schoolAddress.value=db.school.address;schoolPhone.value=db.school.phone;examName.value=db.school.examName;principal.value=db.school.principal;footerInstruction.value=db.school.footer;
+}
+btnSaveSchool.addEventListener('click',()=>{db.school={name:schoolName.value,address:schoolAddress.value,phone:schoolPhone.value,examName:examName.value,principal:principal.value,footer:footerInstruction.value};saveDB();alert('Settings saved.');});
+
+function renderRolls(){
+  const cur=ticketRoll.value;
+  ticketRoll.innerHTML=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(s=>`<option value="${s.roll}">Roll ${esc(s.roll)} - ${esc(s.name)}</option>`).join('');
+  if(cur && [...ticketRoll.options].some(o=>o.value===cur)) ticketRoll.value=cur;
+}
+ticketRoll.addEventListener('change',renderTicket);
+
+function ticketHTML(s){
+  const school=db.school, c=db.customize;
+  const logo=c.logo?`<img class="ticket-logo" src="${c.logo}" alt="Logo">`:'';
+  const photo=s.photo?`<img src="${s.photo}" alt="">`:`<span>${esc(c.photoPlaceholder).replace(/\|/g,'<br>')}</span>`;
+  const schedule=db.exams.map(e=>{const a=(db.rooms||[]).find(x=>x.examId===e.id&&x.studentId===s.id);return `<tr><td>${esc(e.date)}</td><td>${esc(e.time)}</td><td>${esc(e.subject)}</td><td>${esc(a?.room||e.room||'')}</td><td>${esc(a?.seat||'')}</td></tr>`;}).join('');
+  const divCell=c.showDiv?`<td>${esc(c.division)}</td><td>${esc(s.div)}</td>`:'';
+  const grCell=c.showGR?`<td>${esc(c.grNo)}</td><td>${esc(s.gr)}</td>`:'';
+  const mobileRow=c.showMobile?`<tr><td>${esc(c.mobile)}</td><td colspan="5">${esc(s.mobile)}</td></tr>`:'';
+  return `<div class="ticket" style="font-family:${esc(c.font)};--ticket-font:${Number(c.ticketFont)||12}px">
+    <div class="ticket-head">${logo}<div><div class="school-name">${esc(school.name)}</div><div class="school-address">${esc(school.address)}${school.phone?` | ${esc(c.schoolPhone)}: ${esc(school.phone)}`:''}</div></div></div>
+    <div class="exam-banner">${c.ticketTitle?esc(c.ticketTitle)+' - ':''}${esc(school.examName).toUpperCase()}</div>
+    <div class="student-block">
+      <table class="info-table">
+        <tr><td>${esc(c.studentName)}</td><td colspan="5">${esc(s.name)}</td></tr>
+        <tr><td>${esc(c.standard)}</td><td>${esc(s.std)}</td>${divCell}<td>${esc(c.rollNo)}</td><td>${esc(s.roll)}</td></tr>
+        ${grCell?`<tr>${grCell}</tr>`:''}${mobileRow}<tr><td>${esc(c.ctsId||'CTS ID')}</td><td colspan="5">${esc(s.ctsId||'')}</td></tr>
+      </table>
+      ${c.showPhoto?`<div class="photo">${photo}</div>`:''}
+    </div>
+    <div class="schedule-title">${esc(c.scheduleTitle)}</div>
+    <table class="schedule" style="font-size:var(--ticket-font)">
+      <thead><tr><th>${esc(c.examDate)}</th><th>${esc(c.time)}</th><th>${esc(c.subject)}</th><th>Room</th><th>Seat</th></tr></thead>
+      <tbody>${schedule}</tbody>
+    </table>
+    <div class="qr-box">${c.showQR?`<div><div id="qr-${s.id}"></div><div style="font-size:9px;text-align:center;margin-top:4px;font-weight:700">SCAN TO VERIFY</div></div>`:``}</div><div class="footer-block"><div class="footer-note">${esc(school.footer)}</div><div class="principal">${esc(c.principal)}<br><br><br></div></div>
+  </div>`;
+}
+function hallTicketQRData(s){
+  const exams=(db.exams||[]).map(e=>{const a=(db.rooms||[]).find(x=>x.examId===e.id&&x.studentId===s.id);return {exam:e.subject||'',date:e.date||'',time:e.time||'',room:a?.room||e.room||'',seat:a?.seat||''};});
+  const portalUrl=localStorage.getItem('hall_ticket_online_portal_url')||''; if(portalUrl&&s.ctsId){return portalUrl+'?school='+encodeURIComponent(localStorage.getItem('hall_ticket_online_school_key')||'main-school')+'&cts='+encodeURIComponent(s.ctsId);} return JSON.stringify({type:'HALL_TICKET',version:2,school:db.school?.name||'',examName:db.school?.examName||'',name:s.name||'',ctsId:s.ctsId||'',gr:s.gr||'',roll:s.roll||'',standard:s.std||'',division:s.div||'',exams});
+}
+function markGenerated(id){db.generated=db.generated||[];if(!db.generated.includes(id)){db.generated.push(id);localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}}
+function renderAllocations(){const sel=document.getElementById('allocExam');if(!sel)return;const cur=sel.value;sel.innerHTML=db.exams.map(e=>`<option value="${e.id}">${esc(e.subject)} - ${esc(e.date)}</option>`).join('');if(cur)sel.value=cur;const ex=db.exams.find(e=>String(e.id)===String(sel.value));const list=(db.rooms||[]).filter(x=>!ex||x.examId===ex.id);document.getElementById('allocationPreview').innerHTML=list.length?list.map(x=>`<div class="allocation-card"><b>Roll ${esc(x.roll)}</b><div>${esc(x.name)}</div><span class="pill">Room ${esc(x.room)} · Seat ${esc(x.seat)}</span></div>`).join(''):'<div class="muted">No allocations yet.</div>';}
+function autoAllocate(){const ex=db.exams.find(e=>String(e.id)===String(document.getElementById('allocExam').value));if(!ex){alert('Select an exam.');return;}const cap=Math.max(1,Number(document.getElementById('allocCapacity').value)||30);let start=Math.max(1,Number(document.getElementById('allocStart').value)||1);let room=document.getElementById('allocRoom').value.trim()||ex.room||'101';const eligible=db.students.filter(s=>(!ex.std||String(s.std)===String(ex.std))&&(!ex.div||String(s.div)===String(ex.div))).sort((a,b)=>Number(a.roll)-Number(b.roll));db.rooms=(db.rooms||[]).filter(x=>x.examId!==ex.id);eligible.forEach((s,i)=>{const roomNo=String(Number(room)+Math.floor(i/cap));db.rooms.push({examId:ex.id,studentId:s.id,roll:s.roll,name:s.name,room:roomNo,seat:start+(i%cap)});});saveDB();renderAllocations();alert(eligible.length+' students allocated.');}
+function clearAlloc(){const id=Number(document.getElementById('allocExam').value);db.rooms=(db.rooms||[]).filter(x=>x.examId!==id);saveDB();renderAllocations();}
+
+function hallReceiptNow(){const d=new Date();return d.toLocaleString('en-IN',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});}
+function markHallTicketReceived(id){
+  const s=db.students.find(x=>Number(x.id)===Number(id)); if(!s)return;
+  s.hallTicketReceived=true; s.hallTicketReceivedAt=s.hallTicketReceivedAt||hallReceiptNow();
+  saveDB(); renderHallReceiptPage();
+}
+function unmarkHallTicketReceived(id){const s=db.students.find(x=>Number(x.id)===Number(id));if(!s)return;s.hallTicketReceived=false;s.hallTicketReceivedAt='';saveDB();renderHallReceiptPage();}
+function renderHallReceiptPage(){
+  const wrap=document.getElementById('hallReceiptTable'); if(!wrap)return;
+  const q=(document.getElementById('hallReceiptSearch')?.value||'').trim().toLowerCase();
+  const status=document.getElementById('hallReceiptStatus')?.value||'all'; const std=document.getElementById('hallReceiptStd')?.value||''; const div=document.getElementById('hallReceiptDiv')?.value||'';
+  const all=db.students||[]; const received=all.filter(s=>s.hallTicketReceived).length;
+  document.getElementById('hallReceiptTotal').textContent=all.length;document.getElementById('hallReceiptReceived').textContent=received;document.getElementById('hallReceiptPending').textContent=Math.max(0,all.length-received);document.getElementById('hallReceiptPercent').textContent=all.length?Math.round(received*100/all.length)+'%':'0%';
+  const ss=[...new Set(all.map(s=>s.std).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),undefined,{numeric:true})); const ds=[...new Set(all.map(s=>s.div).filter(Boolean))].sort();
+  const se=document.getElementById('hallReceiptStd'), de=document.getElementById('hallReceiptDiv'); if(se){const cur=se.value;se.innerHTML='<option value="">All Standards</option>'+ss.map(x=>`<option>${esc(x)}</option>`).join('');se.value=cur;} if(de){const cur=de.value;de.innerHTML='<option value="">All Divisions</option>'+ds.map(x=>`<option>${esc(x)}</option>`).join('');de.value=cur;}
+  let list=all.filter(s=>{const text=[s.name,s.roll,s.gr,s.ctsId,s.admissionNo].join(' ').toLowerCase();return (!q||text.includes(q))&&(!std||String(s.std)===String(std))&&(!div||String(s.div)===String(div))&&(status==='all'||(status==='received'?!!s.hallTicketReceived:!s.hallTicketReceived));}).sort((a,b)=>Number(a.roll)-Number(b.roll));
+  wrap.innerHTML=`<div class="receipt-print-title"><h2>${esc(db.school?.name||'School')}</h2><h3>Hall Ticket Receipt / Distribution List</h3><p>Printed: ${hallReceiptNow()}</p></div><table class="hall-receipt-table"><thead><tr><th>#</th><th>Roll No.</th><th>Student Name</th><th>Std.</th><th>Div.</th><th>GR No.</th><th>CTS ID</th><th>Received</th><th>Received Date</th><th>Student Signature</th><th class="no-print">Action</th></tr></thead><tbody>${list.length?list.map((s,i)=>`<tr><td>${i+1}</td><td>${esc(s.roll)}</td><td>${esc(s.name)}</td><td>${esc(s.std)}</td><td>${esc(s.div)}</td><td>${esc(s.gr)}</td><td>${esc(s.ctsId)}</td><td>${s.hallTicketReceived?'<span class="received-badge">YES</span>':'<span class="pending-badge">PENDING</span>'}</td><td>${esc(s.hallTicketReceivedAt||'')}</td><td><span class="receipt-sign"></span></td><td class="no-print">${s.hallTicketReceived?`<button class="btn btn-light btn-sm" onclick="unmarkHallTicketReceived(${s.id})">Undo</button>`:`<button class="btn btn-green btn-sm" onclick="markHallTicketReceived(${s.id})">✓ Mark Received</button>`}</td></tr>`).join(''):'<tr><td colspan="11" class="muted">No students found.</td></tr>'}</tbody></table>`;
+}
+function printHallReceiptList(){renderHallReceiptPage();setTimeout(()=>window.print(),200);}
+function clearHallReceiptMarks(){if(!confirm('Clear all Hall Ticket received marks?'))return;(db.students||[]).forEach(s=>{s.hallTicketReceived=false;s.hallTicketReceivedAt='';});saveDB();renderHallReceiptPage();}
+['hallReceiptSearch','hallReceiptStatus','hallReceiptStd','hallReceiptDiv'].forEach(id=>document.getElementById(id)?.addEventListener('input',renderHallReceiptPage));
+
+function renderTicket(){
+  if(!db.students.length){ticketArea.innerHTML='<div class="card">No students.</div>';return;}
+  if(!ticketRoll.value)ticketRoll.value=db.students[0].roll;
+  const s=db.students.find(x=>Number(x.roll)===Number(ticketRoll.value))||db.students[0];
+  ticketArea.innerHTML=ticketHTML(s); markGenerated(s.id); if(db.customize.showQR!==false&&window.QRCode){const q=document.getElementById('qr-'+s.id);if(q)new QRCode(q,{text:hallTicketQRData(s),width:90,height:90});}
+}
+btnPrintCurrent.addEventListener('click',()=>{renderTicket();setTimeout(()=>window.print(),200)});
+btnPrintAll.addEventListener('click',()=>{
+  if(!db.students.length){alert('No students.');return;}
+  ticketArea.innerHTML=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(ticketHTML).join(''); db.students.forEach(s=>markGenerated(s.id)); if(window.QRCode&&db.customize.showQR!==false)db.students.forEach(s=>{const q=document.getElementById('qr-'+s.id);if(q)new QRCode(q,{text:hallTicketQRData(s),width:70,height:70});});
+  setTimeout(()=>window.print(),250);
+});
+
+btnExportBackup.addEventListener('click',()=>{
+  const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Hall_Ticket_Database_Backup.json';a.click();URL.revokeObjectURL(a.href);
+});
+backupFile.addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);db.customize={...structuredClone(defaultCustomize),...(db.customize||{})};db.rooms=db.rooms||[];db.generated=db.generated||[];db.fees=db.fees||[];db.busFees=db.busFees||[];db.students=(db.students||[]).map(st=>({status:'Active',admissionNo:'',dob:'',gender:'',parent:'',parentMobile:'',emergency:'',address:'',email:'',blood:'',admissionDate:'',...st}));saveDB();renderAllocations();alert('Backup restored.');}catch(err){alert('Invalid backup file.');}};r.readAsText(f);
+});
+btnReset.addEventListener('click',()=>{if(confirm('Reset database to demo data? Current data will be lost.')){db=structuredClone(demo);saveDB();}});
+
+document.getElementById('studentSearch')?.addEventListener('input',renderStudents);document.getElementById('studentSearchStd')?.addEventListener('change',renderStudents);document.getElementById('studentSearchDiv')?.addEventListener('change',renderStudents);document.getElementById('btnClearSearch')?.addEventListener('click',()=>{studentSearch.value='';studentSearchStd.value='';studentSearchDiv.value='';renderStudents();});
+document.getElementById('btnLoadMarks')?.addEventListener('click',loadMarksTable);document.getElementById('btnSaveMarks')?.addEventListener('click',saveMarks);document.getElementById('resultExam')?.addEventListener('change',loadMarksTable);document.getElementById('resultStd')?.addEventListener('change',loadMarksTable);document.getElementById('resultDiv')?.addEventListener('change',loadMarksTable);document.getElementById('btnPreviewResult')?.addEventListener('click',previewResult);document.getElementById('btnPrintResult')?.addEventListener('click',printResult);document.getElementById('btnResultPrintAll')?.addEventListener('click',printAllResults);
+document.getElementById('btnStudentFeeReport')?.addEventListener('click',printStudentFeeReport);
+document.getElementById('btnSaveBusFee')?.addEventListener('click',saveBusFee);document.getElementById('btnClearBusFee')?.addEventListener('click',clearBusFeeForm);document.getElementById('btnBusReceipt')?.addEventListener('click',()=>{const id=window.editingBusFeeId||((db.busFees||[]).length?db.busFees[db.busFees.length-1].id:null);if(id)printBusFeeReceipt(id);else alert('Save a bus fee entry first.');});document.getElementById('busSearch')?.addEventListener('input',renderBusFeesTable);document.getElementById('busFilterMode')?.addEventListener('change',renderBusFeesTable);document.getElementById('busFilterStatus')?.addEventListener('change',renderBusFeesTable);document.getElementById('btnBusPrintList')?.addEventListener('click',printBusFeeList);
+document.getElementById('btnSaveFee')?.addEventListener('click',saveFee);document.getElementById('btnClearFee')?.addEventListener('click',clearFeeForm);document.getElementById('btnFeeReceipt')?.addEventListener('click',()=>{const id=window.editingFeeId||((db.fees||[]).length?db.fees[db.fees.length-1].id:null);if(id)printFeeReceipt(id);else alert('Save a fee entry first.');});document.getElementById('feeSearch')?.addEventListener('input',renderFeesTable);document.getElementById('feeFilterMode')?.addEventListener('change',renderFeesTable);document.getElementById('feeFilterStatus')?.addEventListener('change',renderFeesTable);document.getElementById('btnFeePrintList')?.addEventListener('click',printFeeList);document.getElementById('feeStudent')?.addEventListener('change',()=>{});
+document.getElementById('btnAutoAllocate')?.addEventListener('click',autoAllocate);document.getElementById('btnClearAlloc')?.addEventListener('click',clearAlloc);document.getElementById('allocExam')?.addEventListener('change',renderAllocations);
+document.getElementById('dbSearch')?.addEventListener('input',renderStudentDatabase);document.getElementById('dbStd')?.addEventListener('change',renderStudentDatabase);document.getElementById('dbDiv')?.addEventListener('change',renderStudentDatabase);document.getElementById('dbStatus')?.addEventListener('change',renderStudentDatabase);document.getElementById('btnDbClear')?.addEventListener('click',()=>{dbSearch.value='';dbStd.value='';dbDiv.value='';dbStatus.value='';renderStudentDatabase();});document.getElementById('btnDbExportCsv')?.addEventListener('click',exportStudentCSV);document.getElementById('btnDbPrint')?.addEventListener('click',printStudentDatabase);
+function money(n){return '₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});}
+function nextReceipt(){const nums=(db.fees||[]).map(f=>parseInt(String(f.receiptNo||'').replace(/\D/g,''),10)).filter(Number.isFinite);return 'FEE-'+String((Math.max(0,...nums)+1)).padStart(4,'0');}
+function feeStudentLabel(s){return `${s.roll||''} - ${s.name||''}${s.ctsId?' | CTS: '+s.ctsId:''}`;}
+function renderBusFeeStudents(){const sel=document.getElementById('busStudent');if(!sel)return;const cur=sel.value;sel.innerHTML=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(st=>`<option value="${st.id}">${esc(feeStudentLabel(st))}</option>`).join('');if(cur)sel.value=cur;}
+function busNextReceipt(){return 'BUS-'+String((db.busFees||[]).length+1).padStart(5,'0');}
+function busFeeStatus(net,paid){net=Number(net)||0;paid=Number(paid)||0;return paid<=0?'Pending':paid>=net?'Paid':'Partial';}
+function renderBusFeeStats(){const fees=db.busFees||[];const demand=fees.reduce((a,f)=>a+Math.max(0,Number(f.due||0)-Number(f.discount||0)),0),paid=fees.reduce((a,f)=>a+Number(f.paid||0),0);const paidS=new Set(),pendingS=new Set();fees.forEach(f=>{const st=busFeeStatus(Number(f.due)-Number(f.discount),f.paid);(st==='Paid'?paidS:pendingS).add(String(f.studentId));});document.getElementById('busTotalDemand').textContent=money(demand);document.getElementById('busTotalPaid').textContent=money(paid);document.getElementById('busTotalPending').textContent=money(Math.max(0,demand-paid));document.getElementById('busPaidStudents').textContent=paidS.size;document.getElementById('busPendingStudents').textContent=pendingS.size;}
+function renderBusFeesTable(){const q=(document.getElementById('busSearch')?.value||'').toLowerCase().trim(),mode=document.getElementById('busFilterMode')?.value||'',status=document.getElementById('busFilterStatus')?.value||'';const list=(db.busFees||[]).slice().reverse().filter(f=>{const st=db.students.find(x=>String(x.id)===String(f.studentId))||{},net=Math.max(0,Number(f.due)-Number(f.discount)),hay=[st.name,st.ctsId,st.gr,f.receiptNo,f.route,f.stop,f.period].join(' ').toLowerCase();return(!q||hay.includes(q))&&(!mode||f.mode===mode)&&(!status||busFeeStatus(net,f.paid)===status);});document.getElementById('busFeeTableBody').innerHTML=list.map(f=>{const st=db.students.find(x=>String(x.id)===String(f.studentId))||{},net=Math.max(0,Number(f.due)-Number(f.discount)),bal=Math.max(0,net-Number(f.paid||0)),status=busFeeStatus(net,f.paid);return `<tr><td>${esc(f.date)}</td><td>${esc(f.receiptNo)}</td><td>${esc(st.name||'')}</td><td>${esc(st.ctsId||'')}</td><td>${esc(f.route||'')}</td><td>${esc(f.stop||'')}</td><td>${esc(f.period||'')}</td><td>${money(net)}</td><td>${money(f.paid)}</td><td>${money(bal)}</td><td>${esc(f.mode||'')}</td><td class="${status==='Paid'?'fee-paid':'fee-pending'}">${status}</td><td><button class="btn btn-light" onclick="printBusFeeReceipt('${f.id}')">Receipt</button> <button class="btn btn-light" onclick="editBusFee('${f.id}')">Edit</button></td></tr>`;}).join('')||'<tr><td colspan="13" class="muted">No bus fee entries found.</td></tr>';}
+function renderBusFeesPage(){renderBusFeeStudents();renderBusFeeStats();renderBusFeesTable();const d=document.getElementById('busDate');if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);const r=document.getElementById('busReceiptNo');if(r&&!r.value)r.value=busNextReceipt();}
+function clearBusFeeForm(){['busDue','busDiscount','busPaid'].forEach(id=>document.getElementById(id).value='0');['busRoute','busStop','busPeriod','busRemarks'].forEach(id=>document.getElementById(id).value='');document.getElementById('busReceiptNo').value=busNextReceipt();document.getElementById('busDate').value=new Date().toISOString().slice(0,10);window.editingBusFeeId=null;}
+function saveBusFee(){const sid=document.getElementById('busStudent').value;if(!sid){alert('Select a student.');return;}const due=Math.max(0,Number(document.getElementById('busDue').value)||0),discount=Math.min(due,Math.max(0,Number(document.getElementById('busDiscount').value)||0)),paid=Math.max(0,Number(document.getElementById('busPaid').value)||0);if(paid>due-discount){alert('Paid amount cannot exceed net payable amount.');return;}const f={id:window.editingBusFeeId||Date.now(),studentId:Number(sid),year:document.getElementById('busYear').value.trim(),route:document.getElementById('busRoute').value.trim(),stop:document.getElementById('busStop').value.trim(),period:document.getElementById('busPeriod').value.trim(),due,discount,paid,date:document.getElementById('busDate').value,mode:document.getElementById('busMode').value,receiptNo:document.getElementById('busReceiptNo').value.trim()||busNextReceipt(),remarks:document.getElementById('busRemarks').value.trim()};db.busFees=db.busFees||[];const i=db.busFees.findIndex(x=>String(x.id)===String(f.id));if(i>=0)db.busFees[i]=f;else db.busFees.push(f);saveDB();renderBusFeesPage();window.editingBusFeeId=null;alert('Bus fee entry saved successfully.');}
+function editBusFee(id){const f=(db.busFees||[]).find(x=>String(x.id)===String(id));if(!f)return;document.getElementById('busStudent').value=f.studentId;document.getElementById('busYear').value=f.year||'';document.getElementById('busRoute').value=f.route||'';document.getElementById('busStop').value=f.stop||'';document.getElementById('busPeriod').value=f.period||'';document.getElementById('busDue').value=f.due||0;document.getElementById('busDiscount').value=f.discount||0;document.getElementById('busPaid').value=f.paid||0;document.getElementById('busDate').value=f.date||'';document.getElementById('busMode').value=f.mode||'Cash';document.getElementById('busReceiptNo').value=f.receiptNo||'';document.getElementById('busRemarks').value=f.remarks||'';window.editingBusFeeId=f.id;showPage('busfees');}
+function busReceiptHTML(f){const st=db.students.find(x=>String(x.id)===String(f.studentId))||{},net=Math.max(0,Number(f.due)-Number(f.discount)),bal=Math.max(0,net-Number(f.paid));return `<div class="fee-receipt"><div class="fee-receipt-head"><h2>${esc(db.school.name)}</h2><div>${esc(db.school.address||'')}</div><h3>BUS FEE RECEIPT</h3></div><div class="fee-receipt-meta"><div><b>Receipt No.</b><br>${esc(f.receiptNo)}</div><div><b>Date</b><br>${esc(f.date)}</div><div><b>Academic Year</b><br>${esc(f.year||'')}</div></div><table class="fee-table" style="margin-top:15px"><tr><th>Student</th><td>${esc(st.name)}</td><th>CTS ID</th><td>${esc(st.ctsId||'-')}</td></tr><tr><th>Class / Div.</th><td>${esc(st.std)} / ${esc(st.div)}</td><th>GR No.</th><td>${esc(st.gr||'-')}</td></tr><tr><th>Route / Bus</th><td>${esc(f.route||'-')}</td><th>Bus Stop</th><td>${esc(f.stop||'-')}</td></tr><tr><th>Period</th><td>${esc(f.period||'-')}</td><th>Payment Mode</th><td>${esc(f.mode)}</td></tr><tr><th>Amount Due</th><td>${money(f.due)}</td><th>Discount</th><td>${money(f.discount)}</td></tr><tr><th>Amount Paid</th><td><b>${money(f.paid)}</b></td><th>Balance</th><td><b>${money(bal)}</b></td></tr></table><p><b>Remarks:</b> ${esc(f.remarks||'-')}</p><div style="display:flex;justify-content:space-between;margin-top:55px"><span>Parent / Student Signature</span><span>Cashier / School Stamp</span></div></div>`;}
+function printBusFeeReceipt(id){const f=(db.busFees||[]).find(x=>String(x.id)===String(id));if(!f)return;document.getElementById('busReceiptPreview').innerHTML=busReceiptHTML(f);setTimeout(()=>window.print(),150);}
+function printBusFeeList(){const fees=(db.busFees||[]).slice();const rows=fees.map(f=>{const st=db.students.find(x=>String(x.id)===String(f.studentId))||{},net=Math.max(0,Number(f.due)-Number(f.discount)),bal=Math.max(0,net-Number(f.paid||0));return `<tr><td>${esc(f.date)}</td><td>${esc(f.receiptNo)}</td><td>${esc(st.name)}</td><td>${esc(st.ctsId||'')}</td><td>${esc(f.route||'')}</td><td>${esc(f.stop||'')}</td><td>${esc(f.period||'')}</td><td>${money(net)}</td><td>${money(f.paid)}</td><td>${money(bal)}</td></tr>`}).join('');document.getElementById('busReceiptPreview').innerHTML=`<div class="fee-receipt"><div class="fee-receipt-head"><h2>${esc(db.school.name)}</h2><h3>BUS FEE COLLECTION REPORT</h3></div><table class="fee-table"><thead><tr><th>Date</th><th>Receipt</th><th>Student</th><th>CTS ID</th><th>Route</th><th>Stop</th><th>Period</th><th>Net Due</th><th>Paid</th><th>Balance</th></tr></thead><tbody>${rows}</tbody></table></div>`;setTimeout(()=>window.print(),150);}
+function printStudentFeeReport(){const students=db.students.slice().sort((a,b)=>String(a.std).localeCompare(String(b.std))||Number(a.roll)-Number(b.roll));const rows=students.map(st=>{const fs=(db.fees||[]).filter(f=>String(f.studentId)===String(st.id));const demand=fs.reduce((a,f)=>a+Math.max(0,Number(f.due)-Number(f.discount)),0),paid=fs.reduce((a,f)=>a+Number(f.paid||0),0),bus=(db.busFees||[]).filter(f=>String(f.studentId)===String(st.id)).reduce((a,f)=>a+Math.max(0,Number(f.due)-Number(f.discount)),0);return `<tr><td>${esc(st.roll)}</td><td>${esc(st.name)}</td><td>${esc(st.std)}-${esc(st.div)}</td><td>${esc(st.ctsId||'')}</td><td>${money(demand)}</td><td>${money(paid)}</td><td>${money(Math.max(0,demand-paid))}</td><td>${money(bus)}</td></tr>`;}).join('');document.getElementById('feeReceiptPreview').innerHTML=`<div class="fee-receipt"><div class="fee-receipt-head"><h2>${esc(db.school.name)}</h2><h3>STUDENT FEE COLLECTION REPORT</h3><div>School Fee only; Bus Fee shown separately</div></div><table class="fee-table"><thead><tr><th>Roll</th><th>Student</th><th>Std-Div</th><th>CTS ID</th><th>School Fee Due</th><th>School Fee Paid</th><th>School Fee Balance</th><th>Bus Fee Demand</th></tr></thead><tbody>${rows}</tbody></table></div>`;setTimeout(()=>window.print(),150);}
+function renderFeeStudents(){const sel=document.getElementById('feeStudent');if(!sel)return;const cur=sel.value;sel.innerHTML=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(s=>`<option value="${s.id}">${esc(feeStudentLabel(s))}</option>`).join('');if(cur)sel.value=cur;}
+function feeStatus(due,paid){const bal=Math.max(0,Number(due||0)-Number(paid||0));return bal<=0&&Number(paid||0)>0?'Paid':Number(paid||0)>0?'Partial':'Pending';}
+function renderFeeStats(){const fees=db.fees||[];const demand=fees.reduce((a,f)=>a+Math.max(0,Number(f.due||0)-Number(f.discount||0)),0),paid=fees.reduce((a,f)=>a+Number(f.paid||0),0);const students=new Set(),paidS=new Set(),pendingS=new Set();fees.forEach(f=>{students.add(String(f.studentId));if(feeStatus(Number(f.due)-Number(f.discount),f.paid)==='Paid')paidS.add(String(f.studentId));else pendingS.add(String(f.studentId));});document.getElementById('feeTotalDemand').textContent=money(demand);document.getElementById('feeTotalPaid').textContent=money(paid);document.getElementById('feeTotalPending').textContent=money(Math.max(0,demand-paid));document.getElementById('feePaidStudents').textContent=paidS.size;document.getElementById('feePendingStudents').textContent=pendingS.size;}
+function renderFeesTable(){const q=(document.getElementById('feeSearch')?.value||'').toLowerCase().trim(),mode=document.getElementById('feeFilterMode')?.value||'',status=document.getElementById('feeFilterStatus')?.value||'';const list=(db.fees||[]).slice().reverse().filter(f=>{const s=db.students.find(x=>String(x.id)===String(f.studentId))||{};const st=feeStatus(Number(f.due)-Number(f.discount),f.paid);const hay=[s.name,s.ctsId,s.gr,s.roll,f.receiptNo,f.feeType].join(' ').toLowerCase();return (!q||hay.includes(q))&&(!mode||f.mode===mode)&&(!status||st===status);});document.getElementById('feeTableBody').innerHTML=list.map(f=>{const s=db.students.find(x=>String(x.id)===String(f.studentId))||{},net=Math.max(0,Number(f.due||0)-Number(f.discount||0)),bal=Math.max(0,net-Number(f.paid||0)),st=feeStatus(net,f.paid);return `<tr><td>${esc(f.date||'')}</td><td>${esc(f.receiptNo||'')}</td><td>${esc(s.name||'')}</td><td>${esc(s.ctsId||'')}</td><td>${esc(f.feeType||'')}</td><td>${money(f.due)}</td><td>${money(f.discount)}</td><td>${money(f.paid)}</td><td>${money(bal)}</td><td>${esc(f.mode||'')}</td><td class="${st==='Paid'?'fee-paid':'fee-pending'}">${st}</td><td><button class="btn btn-light" onclick="printFeeReceipt('${f.id}')">Receipt</button> <button class="btn btn-light" onclick="editFee('${f.id}')">Edit</button></td></tr>`;}).join('')||'<tr><td colspan="12" class="muted">No fee entries found.</td></tr>';}
+function renderFeesPage(){renderFeeStudents();renderFeeStats();renderFeesTable();const d=document.getElementById('feeDate');if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);const r=document.getElementById('feeReceiptNo');if(r&&!r.value)r.value=nextReceipt();}
+function clearFeeForm(){['feeDue','feeDiscount','feePaid','feeRemarks'].forEach(id=>document.getElementById(id).value='0');document.getElementById('feeRemarks').value='';document.getElementById('feeReceiptNo').value=nextReceipt();document.getElementById('feeDate').value=new Date().toISOString().slice(0,10);window.editingFeeId=null;}
+function saveFee(){const sid=document.getElementById('feeStudent').value;if(!sid){alert('Select a student.');return;}const due=Math.max(0,Number(document.getElementById('feeDue').value)||0),discount=Math.min(due,Math.max(0,Number(document.getElementById('feeDiscount').value)||0)),paid=Math.max(0,Number(document.getElementById('feePaid').value)||0);if(paid>due-discount){alert('Paid amount cannot exceed net payable amount.');return;}const f={id:window.editingFeeId||Date.now(),studentId:Number(sid),year:document.getElementById('feeYear').value.trim(),feeType:document.getElementById('feeType').value,due,discount,paid,date:document.getElementById('feeDate').value,mode:document.getElementById('feeMode').value,receiptNo:document.getElementById('feeReceiptNo').value.trim()||nextReceipt(),remarks:document.getElementById('feeRemarks').value.trim()};db.fees=db.fees||[];const i=db.fees.findIndex(x=>String(x.id)===String(f.id));if(i>=0)db.fees[i]=f;else db.fees.push(f);saveDB();renderFeesPage();window.editingFeeId=null;alert('Fee entry saved successfully.');}
+function editFee(id){const f=(db.fees||[]).find(x=>String(x.id)===String(id));if(!f)return;document.getElementById('feeStudent').value=f.studentId;document.getElementById('feeYear').value=f.year||'';document.getElementById('feeType').value=f.feeType||'Tuition Fee';document.getElementById('feeDue').value=f.due||0;document.getElementById('feeDiscount').value=f.discount||0;document.getElementById('feePaid').value=f.paid||0;document.getElementById('feeDate').value=f.date||'';document.getElementById('feeMode').value=f.mode||'Cash';document.getElementById('feeReceiptNo').value=f.receiptNo||'';document.getElementById('feeRemarks').value=f.remarks||'';window.editingFeeId=f.id;showPage('fees');}
+function feeReceiptHTML(f){const s=db.students.find(x=>String(x.id)===String(f.studentId))||{},net=Math.max(0,Number(f.due)-Number(f.discount)),bal=Math.max(0,net-Number(f.paid));return `<div class="fee-receipt"><div class="fee-receipt-head"><h2>${esc(db.school.name)}</h2><div>${esc(db.school.address||'')}</div><h3>FEE RECEIPT</h3></div><div class="fee-receipt-meta"><div><b>Receipt No.</b><br>${esc(f.receiptNo)}</div><div><b>Date</b><br>${esc(f.date)}</div><div><b>Academic Year</b><br>${esc(f.year||'')}</div></div><table class="fee-table" style="margin-top:15px"><tr><th>Student</th><td>${esc(s.name)}</td><th>CTS ID</th><td>${esc(s.ctsId||'-')}</td></tr><tr><th>Class / Div.</th><td>${esc(s.std)} / ${esc(s.div)}</td><th>GR No.</th><td>${esc(s.gr||'-')}</td></tr><tr><th>Fee Type</th><td>${esc(f.feeType)}</td><th>Payment Mode</th><td>${esc(f.mode)}</td></tr><tr><th>Amount Due</th><td>${money(f.due)}</td><th>Discount</th><td>${money(f.discount)}</td></tr><tr><th>Amount Paid</th><td><b>${money(f.paid)}</b></td><th>Balance</th><td><b>${money(bal)}</b></td></tr></table><p><b>Remarks:</b> ${esc(f.remarks||'-')}</p><div style="display:flex;justify-content:space-between;margin-top:55px"><span>Parent / Student Signature</span><span>Cashier / School Stamp</span></div></div>`;}
+function printFeeReceipt(id){const f=(db.fees||[]).find(x=>String(x.id)===String(id));if(!f)return;document.getElementById('feeReceiptPreview').innerHTML=feeReceiptHTML(f);setTimeout(()=>window.print(),150);}
+function printFeeList(){const fees=(db.fees||[]).slice();const rows=fees.map(f=>{const s=db.students.find(x=>String(x.id)===String(f.studentId))||{},net=Math.max(0,Number(f.due)-Number(f.discount)),bal=Math.max(0,net-Number(f.paid));return `<tr><td>${esc(f.date)}</td><td>${esc(f.receiptNo)}</td><td>${esc(s.name)}</td><td>${esc(s.ctsId||'')}</td><td>${esc(f.feeType)}</td><td>${money(net)}</td><td>${money(f.paid)}</td><td>${money(bal)}</td><td>${esc(f.mode)}</td></tr>`}).join('');document.getElementById('feeReceiptPreview').innerHTML=`<div class="fee-receipt"><div class="fee-receipt-head"><h2>${esc(db.school.name)}</h2><h3>FEE COLLECTION REPORT</h3></div><table class="fee-table"><thead><tr><th>Date</th><th>Receipt</th><th>Student</th><th>CTS ID</th><th>Fee Type</th><th>Net Due</th><th>Paid</th><th>Balance</th><th>Mode</th></tr></thead><tbody>${rows}</tbody></table></div>`;setTimeout(()=>window.print(),150);}
+function renderResultPage(){
+  const examSel=document.getElementById('resultExam'); if(!examSel)return;
+  const cur=examSel.value; examSel.innerHTML=db.exams.map(e=>`<option value="${e.id}">${esc(e.subject)} - ${esc(e.date)}</option>`).join(''); if(cur)examSel.value=cur;
+  const stdSel=document.getElementById('resultStd'),divSel=document.getElementById('resultDiv');
+  const cs=stdSel.value,cd=divSel.value;
+  stdSel.innerHTML='<option value="">All</option>'+[...new Set(db.students.map(s=>s.std).filter(v=>v!==''&&v!=null))].sort((a,b)=>Number(a)-Number(b)).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');stdSel.value=cs;
+  divSel.innerHTML='<option value="">All</option>'+[...new Set(db.students.map(s=>s.div).filter(Boolean))].sort().map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');divSel.value=cd;
+  loadMarksTable(); renderResultStudents();
+}
+function currentResultExam(){return db.exams.find(e=>String(e.id)===String(document.getElementById('resultExam')?.value))||db.exams[0];}
+function loadMarksTable(){const ex=currentResultExam();if(!ex)return;document.getElementById('resultMaxMarks').value=ex.maxMarks??100;document.getElementById('resultPassMarks').value=ex.passMarks??33;const std=document.getElementById('resultStd').value,div=document.getElementById('resultDiv').value;const list=db.students.filter(s=>(!std||String(s.std)===String(std))&&(!div||String(s.div)===String(div))).sort((a,b)=>Number(a.roll)-Number(b.roll));const rec=db.results?.[String(ex.id)]||{};document.getElementById('marksTable').innerHTML=list.map(s=>{const r=rec[String(s.id)]||{};return `<tr data-student-id="${s.id}"><td>${esc(s.roll)}</td><td>${esc(s.ctsId||'')}</td><td style="text-align:left">${esc(s.name)}</td><td><input class="marks-input result-mark" type="number" min="0" max="${Number(ex.maxMarks)||100}" value="${r.marks??''}"></td><td><input class="result-remark" value="${esc(r.remarks||'')}"></td></tr>`}).join('')||'<tr><td colspan="5" class="muted">No students found.</td></tr>';}
+function saveMarks(){const ex=currentResultExam();if(!ex)return;ex.maxMarks=Math.max(1,Number(document.getElementById('resultMaxMarks').value)||100);ex.passMarks=Math.max(0,Number(document.getElementById('resultPassMarks').value)||0);db.results=db.results||{};db.results[String(ex.id)]=db.results[String(ex.id)]||{};document.querySelectorAll('#marksTable tr[data-student-id]').forEach(tr=>{const id=tr.dataset.studentId,m=tr.querySelector('.result-mark').value,remarks=tr.querySelector('.result-remark').value.trim();db.results[String(ex.id)][String(id)]={marks:m===''?'':Number(m),remarks};});saveDB();alert('Marks saved successfully.');}
+function renderResultStudents(){const sel=document.getElementById('resultStudent');if(!sel)return;const cur=sel.value;sel.innerHTML=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(s=>`<option value="${s.id}">${esc(s.roll)} - ${esc(s.name)}${s.ctsId?' | CTS: '+esc(s.ctsId):''}</option>`).join('');if(cur)sel.value=cur;}
+function gradeFor(p){if(p>=90)return'A+';if(p>=80)return'A';if(p>=70)return'B+';if(p>=60)return'B';if(p>=50)return'C';if(p>=33)return'D';return'F';}
+function resultHTML(s){const rows=db.exams.map(e=>{const rec=(db.results?.[String(e.id)]||{})[String(s.id)]||{};const marks=rec.marks===''||rec.marks==null?'':Number(rec.marks);return {e,marks,remarks:rec.remarks||''};});const valid=rows.filter(x=>x.marks!=='');const total=valid.reduce((a,x)=>a+x.marks,0),max=valid.reduce((a,x)=>a+(Number(x.e.maxMarks)||100),0),pct=max?total/max*100:0,failed=valid.some(x=>x.marks<(Number(x.e.passMarks)||33)),status=valid.length===rows.length&&!failed?'PASS':(failed?'FAIL':'INCOMPLETE');return `<div class="result-sheet"><div class="result-head">${db.customize.logo?`<img src="${db.customize.logo}" style="max-height:65px;max-width:120px"><br>`:''}<div>${esc(db.school.name)}</div><h2>${esc(db.school.examName)} — RESULT</h2><div>${esc(db.school.address)}</div></div><div class="result-meta"><div><b>Name</b><br>${esc(s.name)}</div><div><b>Roll No.</b><br>${esc(s.roll)}</div><div><b>CTS ID</b><br>${esc(s.ctsId||'-')}</div><div><b>Standard / Div.</b><br>${esc(s.std)} / ${esc(s.div)}</div></div><table class="result-table"><thead><tr><th>Subject</th><th>Date</th><th>Max</th><th>Pass</th><th>Marks</th><th>Remarks</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.e.subject)}</td><td>${esc(x.e.date)}</td><td>${Number(x.e.maxMarks)||100}</td><td>${Number(x.e.passMarks)||33}</td><td>${x.marks===''?'-':x.marks}</td><td>${esc(x.remarks)}</td></tr>`).join('')}</tbody></table><div class="result-total"><div><b>Total:</b> ${total} / ${max || '-'} &nbsp; | &nbsp; <b>Percentage:</b> ${max?pct.toFixed(2):'-'}% &nbsp; | &nbsp; <span class="result-grade">${status}</span> ${max?' | Grade: '+gradeFor(pct):''}</div></div><div style="display:flex;justify-content:space-between;margin-top:45px"><div>Class Teacher</div><div>${esc(db.customize.principal||'Principal')}<br><br>Principal Signature</div></div></div>`;}
+function studentResultHTML(s){return resultHTML(s);}
+function previewResult(){const s=db.students.find(x=>String(x.id)===String(document.getElementById('resultStudent').value));if(s)document.getElementById('resultPreview').innerHTML=resultHTML(s);}
+function printResult(){previewResult();setTimeout(()=>window.print(),200);}
+function printAllResults(){if(!db.students.length)return;document.getElementById('resultPreview').innerHTML=db.students.map(resultHTML).join('');setTimeout(()=>window.print(),250);}
+function showStudentPortalResult(id){const s=db.students.find(x=>x.id===id);if(s)document.getElementById('portalStudentOutput').innerHTML=resultHTML(s);}
+function showStudentPortalHallTicket(id){const s=db.students.find(x=>x.id===id);if(!s)return;document.getElementById('portalStudentOutput').innerHTML=ticketHTML(s);if(window.QRCode&&db.customize.showQR!==false){const q=document.getElementById('qr-'+s.id);if(q)new QRCode(q,{text:hallTicketQRData(s),width:90,height:90});}}
+document.getElementById('btnPortalSearch')?.addEventListener('click',()=>{const cts=(document.getElementById('portalCTS')?.value||'').trim().toLowerCase(),roll=portalRoll.value.trim(),gr=portalGR.value.trim();const s=db.students.find(x=>(cts&&String(x.ctsId||'').toLowerCase()===cts)||(!cts&&String(x.roll)===roll&&(!gr||String(x.gr)===gr)));if(!s){portalResult.innerHTML='<div class="danger-text">Student not found. CTS ID / Roll No. check કરો.</div>';return;}const r=studentResultHTML(s);portalResult.innerHTML='<div class="card"><div class="btn-row"><button class="btn btn-primary" onclick="showStudentPortalHallTicket('+s.id+')">🎫 Hall Ticket</button><button class="btn btn-green" onclick="showStudentPortalResult('+s.id+')">📊 Result</button></div><div id="portalStudentOutput" style="margin-top:14px"></div></div>';window._portalStudentId=s.id;});
+document.getElementById('btnLogout')?.addEventListener('click',()=>{sessionStorage.removeItem(SESSION_KEY);location.reload();});
+function requireLogin(){if(new URLSearchParams(location.search).get('portal')==='1'){document.body.classList.add('portal-mode');showPage('portal');return;}const pw=db.customize?.adminPassword||'1234';if(sessionStorage.getItem(SESSION_KEY)==='1')return;loginOverlay.classList.remove('hidden');adminPassword.focus();}const closeAdminLogin=()=>{loginOverlay.classList.add('hidden');loginError.textContent='';};btnCloseLogin?.addEventListener('click',closeAdminLogin);btnCloseLogin2?.addEventListener('click',closeAdminLogin);btnLogin.addEventListener('click',()=>{if(adminPassword.value===(db.customize?.adminPassword||'1234')){sessionStorage.setItem(SESSION_KEY,'1');loginOverlay.classList.add('hidden');loginError.textContent='';}else loginError.textContent='Incorrect password.';});adminPassword.addEventListener('keydown',e=>{if(e.key==='Enter')btnLogin.click();});
+
+renderAll();showPage('dashboard');renderAllocations();renderResultPage();requireLogin();
+</script>
+</body>
+</html>

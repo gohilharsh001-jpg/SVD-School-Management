@@ -1,0 +1,3 @@
+-- Initial application release marker.
+-- Existing tables are created by supabase_schema.sql.
+-- This migration intentionally makes no destructive changes.

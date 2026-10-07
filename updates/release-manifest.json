@@ -1,0 +1,7 @@
+{
+  "currentVersion": "1.0.0",
+  "minimumSupportedSchema": 1,
+  "migrationDirectory": "updates/migrations",
+  "rollbackPolicy": "application-files-only-first",
+  "dataPolicy": "never-delete-production-data-during-app-update"
+}
