@@ -140,7 +140,7 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
         <h3 class="section-title">🗂️ School Student Database Management</h3>
         <p class="muted">એક જ databaseમાંથી student profile, CTS ID, class/division, parent/contact details અને admission status manage કરો. આ માહિતી Hall Ticket અને Result સાથે જોડાયેલી રહેશે.</p>
         <div class="searchbar">
-          <input id="dbSearch" placeholder="Search Name / CTS ID / GR / Roll / Admission No. / Parent Mobile">
+          <input id="dbSearch" placeholder="Search Name / CTS ID / GR / Roll / Parent Mobile">
           <select id="dbStd"><option value="">All Standards</option></select>
           <select id="dbDiv"><option value="">All Divisions</option></select>
           <select id="dbStatus"><option value="">All Status</option><option>Active</option><option>Left School</option><option>Alumni</option><option>Inactive</option></select>
@@ -158,7 +158,7 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
         <div class="stat"><b id="dbWithCTS">0</b><span>CTS ID Added</span></div>
         <div class="stat"><b id="dbWithPhoto">0</b><span>Photos Added</span></div>
       </div>
-      <div class="card"><div class="table-wrap"><table id="dbTable"><thead><tr><th>Roll</th><th>Student Name</th><th>Std</th><th>Div</th><th>Admission No.</th><th>GR No.</th><th>CTS ID</th><th>DOB</th><th>Gender</th><th>Parent / Guardian</th><th>Parent Mobile</th><th>Status</th><th>Actions</th></tr></thead><tbody id="dbTableBody"></tbody></table></div></div>
+      <div class="card"><div class="table-wrap"><table id="dbTable"><thead><tr><th>Roll</th><th>Student Name</th><th>Std</th><th>Div</th><th>GR No.</th><th>CTS ID</th><th>DOB</th><th>Gender</th><th>Parent / Guardian</th><th>Parent Mobile</th><th>Status</th><th>Actions</th></tr></thead><tbody id="dbTableBody"></tbody></table></div></div>
     </section>
 
     <section id="page-students" class="hidden">
@@ -170,16 +170,15 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
           <div><label id="lblDivision">Division</label><input id="sDiv" value="A"></div>
           <div><label id="lblRollNo">Roll No.</label><input id="sRoll" type="number"></div>
           <div><label id="lblGRNo">GR No.</label><input id="sGR" type="number"></div>
-          <div><label id="lblMobile">Student Mobile</label><input id="sMobile"></div>
-          <div><label id="lblCTSId">CTS ID</label><input id="sCTSId" placeholder="Unique CTS ID"></div>
-          <div><label>Admission No.</label><input id="sAdmissionNo"></div>
+          <div><label id="lblMobile">Student Mobile</label><input id="sMobile" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" placeholder="10 digit mobile"></div>
+          <div><label id="lblCTSId">CTS ID</label><input id="sCTSId" inputmode="numeric" maxlength="18" pattern="[0-9]{18}" placeholder="18 digit CTS ID"></div>
           <div><label>Date of Birth</label><input id="sDOB" type="date"></div>
           <div><label>Gender</label><select id="sGender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
           <div><label>Category</label><select id="sCategory"><option value="">Select</option><option>General</option><option>OBC</option><option>SEBC</option><option>SC</option><option>ST</option><option>EWS</option><option>Other</option></select></div>
           <div><label>Religion</label><select id="sReligion"><option value="">Select</option><option>Hindu</option><option>Muslim</option><option>Christian</option><option>Sikh</option><option>Jain</option><option>Buddhist</option><option>Other</option></select></div>
           <div><label>Village</label><input id="sVillage" placeholder="Village / City"></div>
           <div><label>Parent / Guardian</label><input id="sParent"></div>
-          <div><label>Parent Mobile</label><input id="sParentMobile"></div>
+          <div><label>Parent Mobile</label><input id="sParentMobile" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" placeholder="10 digit mobile"></div>
           <div><label>Emergency Contact</label><input id="sEmergency"></div>
           <div><label>Address</label><input id="sAddress"></div>
           <div><label>Email</label><input id="sEmail" type="email"></div>
@@ -210,7 +209,7 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
       <div id="pasteBox" class="card hidden">
         <h3 class="section-title">Paste Student Data from Excel</h3>
         <div class="muted">Excelમાં rows select કરો અને Copy (Ctrl+C) → અહીં Paste (Ctrl+V). Header હોવો જરૂરી નથી.</div>
-        <textarea id="studentPaste" placeholder="Student Name&#9;Std&#9;Div&#9;Roll No&#9;GR No&#9;Mobile&#9;CTS ID&#9;Admission No.&#9;DOB&#9;Gender&#9;Category&#9;Religion&#9;Village&#9;Parent/Guardian&#9;Parent Mobile&#9;Address&#9;Status&#9;Photo File Name"></textarea>
+        <textarea id="studentPaste" placeholder="Student Name&#9;Std&#9;Div&#9;Roll No&#9;GR No&#9;Mobile&#9;CTS ID&#9;DOB&#9;Gender&#9;Category&#9;Religion&#9;Village&#9;Parent/Guardian&#9;Parent Mobile&#9;Address&#9;Status&#9;Photo File Name"></textarea>
         <div class="btn-row">
           <button class="btn btn-green" id="btnPasteImport">Import Rows</button>
         </div>
@@ -241,8 +240,9 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
           <div><label id="lblExamDate">Exam Date</label><input id="eDate"></div>
           <div><label id="lblTime">Time</label><input id="eTime"></div>
           <div><label id="lblSubject">Subject</label><input id="eSubject"></div>
-          <div><label>Standard</label><input id="eStd" type="number"></div>
-          <div><label>Division</label><input id="eDiv" value="A"></div>
+          <div><label>Standard / Schedule Group</label><select id="eStd"><option value="">All Standards</option><option value="9">Std 9</option><option value="10">Std 10</option><option value="11">Std 11</option><option value="12">Std 12</option></select></div>
+          <div><label>Division</label><input id="eDiv" value="A" placeholder="A / B / All"></div>
+          <div><label>Test / Exam Type</label><select id="eType"><option>Exam</option><option>Unit Test</option><option>Test Paper</option><option>Periodic Test</option><option>Other</option></select></div>
           <div><label>Room No.</label><input id="eRoom" placeholder="101"></div>
           <div><label>Seat Start</label><input id="eSeatStart" type="number" value="1"></div>
         </div>
@@ -255,15 +255,22 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
 
       <div id="examPasteBox" class="card hidden">
         <h3 class="section-title">Paste Exam Schedule from Excel</h3>
-        <textarea id="examPaste" placeholder="22-10-2026&#9;9:30 am To 12:30 pm&#9;MATHS"></textarea>
+        <textarea id="examPaste" placeholder="Date&#9;Time&#9;Subject&#9;Standard(9/10/11/12)&#9;Division&#9;Type"></textarea>
         <div class="btn-row"><button class="btn btn-green" id="btnExamPasteImport">Import Rows</button></div>
       </div>
 
       <div class="card"><div class="notice">Exam-wise Hall Ticket: દરેક examમાં Standard, Division અને Room/Seat માહિતી રાખી શકાય છે.</div></div>
+      <div class="card no-print">
+        <div class="searchbar">
+          <label style="display:flex;align-items:center;gap:8px;font-weight:700">View Schedule:
+            <select id="scheduleStdFilter"><option value="">All Standards</option><option value="9">Std 9</option><option value="10">Std 10</option><option value="11">Std 11</option><option value="12">Std 12</option></select>
+          </label>
+        </div>
+      </div>
       <div class="card">
-        <h3 class="section-title">Current Exam Schedule</h3>
+        <h3 class="section-title">Current Exam / Test Schedule</h3>
         <div class="table-wrap">
-          <table><thead><tr><th>#</th><th>Date</th><th>Time</th><th>Subject</th><th>Std/Div</th><th>Room</th><th>Action</th></tr></thead>
+          <table><thead><tr><th>#</th><th>Date</th><th>Time</th><th>Subject</th><th>Type</th><th>Std/Div</th><th>Room</th><th>Action</th></tr></thead>
           <tbody id="examTable"></tbody></table>
         </div>
       </div>
@@ -278,6 +285,12 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
           <div style="grid-column:1/-1"><label id="lblAddress">Address</label><input id="schoolAddress"></div>
           <div><label id="lblExamName">Exam Name</label><input id="examName"></div>
           <div><label id="lblPrincipal">Principal</label><input id="principal"></div>
+          <div>
+            <label>Principal Signature</label>
+            <input id="principalSignature" type="file" accept="image/png,image/jpeg,image/webp">
+            <div class="muted">અહીં signature upload કરો. Hall Ticketમાં Principal Signatureની જગ્યાએ automatic આવશે.</div>
+            <div><img id="principalSignaturePreview" class="hidden" style="max-height:70px;max-width:180px;margin-top:8px;border:1px solid #ccc;padding:4px;background:#fff"></div>
+          </div>
           <div style="grid-column:1/-1"><label id="lblFooterInstruction">Footer Instruction</label><textarea id="footerInstruction"></textarea></div>
         </div>
         <div class="btn-row"><button class="btn btn-primary" id="btnSaveSchool">Save Settings</button></div>
@@ -376,7 +389,7 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
 
     <section id="page-results" class="hidden">
       <div class="card">
-        <h3 class="section-title">📊 Result & Marks Entry</h3>
+        <h3 class="section-title">📊 Result / Test Marks / Marksheet</h3>
         <div class="grid">
           <div><label>Exam / Subject</label><select id="resultExam"></select></div>
           <div><label>Standard</label><select id="resultStd"><option value="">All</option></select></div>
@@ -384,13 +397,14 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
           <div><label>Max Marks</label><input id="resultMaxMarks" type="number" min="1" value="100"></div>
           <div><label>Pass Marks</label><input id="resultPassMarks" type="number" min="0" value="33"></div>
         </div>
-        <div class="result-actions" style="margin-top:12px"><button class="btn btn-primary" id="btnLoadMarks">Load Students</button><button class="btn btn-green" id="btnSaveMarks">💾 Save Marks</button><button class="btn btn-light" id="btnResultPrintAll">🖨️ Print All Results</button></div>
+        <div class="result-actions" style="margin-top:12px"><button class="btn btn-primary" id="btnLoadMarks">Load Students</button><button class="btn btn-green" id="btnSaveMarks">💾 Save Marks</button><button class="btn btn-light" id="btnResultPrintAll">🖨️ Print All Results</button><button class="btn btn-light" id="btnPrintTestReport">🧾 Print Test Report</button></div>
         <div class="muted">Admin અહીંથી marks ઉમેરવા/સુધારવા શકે છે. Marks save થયા પછી Result Printમાં બધા subjectsનું કુલ, percentage, grade અને Pass/Fail દેખાશે.</div>
       </div>
       <div class="card"><div class="table-wrap"><table><thead><tr><th>Roll</th><th>CTS ID</th><th>Student Name</th><th>Marks</th><th>Remarks</th></tr></thead><tbody id="marksTable"></tbody></table></div></div>
       <div class="card">
         <h3 class="section-title">🖨️ Student Result Print</h3>
-        <div class="searchbar"><select id="resultStudent"></select><button class="btn btn-primary" id="btnPreviewResult">Preview Result</button><button class="btn btn-light" id="btnPrintResult">Print Result</button></div>
+        <div class="searchbar"><select id="resultStudent"></select><button class="btn btn-primary" id="btnPreviewResult">Preview Result</button><button class="btn btn-light" id="btnPrintResult">Print Result</button><button class="btn btn-green" id="btnWhatsAppResult">📱 WhatsApp Result</button></div>
+        <div class="muted" style="margin-top:8px">Mobile પર direct WhatsApp માટે student/parent mobile number જરૂરી છે. Button WhatsApp chat link ખોલશે; message મોકલવા માટે final Send તમે confirm કરશો.</div>
       </div>
       <div id="resultPreview" style="margin-top:12px"></div>
     </section>
@@ -469,7 +483,34 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
         <div class="muted" style="margin-top:8px">નોંધ: આ standalone HTMLમાં password browser-local છે. Production security માટે server-side authentication જરૂરી છે.</div>
       </div>
       <div class="card">
-        <h3 class="section-title">6. Show / Hide Fields</h3>
+        <h3 class="section-title">6. Student Entry — Manual Show / Hide Fields</h3>
+        <p class="muted">Student Entryમાં કયા fields રાખવા કે hide કરવા તે અહીંથી manually પસંદ કરો.</p>
+        <div class="grid-4" id="studentFieldVisibilityBox">
+          <label class="check"><input type="checkbox" data-student-field="sName" checked> Student Name</label>
+          <label class="check"><input type="checkbox" data-student-field="sStd" checked> Standard</label>
+          <label class="check"><input type="checkbox" data-student-field="sDiv" checked> Division</label>
+          <label class="check"><input type="checkbox" data-student-field="sRoll" checked> Roll No.</label>
+          <label class="check"><input type="checkbox" data-student-field="sGR" checked> GR No.</label>
+          <label class="check"><input type="checkbox" data-student-field="sMobile" checked> Student Mobile</label>
+          <label class="check"><input type="checkbox" data-student-field="sCTSId" checked> CTS ID</label>
+          <label class="check"><input type="checkbox" data-student-field="sDOB" checked> Date of Birth</label>
+          <label class="check"><input type="checkbox" data-student-field="sGender" checked> Gender</label>
+          <label class="check"><input type="checkbox" data-student-field="sCategory" checked> Category</label>
+          <label class="check"><input type="checkbox" data-student-field="sReligion" checked> Religion</label>
+          <label class="check"><input type="checkbox" data-student-field="sVillage" checked> Village</label>
+          <label class="check"><input type="checkbox" data-student-field="sParent" checked> Parent / Guardian</label>
+          <label class="check"><input type="checkbox" data-student-field="sParentMobile" checked> Parent Mobile</label>
+          <label class="check"><input type="checkbox" data-student-field="sEmergency" checked> Emergency Contact</label>
+          <label class="check"><input type="checkbox" data-student-field="sAddress" checked> Address</label>
+          <label class="check"><input type="checkbox" data-student-field="sEmail" checked> Email</label>
+          <label class="check"><input type="checkbox" data-student-field="sBlood" checked> Blood Group</label>
+          <label class="check"><input type="checkbox" data-student-field="sAdmissionDate" checked> Admission Date</label>
+          <label class="check"><input type="checkbox" data-student-field="sStatus" checked> Status</label>
+          <label class="check"><input type="checkbox" data-student-field="sPhoto" checked> Student Photo</label>
+        </div>
+      </div>
+      <div class="card">
+        <h3 class="section-title">7. Hall Ticket Show / Hide Fields</h3>
         <div class="grid-4">
           <label class="check"><input type="checkbox" id="cShowDiv"> Division</label>
           <label class="check"><input type="checkbox" id="cShowGR"> GR No.</label>
@@ -608,7 +649,7 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
 const STORAGE_KEY='hall_ticket_free_db_v3';
 const SESSION_KEY='hall_ticket_admin_session_v1';
 
-const defaultCustomize={navDashboard:'🏠 Dashboard',navRooms:'🪑 Rooms / Seats',navPortal:'🌐 Student Portal',navStudents:'👨‍🎓 Student Entry',navDatabase:'🗂️ Student Database',navFees:'💰 Fee Collection',navResults:'📊 Result / Marks',navSchedule:'📅 Exam Schedule',navSchool:'🏫 School Settings',navTicket:'🎫 Hall Ticket',navHallReceipt:'✍️ Hall Ticket Receipt',navBackup:'💾 Backup / Import',navOnline:'☁️ Online Sync',navCustomize:'⚙️ Customize / Settings',btnSaveStudent:'Save Student',btnClear:'Clear',btnBulk:'Bulk Photos',btnPaste:'Paste from Excel',btnAddExam:'Add Exam',btnPrintCurrent:'Print Current',btnPrintAll:'Print All',studentName:'Student Name',standard:'Standard',division:'Division',rollNo:'Roll No.',grNo:'GR No.',mobile:'Student Mobile',ctsId:'CTS ID',studentPhoto:'Student Photo',examDate:'Exam Date',time:'Time',subject:'Subject',schoolName:'School Name',schoolPhone:'School Phone',address:'Address',examName:'Exam Name',principal:'Principal',footer:'Footer Instruction',ticketTitle:'',scheduleTitle:'EXAM SCHEDULE',photoPlaceholder:'STUDENT|PHOTO',supervisor:'Supervisor Sign',primaryColor:'#1f4e78',darkColor:'#17365d',greenColor:'#70ad47',lightColor:'#eaf3f8',font:'Nirmala UI,Segoe UI,Arial,sans-serif',ticketFont:12,logo:null,showDiv:true,showGR:true,showMobile:true,showPhoto:true,showQR:true,adminPassword:'1234',autoRoll:true,portal:true};
+const defaultCustomize={navDashboard:'🏠 Dashboard',navRooms:'🪑 Rooms / Seats',navPortal:'🌐 Student Portal',navStudents:'👨‍🎓 Student Entry',navDatabase:'🗂️ Student Database',navFees:'💰 Fee Collection',navResults:'📊 Result / Marks',navSchedule:'📅 Exam Schedule',navSchool:'🏫 School Settings',navTicket:'🎫 Hall Ticket',navHallReceipt:'✍️ Hall Ticket Receipt',navBackup:'💾 Backup / Import',navOnline:'☁️ Online Sync',navCustomize:'⚙️ Customize / Settings',btnSaveStudent:'Save Student',btnClear:'Clear',btnBulk:'Bulk Photos',btnPaste:'Paste from Excel',btnAddExam:'Add Exam',btnPrintCurrent:'Print Current',btnPrintAll:'Print All',studentName:'Student Name',standard:'Standard',division:'Division',rollNo:'Roll No.',grNo:'GR No.',mobile:'Student Mobile',ctsId:'CTS ID',studentPhoto:'Student Photo',examDate:'Exam Date',time:'Time',subject:'Subject',schoolName:'School Name',schoolPhone:'School Phone',address:'Address',examName:'Exam Name',principal:'Principal',footer:'Footer Instruction',ticketTitle:'',scheduleTitle:'EXAM SCHEDULE',photoPlaceholder:'STUDENT|PHOTO',supervisor:'Supervisor Sign',primaryColor:'#1f4e78',darkColor:'#17365d',greenColor:'#70ad47',lightColor:'#eaf3f8',font:'Nirmala UI,Segoe UI,Arial,sans-serif',ticketFont:12,logo:null,showDiv:true,showGR:true,showMobile:true,showPhoto:true,showQR:true,adminPassword:'1234',autoRoll:true,portal:true,studentFields:{name:true,std:true,div:true,roll:true,gr:true,mobile:true,ctsId:true,dob:true,gender:true,category:true,religion:true,village:true,parent:true,parentMobile:true,emergency:true,address:true,email:true,blood:true,admissionDate:true,status:true,photo:true}};
 
 const demo = {
   school:{
@@ -624,13 +665,13 @@ const demo = {
     {id:2,name:'Rathod Hetalben Dineshbhai',std:9,div:'A',roll:2,gr:2,mobile:'6353682122',photo:null,photoFileName:''}
   ],
   exams:[
-    {id:1,date:'22-10-2026',time:'9:30 am To 12:30 pm',subject:'MATHS'},
-    {id:2,date:'23-10-2026',time:'9:30 am To 12:30 pm',subject:'GUJARATI'},
-    {id:3,date:'24-10-2026',time:'8:30 am To 11:30 am',subject:'HINDI'},
-    {id:4,date:'26-10-2026',time:'9:30 am To 12:30 pm',subject:'SCIENCE'},
-    {id:5,date:'27-10-2026',time:'9:30 am To 12:30 pm',subject:'ENGLISH'},
-    {id:6,date:'28-10-2026',time:'9:30 am To 12:30 pm',subject:'SOCIAL SCIENCE'},
-    {id:7,date:'29-10-2026',time:'9:30 am To 12:30 pm',subject:'SANSKRIT'}
+    {id:1,date:'22-10-2026',time:'9:30 am To 12:30 pm',subject:'MATHS',std:'9',div:'A',type:'Exam'},
+    {id:2,date:'23-10-2026',time:'9:30 am To 12:30 pm',subject:'GUJARATI',std:'9',div:'A',type:'Exam'},
+    {id:3,date:'24-10-2026',time:'8:30 am To 11:30 am',subject:'HINDI',std:'9',div:'A',type:'Exam'},
+    {id:4,date:'26-10-2026',time:'9:30 am To 12:30 pm',subject:'SCIENCE',std:'9',div:'A',type:'Exam'},
+    {id:5,date:'27-10-2026',time:'9:30 am To 12:30 pm',subject:'ENGLISH',std:'9',div:'A',type:'Exam'},
+    {id:6,date:'28-10-2026',time:'9:30 am To 12:30 pm',subject:'SOCIAL SCIENCE',std:'9',div:'A',type:'Exam'},
+    {id:7,date:'29-10-2026',time:'9:30 am To 12:30 pm',subject:'SANSKRIT',std:'9',div:'A',type:'Exam'}
   ]
 };
 
@@ -642,10 +683,10 @@ function loadDB(){
   try{
     const s=localStorage.getItem(STORAGE_KEY)||localStorage.getItem('hall_ticket_free_db_v2');
     const old=s?JSON.parse(s):structuredClone(demo);
-    old.customize={...structuredClone(defaultCustomize),...(old.customize||{})};
+    old.customize={...structuredClone(defaultCustomize),...(old.customize||{})}; old.customize.studentFields={...structuredClone(defaultCustomize.studentFields),...(old.customize.studentFields||{})};
     old.students=Array.isArray(old.students)?old.students:[]; old.exams=Array.isArray(old.exams)?old.exams:[];
     old.rooms=Array.isArray(old.rooms)?old.rooms:[];
-    old.generated=Array.isArray(old.generated)?old.generated:[]; old.busFees=Array.isArray(old.busFees)?old.busFees:[]; old.results=(old.results&&typeof old.results==='object')?old.results:{}; old.fees=Array.isArray(old.fees)?old.fees:[]; old.students.forEach(st=>{if(st.ctsId===undefined)st.ctsId='';if(st.admissionNo===undefined)st.admissionNo='';if(st.dob===undefined)st.dob='';if(st.gender===undefined)st.gender='';if(st.parent===undefined)st.parent='';if(st.parentMobile===undefined)st.parentMobile='';if(st.emergency===undefined)st.emergency='';if(st.address===undefined)st.address='';if(st.email===undefined)st.email='';if(st.blood===undefined)st.blood='';if(st.admissionDate===undefined)st.admissionDate='';if(st.status===undefined)st.status='Active';if(st.category===undefined)st.category='';if(st.religion===undefined)st.religion='';if(st.village===undefined)st.village='';}); old.exams.forEach(ex=>{if(ex.maxMarks===undefined)ex.maxMarks=100;if(ex.passMarks===undefined)ex.passMarks=33;});
+    old.generated=Array.isArray(old.generated)?old.generated:[]; old.busFees=Array.isArray(old.busFees)?old.busFees:[]; old.results=(old.results&&typeof old.results==='object')?old.results:{}; old.fees=Array.isArray(old.fees)?old.fees:[]; old.students.forEach(st=>{delete st.admissionNo;if(st.ctsId===undefined)st.ctsId='';delete st.admissionNo;if(st.dob===undefined)st.dob='';if(st.gender===undefined)st.gender='';if(st.parent===undefined)st.parent='';if(st.parentMobile===undefined)st.parentMobile='';if(st.emergency===undefined)st.emergency='';if(st.address===undefined)st.address='';if(st.email===undefined)st.email='';if(st.blood===undefined)st.blood='';if(st.admissionDate===undefined)st.admissionDate='';if(st.status===undefined)st.status='Active';if(st.category===undefined)st.category='';if(st.religion===undefined)st.religion='';if(st.village===undefined)st.village='';}); old.exams.forEach(ex=>{if(ex.maxMarks===undefined)ex.maxMarks=100;if(ex.passMarks===undefined)ex.passMarks=33;if(ex.type===undefined)ex.type='Exam';});
     return old;
   }catch(e){ const d=structuredClone(demo); d.customize=structuredClone(defaultCustomize); return d; }
 }
@@ -676,6 +717,8 @@ function applyCustomize(){
   document.documentElement.style.setProperty('--blue',c.primaryColor);document.documentElement.style.setProperty('--blue2',c.darkColor);document.documentElement.style.setProperty('--green',c.greenColor);document.documentElement.style.setProperty('--light',c.lightColor);document.body.style.fontFamily=c.font;
   const show=(id,on)=>{const e=document.getElementById(id);if(e)e.classList.toggle('hidden',!on);};
   show('lblDivision',c.showDiv);show('sDiv',c.showDiv);show('lblGRNo',c.showGR);show('sGR',c.showGR);show('lblMobile',c.showMobile);show('sMobile',c.showMobile);show('lblStudentPhoto',c.showPhoto);show('sPhoto',c.showPhoto);
+  const sf=c.studentFields||defaultCustomize.studentFields;const sfMap={name:'sName',std:'sStd',div:'sDiv',roll:'sRoll',gr:'sGR',mobile:'sMobile',ctsId:'sCTSId',dob:'sDOB',gender:'sGender',category:'sCategory',religion:'sReligion',village:'sVillage',parent:'sParent',parentMobile:'sParentMobile',emergency:'sEmergency',address:'sAddress',email:'sEmail',blood:'sBlood',admissionDate:'sAdmissionDate',status:'sStatus',photo:'sPhoto'};
+  Object.entries(sfMap).forEach(([key,id])=>{const el=document.getElementById(id);if(!el)return;const wrap=el.closest('.grid>div')||el.parentElement;if(wrap)wrap.classList.toggle('hidden',sf[key]===false);});
   const qrNav=document.getElementById('navPortal');if(qrNav)qrNav.classList.toggle('hidden',c.portal===false);
   const logo=document.getElementById('logoPreview');if(logo){logo.src=c.logo||'';logo.classList.toggle('hidden',!c.logo);}
 }
@@ -685,13 +728,16 @@ function loadCustomizeForm(){
   Object.entries(map).forEach(([id,key])=>setVal(id,c[key]));
   ['cShowDiv','cShowGR','cShowMobile','cShowPhoto','cShowQR'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.checked=[c.showDiv,c.showGR,c.showMobile,c.showPhoto,c.showQR][i];});
   setVal('cAdminPassword',c.adminPassword||'1234');setVal('cAutoRoll',String(c.autoRoll!==false));setVal('cPortal',String(c.portal!==false));
+  document.querySelectorAll('[data-student-field]').forEach(el=>{const key=el.dataset.studentField;const mapKey={sName:'name',sStd:'std',sDiv:'div',sRoll:'roll',sGR:'gr',sMobile:'mobile',sCTSId:'ctsId',sDOB:'dob',sGender:'gender',sCategory:'category',sReligion:'religion',sVillage:'village',sParent:'parent',sParentMobile:'parentMobile',sEmergency:'emergency',sAddress:'address',sEmail:'email',sBlood:'blood',sAdmissionDate:'admissionDate',sStatus:'status',sPhoto:'photo'}[key];el.checked=c.studentFields?.[mapKey]!==false;});
   const lp=document.getElementById('logoPreview');lp.src=c.logo||'';lp.classList.toggle('hidden',!c.logo);
 }
 function saveCustomize(){
   const c={};
   const map={cNavDashboard:'navDashboard',cNavStudents:'navStudents',cNavDatabase:'navDatabase',cNavResults:'navResults',cNavSchedule:'navSchedule',cNavSchool:'navSchool',cNavTicket:'navTicket',cNavBackup:'navBackup',cNavCustomize:'navCustomize',cBtnSaveStudent:'btnSaveStudent',cBtnClear:'btnClear',cBtnBulk:'btnBulk',cBtnPaste:'btnPaste',cBtnAddExam:'btnAddExam',cBtnPrintCurrent:'btnPrintCurrent',cBtnPrintAll:'btnPrintAll',cStudentName:'studentName',cStandard:'standard',cDivision:'division',cRollNo:'rollNo',cGRNo:'grNo',cMobile:'mobile',cCTSId:'ctsId',cStudentPhoto:'studentPhoto',cExamDate:'examDate',cTime:'time',cSubject:'subject',cSchoolName:'schoolName',cSchoolPhone:'schoolPhone',cAddress:'address',cExamName:'examName',cPrincipal:'principal',cFooter:'footer',cTicketTitle:'ticketTitle',cScheduleTitle:'scheduleTitle',cPhotoPlaceholder:'photoPlaceholder',cSupervisor:'supervisor',cPrimaryColor:'primaryColor',cDarkColor:'darkColor',cGreenColor:'greenColor',cLightColor:'lightColor',cFont:'font',cTicketFont:'ticketFont'};
   Object.entries(map).forEach(([id,key])=>c[key]=document.getElementById(id).value);
-  c.ticketFont=Math.max(10,Math.min(24,Number(c.ticketFont)||12));c.showDiv=document.getElementById('cShowDiv').checked;c.showGR=document.getElementById('cShowGR').checked;c.showMobile=document.getElementById('cShowMobile').checked;c.showPhoto=document.getElementById('cShowPhoto').checked;c.showQR=document.getElementById('cShowQR').checked;c.adminPassword=document.getElementById('cAdminPassword').value||'1234';c.autoRoll=document.getElementById('cAutoRoll').value==='true';c.portal=document.getElementById('cPortal').value==='true';c.logo=db.customize?.logo||null;
+  c.ticketFont=Math.max(10,Math.min(24,Number(c.ticketFont)||12));c.studentFields={...structuredClone(defaultCustomize.studentFields)};
+  document.querySelectorAll('[data-student-field]').forEach(el=>{const key={sName:'name',sStd:'std',sDiv:'div',sRoll:'roll',sGR:'gr',sMobile:'mobile',sCTSId:'ctsId',sDOB:'dob',sGender:'gender',sCategory:'category',sReligion:'religion',sVillage:'village',sParent:'parent',sParentMobile:'parentMobile',sEmergency:'emergency',sAddress:'address',sEmail:'email',sBlood:'blood',sAdmissionDate:'admissionDate',sStatus:'status',sPhoto:'photo'}[el.dataset.studentField];if(key)c.studentFields[key]=el.checked;});
+  c.showDiv=document.getElementById('cShowDiv').checked;c.showGR=document.getElementById('cShowGR').checked;c.showMobile=document.getElementById('cShowMobile').checked;c.showPhoto=document.getElementById('cShowPhoto').checked;c.showQR=document.getElementById('cShowQR').checked;c.adminPassword=document.getElementById('cAdminPassword').value||'1234';c.autoRoll=document.getElementById('cAutoRoll').value==='true';c.portal=document.getElementById('cPortal').value==='true';c.logo=db.customize?.logo||null;
   db.customize={...structuredClone(defaultCustomize),...c};saveDB();alert('Customization saved. હવે Hall Ticket અને labelsમાં પણ આ ફેરફાર લાગુ છે.');showPage('customize');loadCustomizeForm();
 }
 document.getElementById('btnSaveCustomize').addEventListener('click',saveCustomize);
@@ -855,7 +901,7 @@ function renderStudents(){
 function editStudent(id){
   const s=db.students.find(x=>x.id===id); if(!s)return;
   editingStudentId=id;
-  sName.value=s.name;sStd.value=s.std;sDiv.value=s.div;sRoll.value=s.roll;sGR.value=s.gr;sMobile.value=s.mobile;sCTSId.value=s.ctsId||'';sAdmissionNo.value=s.admissionNo||'';sDOB.value=s.dob||'';sGender.value=s.gender||'';sCategory.value=s.category||'';sReligion.value=s.religion||'';sVillage.value=s.village||'';sParent.value=s.parent||'';sParentMobile.value=s.parentMobile||'';sEmergency.value=s.emergency||'';sAddress.value=s.address||'';sEmail.value=s.email||'';sBlood.value=s.blood||'';sAdmissionDate.value=s.admissionDate||'';sStatus.value=s.status||'Active';
+  sName.value=s.name;sStd.value=s.std;sDiv.value=s.div;sRoll.value=s.roll;sGR.value=s.gr;sMobile.value=s.mobile;sCTSId.value=s.ctsId||'';sDOB.value=s.dob||'';sGender.value=s.gender||'';sCategory.value=s.category||'';sReligion.value=s.religion||'';sVillage.value=s.village||'';sParent.value=s.parent||'';sParentMobile.value=s.parentMobile||'';sEmergency.value=s.emergency||'';sAddress.value=s.address||'';sEmail.value=s.email||'';sBlood.value=s.blood||'';sAdmissionDate.value=s.admissionDate||'';sStatus.value=s.status||'Active';
   selectedPhotoData=s.photo||null;
   photoPreview.src=selectedPhotoData||'';photoPreview.classList.toggle('hidden',!selectedPhotoData);photoEmpty.classList.toggle('hidden',!!selectedPhotoData);
   window.scrollTo({top:0,behavior:'smooth'});
@@ -865,7 +911,7 @@ function deleteStudent(id){
 }
 function clearStudentForm(){
   editingStudentId=null; selectedPhotoData=null;
-  ['sName','sRoll','sGR','sMobile','sCTSId','sAdmissionNo','sDOB','sVillage','sParent','sParentMobile','sEmergency','sAddress','sEmail','sAdmissionDate'].forEach(id=>document.getElementById(id).value='');
+  ['sName','sRoll','sGR','sMobile','sCTSId','sDOB','sVillage','sParent','sParentMobile','sEmergency','sAddress','sEmail','sAdmissionDate'].forEach(id=>document.getElementById(id).value='');
   sStd.value=9;sDiv.value='A';sGender.value='';sCategory.value='';sReligion.value='';sBlood.value='';sStatus.value='Active';sPhoto.value='';
   photoPreview.src='';photoPreview.classList.add('hidden');photoEmpty.classList.remove('hidden');
 }
@@ -879,14 +925,22 @@ function resizePhoto(file, cb){
   };img.src=r.result;};r.readAsDataURL(file);
 }
 sPhoto.addEventListener('change',e=>{const f=e.target.files[0];if(f)resizePhoto(f,d=>{selectedPhotoData=d;photoPreview.src=d;photoPreview.classList.remove('hidden');photoEmpty.classList.add('hidden');});});
+sMobile?.addEventListener('input',()=>sMobile.value=sMobile.value.replace(/\D/g,'').slice(0,10));
+sParentMobile?.addEventListener('input',()=>sParentMobile.value=sParentMobile.value.replace(/\D/g,'').slice(0,10));
+sCTSId?.addEventListener('input',()=>sCTSId.value=sCTSId.value.replace(/\D/g,'').slice(0,18));
 btnSaveStudent.addEventListener('click',()=>{
   const name=sName.value.trim(); let roll=Number(sRoll.value); if(db.customize.autoRoll!==false&&!roll) roll=db.students.length?Math.max(...db.students.map(s=>Number(s.roll)||0))+1:1;
   if(!name||!roll){alert('Student Name અને Roll No. required છે.');return;}
+  const mobile=sMobile.value.trim();
+  const parentMobile=sParentMobile.value.trim();
   const ctsId=sCTSId.value.trim();
+  if(mobile && !/^\d{10}$/.test(mobile)){alert('Student Mobile must be exactly 10 digits.');sMobile.focus();return;}
+  if(parentMobile && !/^\d{10}$/.test(parentMobile)){alert('Parent Mobile must be exactly 10 digits.');sParentMobile.focus();return;}
+  if(ctsId && !/^\d{18}$/.test(ctsId)){alert('CTS ID must be exactly 18 digits.');sCTSId.focus();return;}
   if(ctsId && db.students.some(s=>String(s.ctsId||'').toLowerCase()===ctsId.toLowerCase() && s.id!==editingStudentId)){alert('Duplicate CTS ID already exists.');return;}
   const duplicate=db.students.find(s=>Number(s.roll)===roll && s.id!==editingStudentId);
   if(duplicate){alert('આ Roll No. પહેલેથી છે.');return;}
-  const payload={name,std:Number(sStd.value)||'',div:sDiv.value.trim(),roll,gr:Number(sGR.value)||'',mobile:sMobile.value.trim(),ctsId:sCTSId.value.trim(),admissionNo:sAdmissionNo.value.trim(),dob:sDOB.value,gender:sGender.value,category:sCategory.value,religion:sReligion.value,village:sVillage.value.trim(),parent:sParent.value.trim(),parentMobile:sParentMobile.value.trim(),emergency:sEmergency.value.trim(),address:sAddress.value.trim(),email:sEmail.value.trim(),blood:sBlood.value,admissionDate:sAdmissionDate.value,status:sStatus.value||'Active',photo:selectedPhotoData,photoFileName:sPhoto.files[0]?.name||''};
+  const payload={name,std:Number(sStd.value)||'',div:sDiv.value.trim(),roll,gr:Number(sGR.value)||'',mobile,ctsId,dob:sDOB.value,gender:sGender.value,category:sCategory.value,religion:sReligion.value,village:sVillage.value.trim(),parent:sParent.value.trim(),parentMobile,emergency:sEmergency.value.trim(),address:sAddress.value.trim(),email:sEmail.value.trim(),blood:sBlood.value,admissionDate:sAdmissionDate.value,status:sStatus.value||'Active',photo:selectedPhotoData,photoFileName:sPhoto.files[0]?.name||''};
   if(editingStudentId){const s=db.students.find(x=>x.id===editingStudentId);Object.assign(s,payload);}
   else {db.students.push({id:nextId(db.students),...payload});}
   saveDB();clearStudentForm();alert('Student saved.');
@@ -908,30 +962,35 @@ bulkPhotos.addEventListener('change',async e=>{
 btnImportPaste.addEventListener('click',()=>pasteBox.classList.toggle('hidden'));
 btnPasteImport.addEventListener('click',()=>{
   const rows=studentPaste.value.trim().split(/\r?\n/).filter(Boolean);
-  let added=0;
+  let added=0,skipped=0;
   for(const row of rows){
-    const c=row.split('\t'); if(c.length<4)continue;
-    const [name,std,div,roll,gr,mobile,ctsId,admissionNo,dob,gender,category,religion,village,parent,parentMobile,address,status,photoFileName]=c;
-    if(!name||!roll)continue;
-    if(db.students.some(s=>Number(s.roll)===Number(roll)))continue;
-    db.students.push({id:nextId(db.students),name,std:Number(std)||'',div:div||'',roll:Number(roll),gr:Number(gr)||'',mobile:mobile||'',ctsId:ctsId||'',admissionNo:admissionNo||'',dob:dob||'',gender:gender||'',category:category||'',religion:religion||'',village:village||'',parent:parent||'',parentMobile:parentMobile||'',emergency:'',address:address||'',email:'',blood:'',admissionDate:'',status:status||'Active',photo:null,photoFileName:photoFileName||''});
+    const c=row.split('\t'); if(c.length<7){skipped++;continue;}
+    const [name,std,div,roll,gr,mobile,ctsId,dob,gender,category,religion,village,parent,parentMobile,emergency,address,email,blood,admissionDate,status,photoFileName]=c;
+    if(!name||!roll){skipped++;continue;}
+    const mm=String(mobile||'').trim(), pp=String(parentMobile||'').trim(), cc=String(ctsId||'').trim();
+    if(mm && !/^\d{10}$/.test(mm)){skipped++;continue;}
+    if(pp && !/^\d{10}$/.test(pp)){skipped++;continue;}
+    if(cc && !/^\d{18}$/.test(cc)){skipped++;continue;}
+    if(db.students.some(s=>Number(s.roll)===Number(roll))){skipped++;continue;}
+    if(cc && db.students.some(s=>String(s.ctsId||'')===cc)){skipped++;continue;}
+    db.students.push({id:nextId(db.students),name,std:Number(std)||'',div:div||'',roll:Number(roll),gr:Number(gr)||'',mobile:mm,ctsId:cc,dob:dob||'',gender:gender||'',category:category||'',religion:religion||'',village:village||'',parent:parent||'',parentMobile:pp,emergency:emergency||'',address:address||'',email:email||'',blood:blood||'',admissionDate:admissionDate||'',status:status||'Active',photo:null,photoFileName:photoFileName||''});
     added++;
   }
-  saveDB();studentPaste.value='';alert(added+' students imported.');
+  saveDB();studentPaste.value='';alert(added+' students imported. '+skipped+' skipped (invalid/duplicate data).');
 });
 
 
 function renderStudentDatabase(){
   const q=(document.getElementById('dbSearch')?.value||'').trim().toLowerCase();
   const std=(document.getElementById('dbStd')?.value||''); const div=(document.getElementById('dbDiv')?.value||''); const status=(document.getElementById('dbStatus')?.value||'');
-  const list=db.students.filter(s=>(!q||[s.name,s.ctsId,s.gr,s.roll,s.admissionNo,s.parentMobile,s.parent].some(v=>String(v??'').toLowerCase().includes(q)))&&(!std||String(s.std)===std)&&(!div||String(s.div)===div)&&(!status||String(s.status||'Active')===status));
+  const list=db.students.filter(s=>(!q||[s.name,s.ctsId,s.gr,s.roll,s.parentMobile,s.parent].some(v=>String(v??'').toLowerCase().includes(q)))&&(!std||String(s.std)===std)&&(!div||String(s.div)===div)&&(!status||String(s.status||'Active')===status));
   document.getElementById('dbTotal').textContent=db.students.length; document.getElementById('dbActive').textContent=db.students.filter(s=>(s.status||'Active')==='Active').length; document.getElementById('dbWithCTS').textContent=db.students.filter(s=>s.ctsId).length; document.getElementById('dbWithPhoto').textContent=db.students.filter(s=>s.photo).length;
   const ss=document.getElementById('dbStd'),ds=document.getElementById('dbDiv'); const sv=ss.value,dv=ds.value; ss.innerHTML='<option value="">All Standards</option>'+[...new Set(db.students.map(s=>s.std).filter(Boolean))].sort((a,b)=>Number(a)-Number(b)).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');ds.innerHTML='<option value="">All Divisions</option>'+[...new Set(db.students.map(s=>s.div).filter(Boolean))].sort().map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');ss.value=sv;ds.value=dv;
-  document.getElementById('dbTableBody').innerHTML=list.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(s=>`<tr><td>${esc(s.roll)}</td><td>${esc(s.name)}</td><td>${esc(s.std)}</td><td>${esc(s.div)}</td><td>${esc(s.admissionNo)}</td><td>${esc(s.gr)}</td><td>${esc(s.ctsId)}</td><td>${esc(s.dob)}</td><td>${esc(s.gender)}</td><td>${esc(s.parent)}</td><td>${esc(s.parentMobile)}</td><td><span class="pill">${esc(s.status||'Active')}</span></td><td><button class="btn btn-light" onclick="editStudent(${s.id});showPage('students')">Edit</button></td></tr>`).join('')||'<tr><td colspan="13" class="muted">No students found.</td></tr>';
+  document.getElementById('dbTableBody').innerHTML=list.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(s=>`<tr><td>${esc(s.roll)}</td><td>${esc(s.name)}</td><td>${esc(s.std)}</td><td>${esc(s.div)}</td><td>${esc(s.gr)}</td><td>${esc(s.ctsId)}</td><td>${esc(s.dob)}</td><td>${esc(s.gender)}</td><td>${esc(s.parent)}</td><td>${esc(s.parentMobile)}</td><td><span class="pill">${esc(s.status||'Active')}</span></td><td><button class="btn btn-light" onclick="editStudent(${s.id});showPage('students')">Edit</button> <button class="btn btn-danger" onclick="deleteStudent(${s.id})">Delete</button></td></tr>`).join('')||'<tr><td colspan="12" class="muted">No students found.</td></tr>';
 }
 function exportStudentCSV(){
-  const headers=['Student Name','Standard','Division','Roll No','GR No','CTS ID','Admission No','DOB','Gender','Parent/Guardian','Parent Mobile','Emergency Contact','Address','Email','Blood Group','Admission Date','Status','Category','Religion','Village'];
-  const rows=db.students.map(s=>[s.name,s.std,s.div,s.roll,s.gr,s.ctsId,s.admissionNo,s.dob,s.gender,s.parent,s.parentMobile,s.emergency,s.address,s.email,s.blood,s.admissionDate,s.status||'Active',s.category,s.religion,s.village]);
+  const headers=['Student Name','Standard','Division','Roll No','GR No','CTS ID','DOB','Gender','Parent/Guardian','Parent Mobile','Emergency Contact','Address','Email','Blood Group','Admission Date','Status','Category','Religion','Village'];
+  const rows=db.students.map(s=>[s.name,s.std,s.div,s.roll,s.gr,s.ctsId,s.dob,s.gender,s.parent,s.parentMobile,s.emergency,s.address,s.email,s.blood,s.admissionDate,s.status||'Active',s.category,s.religion,s.village]);
   const csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n'); const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='School_Student_Database.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 function printStudentDatabase(){ const rows=[...document.querySelectorAll('#dbTable tbody tr')].map(tr=>tr.outerHTML).join(''); const w=window.open('','_blank'); if(!w)return; w.document.write(`<html><head><title>Student Database</title><style>body{font-family:Arial;padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #777;padding:6px;font-size:11px}th{background:#eee}</style></head><body><h2>${esc(db.school.name)}</h2><h3>Student Database</h3><table><thead>${document.querySelector('#dbTable thead').innerHTML}</thead><tbody>${rows}</tbody></table></body></html>`);w.document.close();w.print();}
@@ -965,27 +1024,33 @@ function exportStudentReports(){
 document.getElementById('btnGenerateStudentReport')?.addEventListener('click',renderStudentReports);document.getElementById('btnPrintStudentReport')?.addEventListener('click',printStudentReports);document.getElementById('btnExportStudentReport')?.addEventListener('click',exportStudentReports);
 
 function renderExams(){
-  examTable.innerHTML=db.exams.map((e,i)=>`<tr><td>${i+1}</td><td>${esc(e.date)}</td><td>${esc(e.time)}</td><td>${esc(e.subject)}</td><td>${esc(e.std||'All')} / ${esc(e.div||'All')}</td><td>${esc(e.room||'-')}</td><td><button class="btn btn-danger" onclick="deleteExam(${e.id})">Delete</button></td></tr>`).join('')||`<tr><td colspan="7" class="muted">No exams.</td></tr>`;
+  const filter=document.getElementById('scheduleStdFilter')?.value||'';
+  const list=db.exams.filter(e=>!filter||String(e.std||'')===String(filter));
+  examTable.innerHTML=list.map((e,i)=>`<tr><td>${i+1}</td><td>${esc(e.date)}</td><td>${esc(e.time)}</td><td>${esc(e.subject)}</td><td>${esc(e.type||'Exam')}</td><td>${esc(e.std||'All')} / ${esc(e.div||'All')}</td><td>${esc(e.room||'-')}</td><td><button class="btn btn-danger" onclick="deleteExam(${e.id})">Delete</button></td></tr>`).join('')||`<tr><td colspan="8" class="muted">No exams for this standard.</td></tr>`;
 }
-function deleteExam(id){if(confirm('Delete this exam?')){db.exams=db.exams.filter(e=>e.id!==id);saveDB();}}
+function deleteExam(id){if(confirm('Delete this exam/test schedule?')){db.exams=db.exams.filter(e=>e.id!==id);saveDB();}}
 btnSaveExam.addEventListener('click',()=>{
-  const date=eDate.value.trim(),time=eTime.value.trim(),subject=eSubject.value.trim(); const std=eStd.value.trim(),div=eDiv.value.trim(),room=eRoom.value.trim(),seatStart=Number(eSeatStart.value)||1;
+  const date=eDate.value.trim(),time=eTime.value.trim(),subject=eSubject.value.trim(); const std=eStd.value.trim(),div=eDiv.value.trim(),type=document.getElementById('eType').value,room=eRoom.value.trim(),seatStart=Number(eSeatStart.value)||1;
   if(!date||!time||!subject){alert('Date, Time and Subject required.');return;}
-  db.exams.push({id:nextId(db.exams),date,time,subject,std,div,room,seatStart});saveDB();
-  eDate.value='';eTime.value='';eSubject.value='';eStd.value='';eDiv.value='A';eRoom.value='';eSeatStart.value=1;
+  if(std && !['9','10','11','12'].includes(String(std))){alert('Standard only 9, 10, 11 or 12 allowed.');return;}
+  db.exams.push({id:nextId(db.exams),date,time,subject,std,div,type,room,seatStart});saveDB();
+  eDate.value='';eTime.value='';eSubject.value='';eStd.value='';eDiv.value='A';document.getElementById('eType').value='Exam';eRoom.value='';eSeatStart.value=1;
 });
-btnClearExam.addEventListener('click',()=>{eDate.value='';eTime.value='';eSubject.value='';eStd.value='';eDiv.value='A';eRoom.value='';eSeatStart.value=1;});
+btnClearExam.addEventListener('click',()=>{eDate.value='';eTime.value='';eSubject.value='';eStd.value='';eDiv.value='A';document.getElementById('eType').value='Exam';eRoom.value='';eSeatStart.value=1;});
+document.getElementById('scheduleStdFilter')?.addEventListener('change',renderExams);
 btnImportExamPaste.addEventListener('click',()=>examPasteBox.classList.toggle('hidden'));
 btnExamPasteImport.addEventListener('click',()=>{
   const rows=examPaste.value.trim().split(/\r?\n/).filter(Boolean);let n=0;
-  for(const row of rows){const c=row.split('\t');if(c.length<3)continue;db.exams.push({id:nextId(db.exams),date:c[0],time:c[1],subject:c[2]});n++;}
+  for(const row of rows){const c=row.split('\t');if(c.length<3)continue;const std=(c[3]||'').trim(),div=(c[4]||'A').trim(),type=(c[5]||'Exam').trim();if(std && !['9','10','11','12'].includes(std))continue;db.exams.push({id:nextId(db.exams),date:c[0].trim(),time:c[1].trim(),subject:c[2].trim(),std,div,type});n++;}
   saveDB();examPaste.value='';alert(n+' exams imported.');
 });
 
 function renderSchool(){
   schoolName.value=db.school.name;schoolAddress.value=db.school.address;schoolPhone.value=db.school.phone;examName.value=db.school.examName;principal.value=db.school.principal;footerInstruction.value=db.school.footer;
+  const ps=document.getElementById('principalSignaturePreview'); if(ps){ps.src=db.school.principalSignature||'';ps.classList.toggle('hidden',!db.school.principalSignature);}
 }
-btnSaveSchool.addEventListener('click',()=>{db.school={name:schoolName.value,address:schoolAddress.value,phone:schoolPhone.value,examName:examName.value,principal:principal.value,footer:footerInstruction.value};saveDB();alert('Settings saved.');});
+btnSaveSchool.addEventListener('click',()=>{db.school={...db.school,name:schoolName.value,address:schoolAddress.value,phone:schoolPhone.value,examName:examName.value,principal:principal.value,footer:footerInstruction.value};saveDB();alert('Settings saved.');});
+document.getElementById('principalSignature')?.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;resizePhoto(f,d=>{db.school.principalSignature=d;const p=document.getElementById('principalSignaturePreview');if(p){p.src=d;p.classList.remove('hidden');}saveDB();alert('Principal signature uploaded. હવે Hall Ticketમાં automatic આવશે.');});});
 
 function renderRolls(){
   const cur=ticketRoll.value;
@@ -998,7 +1063,7 @@ function ticketHTML(s){
   const school=db.school, c=db.customize;
   const logo=c.logo?`<img class="ticket-logo" src="${c.logo}" alt="Logo">`:'';
   const photo=s.photo?`<img src="${s.photo}" alt="">`:`<span>${esc(c.photoPlaceholder).replace(/\|/g,'<br>')}</span>`;
-  const schedule=db.exams.map(e=>{const a=(db.rooms||[]).find(x=>x.examId===e.id&&x.studentId===s.id);return `<tr><td>${esc(e.date)}</td><td>${esc(e.time)}</td><td>${esc(e.subject)}</td><td>${esc(a?.room||e.room||'')}</td><td>${esc(a?.seat||'')}</td></tr>`;}).join('');
+  const schedule=db.exams.filter(e=>(!e.std||String(e.std)===String(s.std))&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase())).map(e=>{const a=(db.rooms||[]).find(x=>x.examId===e.id&&x.studentId===s.id);return `<tr><td>${esc(e.date)}</td><td>${esc(e.time)}</td><td>${esc(e.subject)}</td><td>${esc(a?.room||e.room||'')}</td><td>${esc(a?.seat||'')}</td></tr>`;}).join('');
   const divCell=c.showDiv?`<td>${esc(c.division)}</td><td>${esc(s.div)}</td>`:'';
   const grCell=c.showGR?`<td>${esc(c.grNo)}</td><td>${esc(s.gr)}</td>`:'';
   const mobileRow=c.showMobile?`<tr><td>${esc(c.mobile)}</td><td colspan="5">${esc(s.mobile)}</td></tr>`:'';
@@ -1018,7 +1083,7 @@ function ticketHTML(s){
       <thead><tr><th>${esc(c.examDate)}</th><th>${esc(c.time)}</th><th>${esc(c.subject)}</th><th>Room</th><th>Seat</th></tr></thead>
       <tbody>${schedule}</tbody>
     </table>
-    <div class="qr-box">${c.showQR?`<div><div id="qr-${s.id}"></div><div style="font-size:9px;text-align:center;margin-top:4px;font-weight:700">SCAN TO VERIFY</div></div>`:``}</div><div class="footer-block"><div class="footer-note">${esc(school.footer)}</div><div class="principal">${esc(c.principal)}<br><br><br></div></div>
+    <div class="qr-box">${c.showQR?`<div><div id="qr-${hallTicketQRKey(s)}"></div><div style="font-size:9px;text-align:center;margin-top:4px;font-weight:700">SCAN TO VERIFY</div></div>`:``}</div><div class="footer-block"><div class="footer-note">${esc(school.footer)}</div><div class="principal">${school.principalSignature?`<img src="${school.principalSignature}" style="max-height:55px;max-width:150px;object-fit:contain"><br>`:''}${esc(school.principal||'Principal')}<br>${school.principalSignature?'Principal Signature':''}</div></div>
   </div>`;
 }
 function renderQR(el,text,size){
@@ -1036,15 +1101,15 @@ function renderQR(el,text,size){
   img.onerror=function(){el.innerHTML='<div style="font-size:10px;color:#b42318;text-align:center;width:'+sz+'px">QR unavailable<br>Connect to internet</div>';};
   el.appendChild(img);
 }
-function hallTicketQRData(s){
+function hallTicketQRKey(s){return String(s.__qrKey||('roll-'+String(s.roll??'')+'-gr-'+String(s.gr??'')+'-cts-'+String(s.ctsId??'').replace(/[^a-zA-Z0-9_-]/g,'')));} function hallTicketQRData(s){
   // QR opens the public verification page with readable student data.
   // This avoids the previous dense/plain-text QR and the old base64-only format.
   const base='https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html';
-  const rows=(db.exams||[]).map(e=>{
+  const rows=(db.exams||[]).filter(e=>(!e.std||String(e.std)===String(s.std))&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase())).map(e=>{
     const a=(db.rooms||[]).find(x=>x.examId===e.id&&x.studentId===s.id);
     const room=a?.room||e.room||'';
     const seat=a?.seat||'';
-    return [e.date||'',e.time||'',e.subject||'',room,seat].join('~');
+    return [e.date||'',e.time||'',e.subject||'',room,seat,e.type||'Exam'].join('~');
   }).join('|');
   const p=new URLSearchParams();
   p.set('n',String(s.name||''));
@@ -1089,12 +1154,12 @@ function renderTicket(){
   if(!db.students.length){ticketArea.innerHTML='<div class="card">No students.</div>';return;}
   if(!ticketRoll.value)ticketRoll.value=db.students[0].roll;
   const s=db.students.find(x=>Number(x.roll)===Number(ticketRoll.value))||db.students[0];
-  ticketArea.innerHTML=ticketHTML(s); markGenerated(s.id); if(db.customize.showQR!==false){const q=document.getElementById('qr-'+s.id);renderQR(q,hallTicketQRData(s),180);}
+  ticketArea.innerHTML=ticketHTML(s); markGenerated(s.id); if(db.customize.showQR!==false){const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),180);}
 }
 btnPrintCurrent.addEventListener('click',()=>{renderTicket();setTimeout(()=>window.print(),200)});
 btnPrintAll.addEventListener('click',()=>{
   if(!db.students.length){alert('No students.');return;}
-  ticketArea.innerHTML=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(ticketHTML).join(''); db.students.forEach(s=>markGenerated(s.id)); if(db.customize.showQR!==false)db.students.forEach(s=>{const q=document.getElementById('qr-'+s.id);renderQR(q,hallTicketQRData(s),150);});
+  const allForPrint=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)); allForPrint.forEach((st,i)=>st.__qrKey='ticket-'+i+'-'+String(st.id??'')+'-'+String(st.roll??'')); ticketArea.innerHTML=allForPrint.map(ticketHTML).join(''); allForPrint.forEach(s=>markGenerated(s.id)); if(db.customize.showQR!==false)db.students.forEach(s=>{const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),150);});
   setTimeout(()=>window.print(),250);
 });
 
@@ -1109,7 +1174,7 @@ backupFile.addEventListener('change',e=>{
 btnReset.addEventListener('click',()=>{if(confirm('Reset database to demo data? Current data will be lost.')){db=structuredClone(demo);saveDB();}});
 
 document.getElementById('studentSearch')?.addEventListener('input',renderStudents);document.getElementById('studentSearchStd')?.addEventListener('change',renderStudents);document.getElementById('studentSearchDiv')?.addEventListener('change',renderStudents);document.getElementById('btnClearSearch')?.addEventListener('click',()=>{studentSearch.value='';studentSearchStd.value='';studentSearchDiv.value='';renderStudents();});
-document.getElementById('btnLoadMarks')?.addEventListener('click',loadMarksTable);document.getElementById('btnSaveMarks')?.addEventListener('click',saveMarks);document.getElementById('resultExam')?.addEventListener('change',loadMarksTable);document.getElementById('resultStd')?.addEventListener('change',loadMarksTable);document.getElementById('resultDiv')?.addEventListener('change',loadMarksTable);document.getElementById('btnPreviewResult')?.addEventListener('click',previewResult);document.getElementById('btnPrintResult')?.addEventListener('click',printResult);document.getElementById('btnResultPrintAll')?.addEventListener('click',printAllResults);
+document.getElementById('btnLoadMarks')?.addEventListener('click',loadMarksTable);document.getElementById('btnSaveMarks')?.addEventListener('click',saveMarks);document.getElementById('resultExam')?.addEventListener('change',loadMarksTable);document.getElementById('resultStd')?.addEventListener('change',loadMarksTable);document.getElementById('resultDiv')?.addEventListener('change',loadMarksTable);document.getElementById('btnPreviewResult')?.addEventListener('click',previewResult);document.getElementById('btnPrintResult')?.addEventListener('click',printResult);document.getElementById('btnWhatsAppResult')?.addEventListener('click',whatsappResult);document.getElementById('btnPrintTestReport')?.addEventListener('click',printTestReport);document.getElementById('btnResultPrintAll')?.addEventListener('click',printAllResults);
 document.getElementById('btnStudentFeeReport')?.addEventListener('click',printStudentFeeReport);
 document.getElementById('btnSaveBusFee')?.addEventListener('click',saveBusFee);document.getElementById('btnClearBusFee')?.addEventListener('click',clearBusFeeForm);document.getElementById('btnBusReceipt')?.addEventListener('click',()=>{const id=window.editingBusFeeId||((db.busFees||[]).length?db.busFees[db.busFees.length-1].id:null);if(id)printBusFeeReceipt(id);else alert('Save a bus fee entry first.');});document.getElementById('busSearch')?.addEventListener('input',renderBusFeesTable);document.getElementById('busFilterMode')?.addEventListener('change',renderBusFeesTable);document.getElementById('busFilterStatus')?.addEventListener('change',renderBusFeesTable);document.getElementById('btnBusPrintList')?.addEventListener('click',printBusFeeList);
 document.getElementById('btnSaveFee')?.addEventListener('click',saveFee);document.getElementById('btnClearFee')?.addEventListener('click',clearFeeForm);document.getElementById('btnFeeReceipt')?.addEventListener('click',()=>{const id=window.editingFeeId||((db.fees||[]).length?db.fees[db.fees.length-1].id:null);if(id)printFeeReceipt(id);else alert('Save a fee entry first.');});document.getElementById('feeSearch')?.addEventListener('input',renderFeesTable);document.getElementById('feeFilterMode')?.addEventListener('change',renderFeesTable);document.getElementById('feeFilterStatus')?.addEventListener('change',renderFeesTable);document.getElementById('btnFeePrintList')?.addEventListener('click',printFeeList);document.getElementById('feeStudent')?.addEventListener('change',()=>{});
@@ -1156,13 +1221,35 @@ function loadMarksTable(){const ex=currentResultExam();if(!ex)return;document.ge
 function saveMarks(){const ex=currentResultExam();if(!ex)return;ex.maxMarks=Math.max(1,Number(document.getElementById('resultMaxMarks').value)||100);ex.passMarks=Math.max(0,Number(document.getElementById('resultPassMarks').value)||0);db.results=db.results||{};db.results[String(ex.id)]=db.results[String(ex.id)]||{};document.querySelectorAll('#marksTable tr[data-student-id]').forEach(tr=>{const id=tr.dataset.studentId,m=tr.querySelector('.result-mark').value,remarks=tr.querySelector('.result-remark').value.trim();db.results[String(ex.id)][String(id)]={marks:m===''?'':Number(m),remarks};});saveDB();alert('Marks saved successfully.');}
 function renderResultStudents(){const sel=document.getElementById('resultStudent');if(!sel)return;const cur=sel.value;sel.innerHTML=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(s=>`<option value="${s.id}">${esc(s.roll)} - ${esc(s.name)}${s.ctsId?' | CTS: '+esc(s.ctsId):''}</option>`).join('');if(cur)sel.value=cur;}
 function gradeFor(p){if(p>=90)return'A+';if(p>=80)return'A';if(p>=70)return'B+';if(p>=60)return'B';if(p>=50)return'C';if(p>=33)return'D';return'F';}
-function resultHTML(s){const rows=db.exams.map(e=>{const rec=(db.results?.[String(e.id)]||{})[String(s.id)]||{};const marks=rec.marks===''||rec.marks==null?'':Number(rec.marks);return {e,marks,remarks:rec.remarks||''};});const valid=rows.filter(x=>x.marks!=='');const total=valid.reduce((a,x)=>a+x.marks,0),max=valid.reduce((a,x)=>a+(Number(x.e.maxMarks)||100),0),pct=max?total/max*100:0,failed=valid.some(x=>x.marks<(Number(x.e.passMarks)||33)),status=valid.length===rows.length&&!failed?'PASS':(failed?'FAIL':'INCOMPLETE');return `<div class="result-sheet"><div class="result-head">${db.customize.logo?`<img src="${db.customize.logo}" style="max-height:65px;max-width:120px"><br>`:''}<div>${esc(db.school.name)}</div><h2>${esc(db.school.examName)} — RESULT</h2><div>${esc(db.school.address)}</div></div><div class="result-meta"><div><b>Name</b><br>${esc(s.name)}</div><div><b>Roll No.</b><br>${esc(s.roll)}</div><div><b>CTS ID</b><br>${esc(s.ctsId||'-')}</div><div><b>Standard / Div.</b><br>${esc(s.std)} / ${esc(s.div)}</div></div><table class="result-table"><thead><tr><th>Subject</th><th>Date</th><th>Max</th><th>Pass</th><th>Marks</th><th>Remarks</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.e.subject)}</td><td>${esc(x.e.date)}</td><td>${Number(x.e.maxMarks)||100}</td><td>${Number(x.e.passMarks)||33}</td><td>${x.marks===''?'-':x.marks}</td><td>${esc(x.remarks)}</td></tr>`).join('')}</tbody></table><div class="result-total"><div><b>Total:</b> ${total} / ${max || '-'} &nbsp; | &nbsp; <b>Percentage:</b> ${max?pct.toFixed(2):'-'}% &nbsp; | &nbsp; <span class="result-grade">${status}</span> ${max?' | Grade: '+gradeFor(pct):''}</div></div><div style="display:flex;justify-content:space-between;margin-top:45px"><div>Class Teacher</div><div>${esc(db.customize.principal||'Principal')}<br><br>Principal Signature</div></div></div>`;}
+function resultHTML(s){const rows=db.exams.map(e=>{const rec=(db.results?.[String(e.id)]||{})[String(s.id)]||{};const marks=rec.marks===''||rec.marks==null?'':Number(rec.marks);return {e,marks,remarks:rec.remarks||''};});const valid=rows.filter(x=>x.marks!=='');const total=valid.reduce((a,x)=>a+x.marks,0),max=valid.reduce((a,x)=>a+(Number(x.e.maxMarks)||100),0),pct=max?total/max*100:0,failed=valid.some(x=>x.marks<(Number(x.e.passMarks)||33)),status=valid.length===rows.length&&!failed?'PASS':(failed?'FAIL':'INCOMPLETE');return `<div class="result-sheet"><div class="result-head">${db.customize.logo?`<img src="${db.customize.logo}" style="max-height:65px;max-width:120px"><br>`:''}<div>${esc(db.school.name)}</div><h2>${esc(db.school.examName)} — RESULT</h2><div>${esc(db.school.address)}</div></div><div class="result-meta"><div><b>Name</b><br>${esc(s.name)}</div><div><b>Roll No.</b><br>${esc(s.roll)}</div><div><b>CTS ID</b><br>${esc(s.ctsId||'-')}</div><div><b>Standard / Div.</b><br>${esc(s.std)} / ${esc(s.div)}</div></div><table class="result-table"><thead><tr><th>Subject</th><th>Type</th><th>Date</th><th>Max</th><th>Pass</th><th>Marks</th><th>Remarks</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.e.subject)}</td><td>${esc(x.e.type||'Exam')}</td><td>${esc(x.e.date)}</td><td>${Number(x.e.maxMarks)||100}</td><td>${Number(x.e.passMarks)||33}</td><td>${x.marks===''?'-':x.marks}</td><td>${esc(x.remarks)}</td></tr>`).join('')}</tbody></table><div class="result-total"><div><b>Total:</b> ${total} / ${max || '-'} &nbsp; | &nbsp; <b>Percentage:</b> ${max?pct.toFixed(2):'-'}% &nbsp; | &nbsp; <span class="result-grade">${status}</span> ${max?' | Grade: '+gradeFor(pct):''}</div></div><div style="display:flex;justify-content:space-between;margin-top:45px"><div>Class Teacher</div><div>${db.school.principalSignature?`<img src="${db.school.principalSignature}" style="max-height:55px;max-width:150px;object-fit:contain"><br>`:''}${esc(db.school.principal||'Principal')}<br><span>${db.school.principalSignature?'Principal Signature':''}</span></div></div></div>`;}
 function studentResultHTML(s){return resultHTML(s);}
 function previewResult(){const s=db.students.find(x=>String(x.id)===String(document.getElementById('resultStudent').value));if(s)document.getElementById('resultPreview').innerHTML=resultHTML(s);}
 function printResult(){previewResult();setTimeout(()=>window.print(),200);}
-function printAllResults(){if(!db.students.length)return;document.getElementById('resultPreview').innerHTML=db.students.map(resultHTML).join('');setTimeout(()=>window.print(),250);}
+function whatsappResult(){
+  const s=db.students.find(x=>String(x.id)===String(document.getElementById('resultStudent').value));if(!s){alert('Student select કરો.');return;}
+  const phone=String(s.mobile||s.parentMobile||'').replace(/\D/g,'');if(phone.length!==10){alert('Student/Parent mobile must be exactly 10 digits for WhatsApp.');return;}
+  const rows=db.exams.map(e=>{const r=(db.results?.[String(e.id)]||{})[String(s.id)]||{};return `${e.subject}: ${r.marks===''||r.marks==null?'-':r.marks}/${Number(e.maxMarks)||100}`;}).join('\n');
+  const text=`${db.school.name}\nResult / Marksheet\nStudent: ${s.name}\nStd: ${s.std}-${s.div}\nRoll: ${s.roll}\n${rows}\n\nPlease contact school for the printed/original result.`;
+  window.open('https://wa.me/91'+phone+'?text='+encodeURIComponent(text),'_blank');
+}
+
+function printAllResults(){
+  const std=document.getElementById('resultStd')?.value||'',div=document.getElementById('resultDiv')?.value||'';
+  const list=db.students.filter(s=>(!std||String(s.std)===String(std))&&(!div||String(s.div)===String(div)));
+  if(!list.length){alert('Selected Standard / Divisionમાં students નથી.');return;}
+  document.getElementById('resultPreview').innerHTML=list.map(resultHTML).join('');setTimeout(()=>window.print(),250);
+}
+function printTestReport(){
+  const ex=currentResultExam();if(!ex){alert('Exam / Subject select કરો.');return;}
+  const std=document.getElementById('resultStd')?.value||'',div=document.getElementById('resultDiv')?.value||'';
+  const list=db.students.filter(s=>(!std||String(s.std)===String(std))&&(!div||String(s.div)===String(div))).sort((a,b)=>Number(a.roll)-Number(b.roll));
+  const rec=db.results?.[String(ex.id)]||{};
+  const rows=list.map((s,i)=>{const r=rec[String(s.id)]||{};const m=r.marks===''||r.marks==null?'-':r.marks;const pass=Number(r.marks)>=Number(ex.passMarks||33);return `<tr><td>${i+1}</td><td>${esc(s.roll)}</td><td>${esc(s.name)}</td><td>${esc(s.std)}-${esc(s.div)}</td><td>${m}</td><td>${esc(ex.maxMarks||100)}</td><td>${m==='-'?'':(pass?'PASS':'FAIL')}</td><td>${esc(r.remarks||'')}</td></tr>`}).join('');
+  document.getElementById('resultPreview').innerHTML=`<div class="result-sheet"><div class="result-head">${db.customize.logo?`<img src="${db.customize.logo}" style="max-height:65px;max-width:120px"><br>`:''}<div>${esc(db.school.name)}</div><h2>${esc(ex.type||'Test')} Report — ${esc(ex.subject)}</h2><div>${esc(ex.date)} | ${esc(ex.time)} | Standard ${esc(std||'All')} ${div?'Division '+esc(div):''}</div></div><table class="result-table"><thead><tr><th>#</th><th>Roll</th><th>Student</th><th>Std/Div</th><th>Marks</th><th>Max</th><th>Status</th><th>Remarks</th></tr></thead><tbody>${rows}</tbody></table><div style="display:flex;justify-content:flex-end;margin-top:35px">${db.school.principalSignature?`<img src="${db.school.principalSignature}" style="max-height:55px;max-width:150px"><br>`:''}</div></div>`;
+  setTimeout(()=>window.print(),250);
+}
 function showStudentPortalResult(id){const s=db.students.find(x=>x.id===id);if(s)document.getElementById('portalStudentOutput').innerHTML=resultHTML(s);}
-function showStudentPortalHallTicket(id){const s=db.students.find(x=>x.id===id);if(!s)return;document.getElementById('portalStudentOutput').innerHTML=ticketHTML(s);if(db.customize.showQR!==false){const q=document.getElementById('qr-'+s.id);renderQR(q,hallTicketQRData(s),180);}}
+function showStudentPortalHallTicket(id){const s=db.students.find(x=>x.id===id);if(!s)return;s.__qrKey='portal-'+String(s.id??'')+'-'+String(s.roll??'');document.getElementById('portalStudentOutput').innerHTML=ticketHTML(s);if(db.customize.showQR!==false){const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),180);}}
 document.getElementById('btnPortalSearch')?.addEventListener('click',()=>{const cts=(document.getElementById('portalCTS')?.value||'').trim().toLowerCase(),roll=portalRoll.value.trim(),gr=portalGR.value.trim();const s=db.students.find(x=>(cts&&String(x.ctsId||'').toLowerCase()===cts)||(!cts&&String(x.roll)===roll&&(!gr||String(x.gr)===gr)));if(!s){portalResult.innerHTML='<div class="danger-text">Student not found. CTS ID / Roll No. check કરો.</div>';return;}const r=studentResultHTML(s);portalResult.innerHTML='<div class="card"><div class="btn-row"><button class="btn btn-primary" onclick="showStudentPortalHallTicket('+s.id+')">🎫 Hall Ticket</button><button class="btn btn-green" onclick="showStudentPortalResult('+s.id+')">📊 Result</button></div><div id="portalStudentOutput" style="margin-top:14px"></div></div>';window._portalStudentId=s.id;});
 document.getElementById('btnLogout')?.addEventListener('click',()=>{sessionStorage.removeItem(SESSION_KEY);location.reload();});
 function requireLogin(){if(new URLSearchParams(location.search).get('portal')==='1'){document.body.classList.add('portal-mode');showPage('portal');return;}if(window.__passwordRecoveryActive || isPasswordRecoveryLink())return;const pw=db.customize?.adminPassword||'1234';if(sessionStorage.getItem(SESSION_KEY)==='1')return;loginOverlay.classList.remove('hidden');adminPassword.focus();}const closeAdminLogin=()=>{loginOverlay.classList.add('hidden');loginError.textContent='';};btnCloseLogin?.addEventListener('click',closeAdminLogin);btnCloseLogin2?.addEventListener('click',closeAdminLogin);btnLogin.addEventListener('click',()=>{if(adminPassword.value===(db.customize?.adminPassword||'1234')){sessionStorage.setItem(SESSION_KEY,'1');loginOverlay.classList.add('hidden');loginError.textContent='';}else loginError.textContent='Incorrect password.';});adminPassword.addEventListener('keydown',e=>{if(e.key==='Enter')btnLogin.click();});

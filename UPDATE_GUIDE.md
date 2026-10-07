@@ -1,3 +1,6 @@
+
+## v1.3.8
+Upload/replace the package files in the GitHub Pages repository. Test locally first, especially Student Entry validation, Standard-wise schedules, marks entry, WhatsApp result link, and Principal Signature upload.
 # Safe Update Guide
 
 This project is designed so future features can be added without starting over.

@@ -30,3 +30,6 @@ Advanced Student Reports support:
 - CSV export
 
 Data is stored locally in the browser in this free standalone version. For true multi-device online access, connect the system to an online backend/database in a future deployment.
+
+
+Current version: v1.3.8

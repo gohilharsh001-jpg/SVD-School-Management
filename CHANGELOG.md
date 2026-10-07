@@ -1,3 +1,24 @@
+# v1.3.8 — School Management Update
+
+- Added separate exam/test schedule support for Standards 9, 10, 11 and 12.
+- Added Test / Exam Type (Exam, Unit Test, Test Paper, Periodic Test, Other).
+- Hall Ticket schedule and QR schedule are filtered by student Standard + Division.
+- Student Mobile accepts exactly 10 digits.
+- Parent Mobile accepts exactly 10 digits.
+- CTS ID accepts exactly 18 digits.
+- Removed Admission No. from Student Entry, Database, Excel import/export and migrated old local records.
+- Added Delete action in Student Database for accidental/wrong student records.
+- Added manual Student Entry field show/hide controls.
+- Added standard/subject-wise marks entry, printable marksheet/result and standard/subject-wise Test Report.
+- Added Principal Signature upload in School Settings; uploaded signature automatically appears on Hall Ticket and Result.
+- Existing QR all-student uniqueness fix is preserved.
+
+# v1.3.7
+
+- Fixed QR generation for all students when student IDs are missing or duplicated.
+- Each Hall Ticket QR now uses a unique render key.
+- Preserves student-specific QR data for Print All and individual Hall Tickets.
+
 # v1.3.6 - QR Verification Fix
 - Fixed verification page treating the normal Division parameter `d` as legacy Base64 data.
 - Current QR links now open correctly for divisions such as A/B/C.

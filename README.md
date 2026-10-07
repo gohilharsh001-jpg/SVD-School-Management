@@ -8,3 +8,6 @@ Student portal: student_portal.html
 
 ## Current version
 **v1.2.1** — Supabase Cloud Sync reliability update. No schema migration required.
+
+
+Current version: v1.3.8

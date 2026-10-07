@@ -1,7 +1,20 @@
 {
-  "version": "1.3.6",
+  "version": "1.3.8",
   "date": "2026-10-07",
-  "name": "SVD School Management",
+  "name": "School Management – Schedule, Student Validation, Marks & Signature Update",
   "status": "stable",
-  "notes": "Hall Ticket QR reliability fix: QR now contains compact plain-text student and exam data for direct scanning, with larger QR rendering."
+  "notes": "Hall Ticket QR reliability fix: QR now contains compact plain-text student and exam data for direct scanning, with larger QR rendering.",
+  "build": "2026-10-07",
+  "changes": [
+    "Separate exam/test schedules for Standards 9, 10, 11 and 12",
+    "Student mobile validation: exactly 10 digits",
+    "CTS ID validation: exactly 18 digits",
+    "Removed Admission No. from Student Entry, database, import/export and migrated old records",
+    "Delete option available for mistaken student records",
+    "Manual Student Entry field show/hide controls",
+    "Standard/subject-wise test and exam marks entry, marksheet and printable reports",
+    "WhatsApp result sending link using verified 10-digit student/parent mobile",
+    "Principal signature upload in School Settings and automatic Hall Ticket placement",
+    "QR schedule now follows each student's standard/division"
+  ]
 }
