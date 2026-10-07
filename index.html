@@ -743,7 +743,12 @@ async function handlePasswordRecovery(){
     }
   });
   const hash=location.hash||'';
-  if(hash.includes('type=recovery')){
+  // Recovery links may arrive with `type=recovery` OR only implicit-flow
+  // access/refresh tokens after Supabase has consumed the recovery event.
+  const raw=hash.replace(/^#/,'');
+  const params=new URLSearchParams(raw);
+  const isRecoveryHash=hash.includes('type=recovery') || !!params.get('access_token');
+  if(isRecoveryHash){
     document.getElementById('passwordRecoveryModal')?.classList.remove('hidden');
     document.getElementById('newAuthPassword')?.focus();
     // Give supabase-js time to consume the recovery token from the URL.

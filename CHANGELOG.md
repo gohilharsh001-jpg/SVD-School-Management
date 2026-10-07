@@ -1,3 +1,7 @@
+## v1.2.3
+- Fixed Supabase password-recovery links that arrive with `access_token` in the URL hash but no `type=recovery`.
+- Recovery modal now opens for both recovery event/hash formats.
+
 # v1.2.2
 - Fixed Supabase password-recovery session handling and Update Password button flow.
 
