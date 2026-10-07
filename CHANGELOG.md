@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.2.1 — Supabase Auth Password Reset
+- Added Forgot / Reset Password button to Online Sync.
+- Sends Supabase Auth password-reset email to the Admin Email.
+- Added in-app recovery screen to set a new Supabase Auth password after opening the Gmail reset link.
+- Existing local data, cloud sync, and database schema remain unchanged.
+
+
 ## v1.2.0 — Supabase Cloud Sync Reliability Update
 - Dashboard now shows live Cloud connection status.
 - Existing Supabase Auth session is restored when the app starts.

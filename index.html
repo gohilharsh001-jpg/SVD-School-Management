@@ -541,6 +541,7 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
         </div>
         <div class="btn-row" style="margin-top:14px">
           <button class="btn btn-primary" id="btnCloudConnect">☁️ Connect / Login</button>
+          <button class="btn btn-light" id="btnCloudReset">🔑 Forgot / Reset Password</button>
           <button class="btn btn-green" id="btnCloudPush">⬆ Upload Current Data</button>
           <button class="btn btn-light" id="btnCloudPull">⬇ Download Cloud Data</button>
           <button class="btn btn-light" id="btnCloudLogout">Logout Cloud</button>
@@ -555,6 +556,36 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
         </div>
       </div>
     </section>
+
+    <div id="cloudResetModal" class="modal hidden">
+      <div class="modal-box" style="max-width:520px">
+        <button class="modal-close" id="btnCloseCloudReset">×</button>
+        <h2>🔑 Reset Supabase Auth Password</h2>
+        <p class="muted">તમારા Admin Email પર password reset link મોકલાશે. આ <b>Supabase Auth password</b> છે; Database password અલગ છે.</p>
+        <label>Admin Email</label>
+        <input id="resetEmail" type="email" placeholder="admin@example.com">
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn btn-primary" id="btnSendReset">📧 Send Reset Link</button>
+          <button class="btn btn-light" id="btnCancelReset">Close</button>
+        </div>
+        <div id="resetStatus" class="muted" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <div id="passwordRecoveryModal" class="modal hidden">
+      <div class="modal-box" style="max-width:520px">
+        <h2>🔐 Set New Supabase Password</h2>
+        <p class="muted">Reset linkથી અહીં આવ્યા છો. હવે નવો Supabase Auth password set કરો.</p>
+        <label>New Password</label>
+        <input id="newAuthPassword" type="password" minlength="6" placeholder="New password (minimum 6 characters)">
+        <label style="margin-top:10px">Confirm Password</label>
+        <input id="newAuthPassword2" type="password" minlength="6" placeholder="Confirm new password">
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn btn-primary" id="btnUpdateAuthPassword">💾 Update Password</button>
+        </div>
+        <div id="recoveryStatus" class="muted" style="margin-top:12px"></div>
+      </div>
+    </div>
 
     <section id="page-backup" class="hidden">
       <div class="card">
@@ -677,6 +708,64 @@ async function cloudConnect(){try{const c=cloudConfig();if(!c.url||!c.key)throw 
 async function cloudPush(){try{const c=cloudConfig(),client=initCloud();if(!client)throw new Error('પહેલા Connect કરો.');const sess=await client.auth.getSession();if(!sess.data.session)throw new Error('Cloud login જરૂરી છે.');const payload={school_key:c.schoolKey,owner_id:sess.data.session.user.id,data:db,updated_at:new Date().toISOString()};const r=await client.from('school_state').upsert(payload,{onConflict:'school_key'});if(r.error)throw r.error;localStorage.setItem('hall_ticket_cloud_autosync','1');cloudStatus('Data uploaded successfully • '+new Date().toLocaleString('en-IN')+' • Auto-sync ON',true);updateTopCloudStatus(true,sess.data.session.user.email);}catch(e){cloudStatus('Upload error: '+e.message);alert(e.message);}}
 async function cloudPull(){try{const c=cloudConfig(),client=initCloud();if(!client)throw new Error('પહેલા Connect કરો.');const sess=await client.auth.getSession();if(!sess.data.session)throw new Error('Cloud login જરૂરી છે.');const r=await client.from('school_state').select('data,updated_at').eq('school_key',c.schoolKey).single();if(r.error)throw r.error;if(!r.data?.data)throw new Error('Cloud data મળ્યો નથી.');if(!confirm('Cloud data download કરીને હાલના browser dataને replace કરવું?'))return;db=r.data.data;db.customize={...structuredClone(defaultCustomize),...(db.customize||{})};localStorage.setItem(STORAGE_KEY,JSON.stringify(db));localStorage.setItem('hall_ticket_cloud_autosync','1');renderAll();applyCustomize();cloudStatus('Cloud data downloaded • '+new Date(r.data.updated_at).toLocaleString('en-IN')+' • Auto-sync ON',true);updateTopCloudStatus(true,sess.data.session.user.email);alert('Cloud data restored successfully.');}catch(e){cloudStatus('Download error: '+e.message);alert(e.message);}}
 async function cloudLogout(){if(cloudClient)await cloudClient.auth.signOut();localStorage.removeItem('hall_ticket_cloud_autosync');cloudStatus('Cloud logged out.');updateTopCloudStatus(false);}
+async function sendAuthPasswordReset(){
+  try{
+    const c=cloudConfig();
+    const email=(document.getElementById('resetEmail')?.value||document.getElementById('sbEmail')?.value||'').trim();
+    if(!c.url||!c.key)throw new Error('Supabase URL અને Publishable Key આપો.');
+    if(!email)throw new Error('Admin Email નાખો.');
+    localStorage.setItem('hall_ticket_sb_url',c.url);
+    localStorage.setItem('hall_ticket_sb_key',c.key);
+    const client=initCloud();
+    const redirectTo=location.origin+location.pathname;
+    const r=await client.auth.resetPasswordForEmail(email,{redirectTo});
+    if(r.error)throw r.error;
+    const e=document.getElementById('resetStatus');
+    if(e)e.textContent='Reset link Gmail પર મોકલાઈ છે. Gmailમાં link ખોલો અને નવો password set કરો.';
+  }catch(err){
+    const e=document.getElementById('resetStatus');
+    if(e)e.textContent='Error: '+err.message;
+    else alert(err.message);
+  }
+}
+function openCloudReset(){
+  const m=document.getElementById('cloudResetModal');
+  if(m){m.classList.remove('hidden');document.getElementById('resetEmail').value=document.getElementById('sbEmail')?.value||localStorage.getItem('hall_ticket_reset_email')||'';document.getElementById('resetEmail').focus();}
+}
+function closeCloudReset(){document.getElementById('cloudResetModal')?.classList.add('hidden');}
+async function handlePasswordRecovery(){
+  const client=initCloud();
+  if(!client)return;
+  client.auth.onAuthStateChange(async(event)=>{
+    if(event==='PASSWORD_RECOVERY'){
+      document.getElementById('passwordRecoveryModal')?.classList.remove('hidden');
+      document.getElementById('newAuthPassword')?.focus();
+    }
+  });
+  const hash=location.hash||'';
+  if(hash.includes('type=recovery')){
+    setTimeout(()=>{document.getElementById('passwordRecoveryModal')?.classList.remove('hidden');document.getElementById('newAuthPassword')?.focus();},300);
+  }
+}
+async function updateAuthPassword(){
+  try{
+    const p1=document.getElementById('newAuthPassword').value;
+    const p2=document.getElementById('newAuthPassword2').value;
+    if(!p1||p1.length<6)throw new Error('Password ઓછામાં ઓછો 6 charactersનો હોવો જોઈએ.');
+    if(p1!==p2)throw new Error('બંને password સરખા નથી.');
+    const client=initCloud();if(!client)throw new Error('Supabase configuration missing.');
+    const r=await client.auth.updateUser({password:p1});
+    if(r.error)throw r.error;
+    document.getElementById('recoveryStatus').textContent='Password successfully updated. હવે Online Syncમાં આ નવો password વાપરો.';
+    setTimeout(()=>{document.getElementById('passwordRecoveryModal')?.classList.add('hidden');history.replaceState({},document.title,location.pathname+location.search);},1200);
+  }catch(err){document.getElementById('recoveryStatus').textContent='Error: '+err.message;}
+}
+document.getElementById('btnCloudReset')?.addEventListener('click',openCloudReset);
+document.getElementById('btnCloseCloudReset')?.addEventListener('click',closeCloudReset);
+document.getElementById('btnCancelReset')?.addEventListener('click',closeCloudReset);
+document.getElementById('btnSendReset')?.addEventListener('click',sendAuthPasswordReset);
+document.getElementById('btnUpdateAuthPassword')?.addEventListener('click',updateAuthPassword);
+
 document.getElementById('btnCloudConnect')?.addEventListener('click',cloudConnect);document.getElementById('btnCloudPush')?.addEventListener('click',cloudPush);document.getElementById('btnCloudPull')?.addEventListener('click',cloudPull);document.getElementById('btnCloudLogout')?.addEventListener('click',cloudLogout);document.getElementById('btnSavePortalUrl')?.addEventListener('click',()=>{localStorage.setItem('hall_ticket_online_portal_url',document.getElementById('sbPortalUrl').value.trim());localStorage.setItem('hall_ticket_online_school_key',document.getElementById('sbSchoolKey').value.trim()||'main-school');alert('Portal URL saved.');});
 function loadCloudForm(){const c=cloudConfig();document.getElementById('sbUrl').value=c.url;document.getElementById('sbKey').value=c.key;document.getElementById('sbSchoolKey').value=c.schoolKey;document.getElementById('sbPortalUrl').value=localStorage.getItem('hall_ticket_online_portal_url')||'';}
 function renderAll(){
@@ -989,7 +1078,7 @@ document.getElementById('btnPortalSearch')?.addEventListener('click',()=>{const 
 document.getElementById('btnLogout')?.addEventListener('click',()=>{sessionStorage.removeItem(SESSION_KEY);location.reload();});
 function requireLogin(){if(new URLSearchParams(location.search).get('portal')==='1'){document.body.classList.add('portal-mode');showPage('portal');return;}const pw=db.customize?.adminPassword||'1234';if(sessionStorage.getItem(SESSION_KEY)==='1')return;loginOverlay.classList.remove('hidden');adminPassword.focus();}const closeAdminLogin=()=>{loginOverlay.classList.add('hidden');loginError.textContent='';};btnCloseLogin?.addEventListener('click',closeAdminLogin);btnCloseLogin2?.addEventListener('click',closeAdminLogin);btnLogin.addEventListener('click',()=>{if(adminPassword.value===(db.customize?.adminPassword||'1234')){sessionStorage.setItem(SESSION_KEY,'1');loginOverlay.classList.add('hidden');loginError.textContent='';}else loginError.textContent='Incorrect password.';});adminPassword.addEventListener('keydown',e=>{if(e.key==='Enter')btnLogin.click();});
 
-renderAll();showPage('dashboard');renderAllocations();renderResultPage();refreshCloudSessionStatus();requireLogin();
+renderAll();showPage('dashboard');renderAllocations();renderResultPage();refreshCloudSessionStatus();handlePasswordRecovery();requireLogin();
 </script>
 </body>
 </html>

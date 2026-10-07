@@ -1,6 +1,6 @@
 {
   "product": "School Hall Ticket & Student Management System",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "release": "Supabase Cloud Sync Reliability Update",
   "schema_version": "1",
   "update_strategy": "versioned",
@@ -11,5 +11,6 @@
     "updates/",
     "user data in Supabase"
   ],
-  "notes": "Improved Supabase connection status, restores an existing Auth session on startup, prevents automatic cloud overwrite until the first explicit Upload or Download, and enables auto-sync only after a successful first sync."
+  "notes": "Improved Supabase connection status, restores an existing Auth session on startup, prevents automatic cloud overwrite until the first explicit Upload or Download, and enables auto-sync only after a successful first sync.",
+  "name": "SVD School Management"
 }
