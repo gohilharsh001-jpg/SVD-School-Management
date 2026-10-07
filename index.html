@@ -9,10 +9,10 @@
 *{box-sizing:border-box}
 body{margin:0;font-family:"Nirmala UI","Segoe UI",Arial,sans-serif;background:var(--bg);color:#1d2a35}
 .app{display:flex;min-height:100vh}
-.sidebar{width:240px;background:linear-gradient(180deg,#17365d,#1f4e78);color:#fff;padding:18px 12px;position:fixed;top:0;bottom:0;left:0;display:flex;flex-direction:column;overflow:hidden}
+.sidebar{width:240px;background:linear-gradient(180deg,#17365d,#1f4e78);color:#fff;padding:18px 12px;position:fixed;top:0;bottom:0;left:0}
 .brand{padding:10px 12px 22px;border-bottom:1px solid rgba(255,255,255,.2);margin-bottom:12px}
 .brand h1{font-size:19px;margin:0 0 4px}.brand p{margin:0;font-size:12px;opacity:.82}
-.nav button{display:block;width:100%;border:0;background:transparent;color:#fff;text-align:left;padding:12px 14px;border-radius:8px;margin:5px 0;font-size:14px;cursor:pointer} .nav{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:4px 4px 18px 0;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.45) transparent}.nav::-webkit-scrollbar{width:7px}.nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.45);border-radius:10px}
+.nav button{display:block;width:100%;border:0;background:transparent;color:#fff;text-align:left;padding:12px 14px;border-radius:8px;margin:5px 0;font-size:14px;cursor:pointer}
 .nav button:hover,.nav button.active{background:rgba(255,255,255,.15)}
 .main{margin-left:240px;width:calc(100% - 240px);padding:22px}
 .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
@@ -69,10 +69,10 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
   .sidebar{position:static;width:100%;height:auto}.app{display:block}.main{margin:0;width:100%;padding:12px}.grid,.grid-4{grid-template-columns:1fr}
 }
 
-@media(max-width:900px){.sidebar{position:static;width:100%;height:auto;max-height:58vh;overflow:hidden}.nav{max-height:44vh;overflow-y:auto}.app{display:block}.main{margin:0;width:100%;padding:12px}.grid,.grid-4{grid-template-columns:1fr}} .fee-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}.fee-stat{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px}.fee-stat b{font-size:22px;display:block}.fee-table{width:100%;border-collapse:collapse}.fee-table th,.fee-table td{border:1px solid #b8cbd8;padding:7px;text-align:left}.fee-table th{background:#e6f0f6}.fee-receipt{max-width:800px;margin:0 auto;background:#fff;padding:24px;border:1px solid #b8cbd8}.fee-receipt-head{text-align:center;border-bottom:2px solid var(--blue);padding-bottom:12px;margin-bottom:14px}.fee-receipt-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.fee-paid{color:#167a25;font-weight:800}.fee-pending{color:#a00000;font-weight:800}
+.fee-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}.fee-stat{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px}.fee-stat b{font-size:22px;display:block}.fee-table{width:100%;border-collapse:collapse}.fee-table th,.fee-table td{border:1px solid #b8cbd8;padding:7px;text-align:left}.fee-table th{background:#e6f0f6}.fee-receipt{max-width:800px;margin:0 auto;background:#fff;padding:24px;border:1px solid #b8cbd8}.fee-receipt-head{text-align:center;border-bottom:2px solid var(--blue);padding-bottom:12px;margin-bottom:14px}.fee-receipt-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.fee-paid{color:#167a25;font-weight:800}.fee-pending{color:#a00000;font-weight:800}
 </style>
 <style>
-.searchbar{display:flex;gap:8px;flex-wrap:wrap}.searchbar input,.searchbar select{flex:1;min-width:160px}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--light);color:var(--blue2);font-size:11px;font-weight:700}.danger-text{color:#a00000;font-weight:800}.login-overlay{position:fixed;inset:0;background:rgba(10,30,50,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px} .locked-mode .app{pointer-events:none;user-select:none}.locked-mode .login-overlay{pointer-events:auto}.login-box{width:min(420px,100%);background:#fff;border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3)}.login-box h2{margin-top:0;color:var(--blue2)}.modal{position:fixed;inset:0;background:rgba(10,30,50,.6);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px}.modal-card{background:#fff;border-radius:14px;padding:20px;width:min(900px,100%);max-height:90vh;overflow:auto}.qr-box{display:flex;justify-content:center;align-items:center;padding:10px}.receipt-sign{min-width:150px;height:28px;border-bottom:1px solid #222;display:inline-block}.received-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#e8f5e9;color:#176b2c;font-weight:700;font-size:12px}.pending-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#fff3cd;color:#856404;font-weight:700;font-size:12px}.receipt-print-title{display:none} @media print{.receipt-print-title{display:block;text-align:center;margin-bottom:12px}.hall-receipt-table{width:100%;border-collapse:collapse}.hall-receipt-table th,.hall-receipt-table td{border:1px solid #333;padding:6px;font-size:11px}.hall-receipt-table .no-print{display:none!important}} 
+.searchbar{display:flex;gap:8px;flex-wrap:wrap}.searchbar input,.searchbar select{flex:1;min-width:160px}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--light);color:var(--blue2);font-size:11px;font-weight:700}.danger-text{color:#a00000;font-weight:800}.login-overlay{position:fixed;inset:0;background:rgba(10,30,50,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}.login-box{width:min(420px,100%);background:#fff;border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3)}.login-box h2{margin-top:0;color:var(--blue2)}.modal{position:fixed;inset:0;background:rgba(10,30,50,.6);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px}.modal-card{background:#fff;border-radius:14px;padding:20px;width:min(900px,100%);max-height:90vh;overflow:auto}.qr-box{display:flex;justify-content:center;align-items:center;padding:10px}.receipt-sign{min-width:150px;height:28px;border-bottom:1px solid #222;display:inline-block}.received-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#e8f5e9;color:#176b2c;font-weight:700;font-size:12px}.pending-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#fff3cd;color:#856404;font-weight:700;font-size:12px}.receipt-print-title{display:none} @media print{.receipt-print-title{display:block;text-align:center;margin-bottom:12px}.hall-receipt-table{width:100%;border-collapse:collapse}.hall-receipt-table th,.hall-receipt-table td{border:1px solid #333;padding:6px;font-size:11px}.hall-receipt-table .no-print{display:none!important}} 
 .allocation-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.allocation-card{border:1px solid var(--border);border-radius:10px;padding:12px;background:#fff}.public-portal{max-width:900px;margin:30px auto;padding:20px}.status-ok{color:#167a25;font-weight:800}.status-warn{color:#9b6500;font-weight:800}.result-sheet{max-width:900px;margin:0 auto;background:#fff;padding:24px;border:1px solid #ccd8e0}.result-head{text-align:center;border-bottom:2px solid var(--blue);padding-bottom:12px;margin-bottom:14px}.result-head h2{margin:4px 0;color:var(--blue2)}.result-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}.result-table{width:100%;border-collapse:collapse}.result-table th,.result-table td{border:1px solid #9db6c9;padding:7px;text-align:center}.result-table th{background:#e6f0f6}.result-total{display:flex;justify-content:flex-end;margin-top:12px}.result-grade{font-size:18px;font-weight:900}.result-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.marks-input{width:90px;min-width:70px;padding:6px}.portal-result-card{margin-top:16px}.portal-mode .sidebar,.portal-mode .topbar,.portal-mode .login-overlay{display:none!important}.portal-mode .main{margin:0;max-width:1000px}.portal-mode #page-portal{display:block!important}.portal-mode main section{display:none!important}.portal-mode #page-portal{min-height:100vh}
 </style>
 </head>
@@ -733,26 +733,60 @@ function openCloudReset(){
   if(m){m.classList.remove('hidden');document.getElementById('resetEmail').value=document.getElementById('sbEmail')?.value||localStorage.getItem('hall_ticket_reset_email')||'';document.getElementById('resetEmail').focus();}
 }
 function closeCloudReset(){document.getElementById('cloudResetModal')?.classList.add('hidden');}
+function isPasswordRecoveryLink(){
+  const raw=(location.hash||'').replace(/^#/,'');
+  const params=new URLSearchParams(raw);
+  return params.get('type')==='recovery' || !!params.get('access_token');
+}
+function showPasswordRecoveryModal(){
+  const m=document.getElementById('passwordRecoveryModal');
+  if(m)m.classList.remove('hidden');
+  setTimeout(()=>document.getElementById('newAuthPassword')?.focus(),50);
+}
+async function ensureRecoverySession(client){
+  let session=(await client.auth.getSession()).data.session;
+  if(session)return session;
+
+  // Supabase may need a moment to exchange the recovery URL hash for a session.
+  session=await new Promise((resolve)=>{
+    let done=false;
+    const finish=(value)=>{if(done)return;done=true;try{client.auth.onAuthStateChange(()=>{});}catch(e){};resolve(value||null);};
+    let timer=setTimeout(()=>finish(null),10000);
+    client.auth.onAuthStateChange((event,s)=>{
+      if(s && (event==='PASSWORD_RECOVERY'||event==='SIGNED_IN'||event==='TOKEN_REFRESHED')){
+        clearTimeout(timer); finish(s);
+      }
+    });
+  });
+  if(session)return session;
+
+  const raw=(location.hash||'').replace(/^#/,'');
+  const params=new URLSearchParams(raw);
+  const access_token=params.get('access_token');
+  const refresh_token=params.get('refresh_token');
+  if(access_token && refresh_token){
+    const sr=await client.auth.setSession({access_token,refresh_token});
+    if(sr.error)throw sr.error;
+    session=sr.data.session;
+  }
+  return session;
+}
 async function handlePasswordRecovery(){
   const client=initCloud();
   if(!client)return;
-  client.auth.onAuthStateChange(async(event)=>{
+  client.auth.onAuthStateChange((event)=>{
     if(event==='PASSWORD_RECOVERY'){
-      document.getElementById('passwordRecoveryModal')?.classList.remove('hidden');
-      document.getElementById('newAuthPassword')?.focus();
+      window.__passwordRecoveryActive=true;
+      showPasswordRecoveryModal();
     }
   });
-  const hash=location.hash||'';
-  // Recovery links may arrive with `type=recovery` OR only implicit-flow
-  // access/refresh tokens after Supabase has consumed the recovery event.
-  const raw=hash.replace(/^#/,'');
-  const params=new URLSearchParams(raw);
-  const isRecoveryHash=hash.includes('type=recovery') || !!params.get('access_token');
-  if(isRecoveryHash){
-    document.getElementById('passwordRecoveryModal')?.classList.remove('hidden');
-    document.getElementById('newAuthPassword')?.focus();
-    // Give supabase-js time to consume the recovery token from the URL.
-    setTimeout(async()=>{ try{ await client.auth.getSession(); }catch(e){} },250);
+  if(isPasswordRecoveryLink()){
+    window.__passwordRecoveryActive=true;
+    showPasswordRecoveryModal();
+    try{await ensureRecoverySession(client);}catch(e){
+      const status=document.getElementById('recoveryStatus');
+      if(status)status.textContent='❌ Recovery session error: '+e.message;
+    }
   }
 }
 async function updateAuthPassword(){
@@ -761,31 +795,24 @@ async function updateAuthPassword(){
   try{
     const p1=document.getElementById('newAuthPassword').value;
     const p2=document.getElementById('newAuthPassword2').value;
-    if(!p1||p1.length<6)throw new Error('Password ઓછામાં ઓછો 6 charactersનો હોવો જોઈએ.');
+    if(!p1||p1.length<8)throw new Error('Password ઓછામાં ઓછો 8 charactersનો હોવો જોઈએ.');
     if(p1!==p2)throw new Error('બંને password સરખા નથી.');
-    const client=initCloud();if(!client)throw new Error('Supabase configuration missing.');
+    const client=initCloud();
+    if(!client)throw new Error('Supabase configuration missing.');
     if(status)status.textContent='Updating password...';
     if(btn){btn.disabled=true;btn.textContent='⏳ Updating...';}
-    let session=(await client.auth.getSession()).data.session;
-    // Fallback for recovery links that arrived with implicit-flow tokens in the URL hash.
-    if(!session){
-      const raw=(location.hash||'').replace(/^#/,'');
-      const params=new URLSearchParams(raw);
-      const access_token=params.get('access_token');
-      const refresh_token=params.get('refresh_token');
-      if(access_token && refresh_token){
-        const sr=await client.auth.setSession({access_token,refresh_token});
-        if(sr.error)throw sr.error;
-        session=sr.data.session;
-      }
-    }
-    if(!session)throw new Error('Password reset session મળ્યું નથી. Gmailનો reset link ફરીથી ખોલો અને આ page પર જ રહો.');
+    const session=await ensureRecoverySession(client);
+    if(!session)throw new Error('Password reset session મળ્યું નથી. Gmailનો સૌથી નવો reset link ફરીથી ખોલો અને આ page પર જ રહો.');
     const r=await client.auth.updateUser({password:p1});
     if(r.error)throw r.error;
     if(status)status.textContent='✅ Password successfully updated. હવે Online Syncમાં આ નવો password વાપરો.';
-    setTimeout(()=>{document.getElementById('passwordRecoveryModal')?.classList.add('hidden');history.replaceState({},document.title,location.pathname+location.search);},1400);
+    window.__passwordRecoveryActive=false;
+    setTimeout(()=>{
+      document.getElementById('passwordRecoveryModal')?.classList.add('hidden');
+      try{history.replaceState({},document.title,location.pathname+location.search);}catch(e){}
+    },1400);
   }catch(err){
-    if(status)status.textContent='❌ Error: '+err.message;
+    if(status)status.textContent='❌ Error: '+(err?.message||String(err));
     if(btn){btn.disabled=false;btn.textContent='💾 Update Password';}
   }
 }
@@ -998,27 +1025,39 @@ function renderQR(el,text,size){
   if(!el)return;
   el.innerHTML='';
   const img=document.createElement('img');
+  const sz=size||120;
   img.alt='QR Code';
-  img.width=size||90; img.height=size||90;
-  img.style.width=(size||90)+'px'; img.style.height=(size||90)+'px';
+  img.width=sz; img.height=sz;
+  img.style.width=sz+'px'; img.style.height=sz+'px';
   img.style.display='block'; img.style.background='#fff';
+  img.style.imageRendering='pixelated';
   img.referrerPolicy='no-referrer';
-  img.src='https://api.qrserver.com/v1/create-qr-code/?size='+(size||90)+'x'+(size||90)+'&margin=8&data='+encodeURIComponent(text);
-  img.onerror=function(){el.innerHTML='<div style="font-size:10px;color:#b42318;text-align:center;width:'+(size||90)+'px">QR unavailable<br>Connect to internet</div>';};
+  img.src='https://api.qrserver.com/v1/create-qr-code/?size='+sz+'x'+sz+'&margin=10&ecc=M&data='+encodeURIComponent(text);
+  img.onerror=function(){el.innerHTML='<div style="font-size:10px;color:#b42318;text-align:center;width:'+sz+'px">QR unavailable<br>Connect to internet</div>';};
   el.appendChild(img);
 }
 function hallTicketQRData(s){
-  const exams=(db.exams||[]).map(e=>{const a=(db.rooms||[]).find(x=>x.examId===e.id&&x.studentId===s.id);return {exam:e.subject||'',date:e.date||'',time:e.time||'',room:a?.room||e.room||'',seat:a?.seat||''};});
-  const payload={type:'HALL_TICKET',version:3,school:db.school?.name||'',address:db.school?.address||'',examName:db.school?.examName||'',name:s.name||'',ctsId:s.ctsId||'',gr:s.gr||'',roll:s.roll||'',standard:s.std||'',division:s.div||'',exams};
-  // Prefer a direct, cloud-free verification page so scanning the QR works even while Supabase is unavailable.
-  const hosted=(location.protocol==='http:'||location.protocol==='https:');
-  const fallback='https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html';
-  const verifyUrl=hosted?new URL('verify.html',location.href).href:fallback;
-  try{
-    const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(payload)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-    return verifyUrl+'?d='+encoded;
-  }catch(e){ return JSON.stringify(payload); }
+  // QR opens the public verification page with readable student data.
+  // This avoids the previous dense/plain-text QR and the old base64-only format.
+  const base='https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html';
+  const rows=(db.exams||[]).map(e=>{
+    const a=(db.rooms||[]).find(x=>x.examId===e.id&&x.studentId===s.id);
+    const room=a?.room||e.room||'';
+    const seat=a?.seat||'';
+    return [e.date||'',e.time||'',e.subject||'',room,seat].join('~');
+  }).join('|');
+  const p=new URLSearchParams();
+  p.set('n',String(s.name||''));
+  p.set('c',String(s.ctsId||''));
+  p.set('g',String(s.gr||''));
+  p.set('r',String(s.roll||''));
+  p.set('s',String(s.std||''));
+  p.set('d',String(s.div||''));
+  p.set('e',String(db.school?.examName||''));
+  p.set('q',rows);
+  return base+'?'+p.toString();
 }
+
 function markGenerated(id){db.generated=db.generated||[];if(!db.generated.includes(id)){db.generated.push(id);localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}}
 function renderAllocations(){const sel=document.getElementById('allocExam');if(!sel)return;const cur=sel.value;sel.innerHTML=db.exams.map(e=>`<option value="${e.id}">${esc(e.subject)} - ${esc(e.date)}</option>`).join('');if(cur)sel.value=cur;const ex=db.exams.find(e=>String(e.id)===String(sel.value));const list=(db.rooms||[]).filter(x=>!ex||x.examId===ex.id);document.getElementById('allocationPreview').innerHTML=list.length?list.map(x=>`<div class="allocation-card"><b>Roll ${esc(x.roll)}</b><div>${esc(x.name)}</div><span class="pill">Room ${esc(x.room)} · Seat ${esc(x.seat)}</span></div>`).join(''):'<div class="muted">No allocations yet.</div>';}
 function autoAllocate(){const ex=db.exams.find(e=>String(e.id)===String(document.getElementById('allocExam').value));if(!ex){alert('Select an exam.');return;}const cap=Math.max(1,Number(document.getElementById('allocCapacity').value)||30);let start=Math.max(1,Number(document.getElementById('allocStart').value)||1);let room=document.getElementById('allocRoom').value.trim()||ex.room||'101';const eligible=db.students.filter(s=>(!ex.std||String(s.std)===String(ex.std))&&(!ex.div||String(s.div)===String(ex.div))).sort((a,b)=>Number(a.roll)-Number(b.roll));db.rooms=(db.rooms||[]).filter(x=>x.examId!==ex.id);eligible.forEach((s,i)=>{const roomNo=String(Number(room)+Math.floor(i/cap));db.rooms.push({examId:ex.id,studentId:s.id,roll:s.roll,name:s.name,room:roomNo,seat:start+(i%cap)});});saveDB();renderAllocations();alert(eligible.length+' students allocated.');}
@@ -1050,12 +1089,12 @@ function renderTicket(){
   if(!db.students.length){ticketArea.innerHTML='<div class="card">No students.</div>';return;}
   if(!ticketRoll.value)ticketRoll.value=db.students[0].roll;
   const s=db.students.find(x=>Number(x.roll)===Number(ticketRoll.value))||db.students[0];
-  ticketArea.innerHTML=ticketHTML(s); markGenerated(s.id); if(db.customize.showQR!==false){const q=document.getElementById('qr-'+s.id);renderQR(q,hallTicketQRData(s),90);}
+  ticketArea.innerHTML=ticketHTML(s); markGenerated(s.id); if(db.customize.showQR!==false){const q=document.getElementById('qr-'+s.id);renderQR(q,hallTicketQRData(s),180);}
 }
 btnPrintCurrent.addEventListener('click',()=>{renderTicket();setTimeout(()=>window.print(),200)});
 btnPrintAll.addEventListener('click',()=>{
   if(!db.students.length){alert('No students.');return;}
-  ticketArea.innerHTML=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(ticketHTML).join(''); db.students.forEach(s=>markGenerated(s.id)); if(db.customize.showQR!==false)db.students.forEach(s=>{const q=document.getElementById('qr-'+s.id);renderQR(q,hallTicketQRData(s),70);});
+  ticketArea.innerHTML=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(ticketHTML).join(''); db.students.forEach(s=>markGenerated(s.id)); if(db.customize.showQR!==false)db.students.forEach(s=>{const q=document.getElementById('qr-'+s.id);renderQR(q,hallTicketQRData(s),150);});
   setTimeout(()=>window.print(),250);
 });
 
@@ -1123,10 +1162,10 @@ function previewResult(){const s=db.students.find(x=>String(x.id)===String(docum
 function printResult(){previewResult();setTimeout(()=>window.print(),200);}
 function printAllResults(){if(!db.students.length)return;document.getElementById('resultPreview').innerHTML=db.students.map(resultHTML).join('');setTimeout(()=>window.print(),250);}
 function showStudentPortalResult(id){const s=db.students.find(x=>x.id===id);if(s)document.getElementById('portalStudentOutput').innerHTML=resultHTML(s);}
-function showStudentPortalHallTicket(id){const s=db.students.find(x=>x.id===id);if(!s)return;document.getElementById('portalStudentOutput').innerHTML=ticketHTML(s);if(db.customize.showQR!==false){const q=document.getElementById('qr-'+s.id);renderQR(q,hallTicketQRData(s),90);}}
+function showStudentPortalHallTicket(id){const s=db.students.find(x=>x.id===id);if(!s)return;document.getElementById('portalStudentOutput').innerHTML=ticketHTML(s);if(db.customize.showQR!==false){const q=document.getElementById('qr-'+s.id);renderQR(q,hallTicketQRData(s),180);}}
 document.getElementById('btnPortalSearch')?.addEventListener('click',()=>{const cts=(document.getElementById('portalCTS')?.value||'').trim().toLowerCase(),roll=portalRoll.value.trim(),gr=portalGR.value.trim();const s=db.students.find(x=>(cts&&String(x.ctsId||'').toLowerCase()===cts)||(!cts&&String(x.roll)===roll&&(!gr||String(x.gr)===gr)));if(!s){portalResult.innerHTML='<div class="danger-text">Student not found. CTS ID / Roll No. check કરો.</div>';return;}const r=studentResultHTML(s);portalResult.innerHTML='<div class="card"><div class="btn-row"><button class="btn btn-primary" onclick="showStudentPortalHallTicket('+s.id+')">🎫 Hall Ticket</button><button class="btn btn-green" onclick="showStudentPortalResult('+s.id+')">📊 Result</button></div><div id="portalStudentOutput" style="margin-top:14px"></div></div>';window._portalStudentId=s.id;});
 document.getElementById('btnLogout')?.addEventListener('click',()=>{sessionStorage.removeItem(SESSION_KEY);location.reload();});
-function requireLogin(){if(new URLSearchParams(location.search).get('portal')==='1'){document.body.classList.add('portal-mode');showPage('portal');return;}if(sessionStorage.getItem(SESSION_KEY)==='1')return;loginOverlay.classList.remove('hidden');document.body.classList.add('locked-mode');setTimeout(()=>adminPassword.focus(),0);}const closeAdminLogin=()=>{loginError.textContent='Login required. Close દબાવવાથી system access નહીં મળે.';adminPassword.value='';adminPassword.focus();};btnCloseLogin?.addEventListener('click',closeAdminLogin);btnCloseLogin2?.addEventListener('click',closeAdminLogin);btnLogin.addEventListener('click',()=>{if(adminPassword.value===(db.customize?.adminPassword||'1234')){sessionStorage.setItem(SESSION_KEY,'1');loginOverlay.classList.add('hidden');document.body.classList.remove('locked-mode');loginError.textContent='';}else{loginError.textContent='Incorrect password.';adminPassword.focus();}});adminPassword.addEventListener('keydown',e=>{if(e.key==='Enter')btnLogin.click();});
+function requireLogin(){if(new URLSearchParams(location.search).get('portal')==='1'){document.body.classList.add('portal-mode');showPage('portal');return;}if(window.__passwordRecoveryActive || isPasswordRecoveryLink())return;const pw=db.customize?.adminPassword||'1234';if(sessionStorage.getItem(SESSION_KEY)==='1')return;loginOverlay.classList.remove('hidden');adminPassword.focus();}const closeAdminLogin=()=>{loginOverlay.classList.add('hidden');loginError.textContent='';};btnCloseLogin?.addEventListener('click',closeAdminLogin);btnCloseLogin2?.addEventListener('click',closeAdminLogin);btnLogin.addEventListener('click',()=>{if(adminPassword.value===(db.customize?.adminPassword||'1234')){sessionStorage.setItem(SESSION_KEY,'1');loginOverlay.classList.add('hidden');loginError.textContent='';}else loginError.textContent='Incorrect password.';});adminPassword.addEventListener('keydown',e=>{if(e.key==='Enter')btnLogin.click();});
 
 renderAll();showPage('dashboard');renderAllocations();renderResultPage();refreshCloudSessionStatus();handlePasswordRecovery();requireLogin();
 </script>

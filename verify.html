@@ -4,6 +4,53 @@
 <body><div class="wrap"><div class="card" id="app"><div class="head"><h2>🎫 Hall Ticket Verification</h2><div id="school"></div></div><div id="content"></div></div></div>
 <script>
 function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
-function decodeData(){const d=new URLSearchParams(location.search).get('d');if(!d)throw new Error('QR data not found.');const b64=d.replace(/-/g,'+').replace(/_/g,'/');const pad=b64+'='.repeat((4-b64.length%4)%4);return JSON.parse(decodeURIComponent(escape(atob(pad))));}
-try{const x=decodeData();document.title='Hall Ticket Verification - '+(x.school||'SVD School');document.getElementById('school').innerHTML='<b>'+esc(x.school||'School')+'</b>'+(x.address?'<div>'+esc(x.address)+'</div>':'');const rows=(x.exams||[]).map(e=>'<tr><td>'+esc(e.date)+'</td><td>'+esc(e.time)+'</td><td>'+esc(e.exam)+'</td><td>'+esc(e.room)+'</td><td>'+esc(e.seat)+'</td></tr>').join('');document.getElementById('content').innerHTML='<p><span class="ok">✓ QR DATA VERIFIED</span></p><div class="warn"><b>Note:</b> This page displays the information embedded in the printed QR code. It does not contact Supabase.</div><div class="meta"><div><b>Student Name</b><br>'+esc(x.name)+'</div><div><b>CTS ID</b><br>'+esc(x.ctsId)+'</div><div><b>GR No.</b><br>'+esc(x.gr)+'</div><div><b>Roll No.</b><br>'+esc(x.roll)+'</div><div><b>Standard / Division</b><br>'+esc(x.standard)+' / '+esc(x.division)+'</div><div><b>Exam</b><br>'+esc(x.examName)+'</div></div><h3>Exam Schedule</h3><table class="schedule"><tr><th>Date</th><th>Time</th><th>Subject</th><th>Room</th><th>Seat</th></tr>'+rows+'</table>';}catch(e){document.getElementById('content').innerHTML='<p style="color:#b42318;font-weight:700">Invalid or incomplete QR code.</p><p>'+esc(e.message)+'</p>';}
+function decodeLegacy(){
+  // Legacy QR format uses parameter "v". The current format uses "d" for Division,
+  // so never attempt to Base64-decode a normal division such as A/B/C.
+  const d=new URLSearchParams(location.search).get('v');
+  if(!d)return null;
+  const b64=d.replace(/-/g,'+').replace(/_/g,'/');
+  const pad=b64+'='.repeat((4-b64.length%4)%4);
+  return JSON.parse(decodeURIComponent(escape(atob(pad))));
+}
+try{
+  const p=new URLSearchParams(location.search);
+  let x=decodeLegacy();
+  if(!x){
+    const q=p.get('q')||'';
+    const exams=q?q.split('|').filter(Boolean).map(row=>{
+      const a=row.split('~');
+      return {date:a[0]||'',time:a[1]||'',exam:a[2]||'',room:a[3]||'',seat:a[4]||''};
+    }):[];
+    x={
+      school:'Shree S.V. Doshi Highschool, Kumbhan',
+      name:p.get('n')||'',
+      ctsId:p.get('c')||'',
+      gr:p.get('g')||'',
+      roll:p.get('r')||'',
+      standard:p.get('s')||'',
+      division:p.get('d')||'',
+      examName:p.get('e')||'',
+      exams
+    };
+  }
+  if(!x.name && !x.ctsId && !x.gr && !x.roll) throw new Error('QR data not found.');
+  document.title='Hall Ticket Verification - '+(x.school||'SVD School');
+  document.getElementById('school').innerHTML='<b>'+esc(x.school||'Shree S.V. Doshi Highschool, Kumbhan')+'</b>';
+  const rows=(x.exams||[]).map(e=>'<tr><td>'+esc(e.date)+'</td><td>'+esc(e.time)+'</td><td>'+esc(e.exam)+'</td><td>'+esc(e.room)+'</td><td>'+esc(e.seat)+'</td></tr>').join('');
+  document.getElementById('content').innerHTML=
+    '<p><span class="ok">✓ QR DATA VERIFIED</span></p>'+
+    '<div class="warn"><b>Verified from QR:</b> This page displays the information embedded in the QR code. It does not require Supabase.</div>'+
+    '<div class="meta">'+
+    '<div><b>Student Name</b><br>'+esc(x.name)+'</div>'+
+    '<div><b>CTS ID</b><br>'+esc(x.ctsId)+'</div>'+
+    '<div><b>GR No.</b><br>'+esc(x.gr)+'</div>'+
+    '<div><b>Roll No.</b><br>'+esc(x.roll)+'</div>'+
+    '<div><b>Standard / Division</b><br>'+esc(x.standard)+' / '+esc(x.division)+'</div>'+
+    '<div><b>Exam</b><br>'+esc(x.examName)+'</div>'+
+    '</div>'+
+    (rows?'<h3>Exam Schedule</h3><table class="schedule"><tr><th>Date</th><th>Time</th><th>Subject</th><th>Room</th><th>Seat</th></tr>'+rows+'</table>':'');
+}catch(e){
+  document.getElementById('content').innerHTML='<p style="color:#b42318;font-weight:700">Invalid or incomplete QR code.</p><p>'+esc(e.message)+'</p>';
+}
 </script></body></html>

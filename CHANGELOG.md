@@ -1,9 +1,29 @@
-# v1.2.9 - QR + Sidebar + Login Security
+# v1.3.6 - QR Verification Fix
+- Fixed verification page treating the normal Division parameter `d` as legacy Base64 data.
+- Current QR links now open correctly for divisions such as A/B/C.
 
-- Fixed left sidebar vertical scrolling on desktop and mobile.
-- Fixed Admin Login Close buttons so closing cannot grant system access.
-- Added locked-mode protection until successful admin login.
-- Preserved QR verification page architecture.
+## v1.3.5 — QR verification URL fix
+- QR now opens the public verification page with readable student data.
+- Increased QR render size for easier mobile scanning.
+- Verification page supports the new QR format and the legacy `d` format.
+
+## v1.3.5 — QR direct-data reliability fix
+- Hall Ticket QR now encodes compact plain-text student and exam schedule data directly.
+- Removed the long base64 verification URL from the QR payload to improve phone-camera scanning reliability.
+- Increased QR render size for current and bulk hall tickets.
+- Existing Admin Login, sidebar scrolling, Supabase/Auth, Student, Result, Fee, Bus Fee and Reports features are preserved.
+
+## v1.3.3 — Supabase Auth Recovery Session Fix
+- Password recovery Update Password now waits for Supabase recovery/sign-in session events before calling updateUser.
+- Added recovery-token fallback when the session is not immediately available.
+- Preserved existing login, sidebar, QR, cloud sync and database features.
+
+## v1.3.2 — Supabase Auth Recovery Flow Fix
+- Recovery links now reliably establish the Supabase recovery session before updating the password.
+- Admin Login is bypassed while a password-recovery link is active, so the recovery form is not blocked by the local login overlay.
+- Supports Supabase implicit recovery links containing access/refresh tokens.
+- Requires an 8-character minimum for new Supabase Auth passwords.
+- Existing local data, QR, Hall Ticket, Result, Fee, Bus Fee, Reports and Cloud Sync features remain unchanged.
 
 # Changelog
 

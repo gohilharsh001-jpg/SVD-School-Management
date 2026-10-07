@@ -1,5 +1,7 @@
 {
-  "version": "1.2.9",
+  "version": "1.3.6",
   "date": "2026-10-07",
-  "name": "SVD School Management"
+  "name": "SVD School Management",
+  "status": "stable",
+  "notes": "Hall Ticket QR reliability fix: QR now contains compact plain-text student and exam data for direct scanning, with larger QR rendering."
 }
