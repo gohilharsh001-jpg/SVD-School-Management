@@ -701,7 +701,7 @@ document.getElementById('cLogo').addEventListener('change',e=>{const f=e.target.
 let cloudClient=null;
 function cloudConfig(){return {url:(document.getElementById('sbUrl')?.value||localStorage.getItem('hall_ticket_sb_url')||'').trim(),key:(document.getElementById('sbKey')?.value||localStorage.getItem('hall_ticket_sb_key')||'').trim(),schoolKey:(document.getElementById('sbSchoolKey')?.value||localStorage.getItem('hall_ticket_online_school_key')||'main-school').trim()||'main-school'};}
 function cloudStatus(msg,ok=false){const e=document.getElementById('cloudStatus');if(e){e.textContent=msg;e.className=ok?'status-ok':'muted';}}
-function initCloud(){const c=cloudConfig(); if(!c.url||!c.key||!window.supabase)return null; if(!cloudClient)cloudClient=window.supabase.createClient(c.url,c.key); return cloudClient;}
+function initCloud(){const c=cloudConfig(); if(!c.url||!c.key||!window.supabase)return null; if(!cloudClient)cloudClient=window.supabase.createClient(c.url,c.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'implicit'}}); return cloudClient;}
 function updateTopCloudStatus(connected=false,email=''){const e=document.getElementById('topCloudStatus');if(e)e.textContent=connected?('Storage: Browser local • Cloud: Connected'+(email?' • '+email:'')):'Storage: Browser local • Cloud: Not connected';}
 async function refreshCloudSessionStatus(){try{const client=initCloud();if(!client){updateTopCloudStatus(false);return;}const s=await client.auth.getSession();if(s.data.session){cloudStatus('Connected as '+s.data.session.user.email,true);updateTopCloudStatus(true,s.data.session.user.email);}else updateTopCloudStatus(false);}catch(e){updateTopCloudStatus(false);}}
 async function cloudConnect(){try{const c=cloudConfig();if(!c.url||!c.key)throw new Error('Supabase URL અને Publishable Key આપો.');localStorage.setItem('hall_ticket_sb_url',c.url);localStorage.setItem('hall_ticket_sb_key',c.key);localStorage.setItem('hall_ticket_online_school_key',c.schoolKey);const client=initCloud();const email=document.getElementById('sbEmail').value.trim(),password=document.getElementById('sbPassword').value;if(email&&password){const r=await client.auth.signInWithPassword({email,password});if(r.error)throw r.error;}const s=await client.auth.getSession();if(!s.data.session)throw new Error('Supabase Admin login જરૂરી છે. પ્રથમ Authentication → Users માં user બનાવો.');cloudStatus('Connected as '+s.data.session.user.email+' • First sync: Upload or Download પસંદ કરો.',true);updateTopCloudStatus(true,s.data.session.user.email);localStorage.removeItem('hall_ticket_cloud_autosync');}catch(e){cloudStatus('Error: '+e.message);updateTopCloudStatus(false);alert(e.message);}}
@@ -744,21 +744,45 @@ async function handlePasswordRecovery(){
   });
   const hash=location.hash||'';
   if(hash.includes('type=recovery')){
-    setTimeout(()=>{document.getElementById('passwordRecoveryModal')?.classList.remove('hidden');document.getElementById('newAuthPassword')?.focus();},300);
+    document.getElementById('passwordRecoveryModal')?.classList.remove('hidden');
+    document.getElementById('newAuthPassword')?.focus();
+    // Give supabase-js time to consume the recovery token from the URL.
+    setTimeout(async()=>{ try{ await client.auth.getSession(); }catch(e){} },250);
   }
 }
 async function updateAuthPassword(){
+  const status=document.getElementById('recoveryStatus');
+  const btn=document.getElementById('btnUpdateAuthPassword');
   try{
     const p1=document.getElementById('newAuthPassword').value;
     const p2=document.getElementById('newAuthPassword2').value;
     if(!p1||p1.length<6)throw new Error('Password ઓછામાં ઓછો 6 charactersનો હોવો જોઈએ.');
     if(p1!==p2)throw new Error('બંને password સરખા નથી.');
     const client=initCloud();if(!client)throw new Error('Supabase configuration missing.');
+    if(status)status.textContent='Updating password...';
+    if(btn){btn.disabled=true;btn.textContent='⏳ Updating...';}
+    let session=(await client.auth.getSession()).data.session;
+    // Fallback for recovery links that arrived with implicit-flow tokens in the URL hash.
+    if(!session){
+      const raw=(location.hash||'').replace(/^#/,'');
+      const params=new URLSearchParams(raw);
+      const access_token=params.get('access_token');
+      const refresh_token=params.get('refresh_token');
+      if(access_token && refresh_token){
+        const sr=await client.auth.setSession({access_token,refresh_token});
+        if(sr.error)throw sr.error;
+        session=sr.data.session;
+      }
+    }
+    if(!session)throw new Error('Password reset session મળ્યું નથી. Gmailનો reset link ફરીથી ખોલો અને આ page પર જ રહો.');
     const r=await client.auth.updateUser({password:p1});
     if(r.error)throw r.error;
-    document.getElementById('recoveryStatus').textContent='Password successfully updated. હવે Online Syncમાં આ નવો password વાપરો.';
-    setTimeout(()=>{document.getElementById('passwordRecoveryModal')?.classList.add('hidden');history.replaceState({},document.title,location.pathname+location.search);},1200);
-  }catch(err){document.getElementById('recoveryStatus').textContent='Error: '+err.message;}
+    if(status)status.textContent='✅ Password successfully updated. હવે Online Syncમાં આ નવો password વાપરો.';
+    setTimeout(()=>{document.getElementById('passwordRecoveryModal')?.classList.add('hidden');history.replaceState({},document.title,location.pathname+location.search);},1400);
+  }catch(err){
+    if(status)status.textContent='❌ Error: '+err.message;
+    if(btn){btn.disabled=false;btn.textContent='💾 Update Password';}
+  }
 }
 document.getElementById('btnCloudReset')?.addEventListener('click',openCloudReset);
 document.getElementById('btnCloseCloudReset')?.addEventListener('click',closeCloudReset);

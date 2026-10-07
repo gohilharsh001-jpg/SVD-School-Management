@@ -1,6 +1,6 @@
 {
   "product": "School Hall Ticket & Student Management System",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "release": "Supabase Cloud Sync Reliability Update",
   "schema_version": "1",
   "update_strategy": "versioned",

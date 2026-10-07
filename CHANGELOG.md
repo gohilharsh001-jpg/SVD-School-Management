@@ -1,3 +1,6 @@
+# v1.2.2
+- Fixed Supabase password-recovery session handling and Update Password button flow.
+
 # Changelog
 
 ## v1.2.1 — Supabase Auth Password Reset
