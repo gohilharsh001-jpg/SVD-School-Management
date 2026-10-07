@@ -1,6 +1,5 @@
 {
-  "version": "1.2.4",
-  "name": "SVD School Management",
-  "status": "stable",
-  "notes": "Supabase password recovery modal now opens correctly for implicit-flow access-token recovery links."
+  "version": "1.2.9",
+  "date": "2026-10-07",
+  "name": "SVD School Management"
 }

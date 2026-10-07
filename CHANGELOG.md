@@ -1,3 +1,31 @@
+# v1.2.9 - QR + Sidebar + Login Security
+
+- Fixed left sidebar vertical scrolling on desktop and mobile.
+- Fixed Admin Login Close buttons so closing cannot grant system access.
+- Added locked-mode protection until successful admin login.
+- Preserved QR verification page architecture.
+
+# Changelog
+
+## v1.2.8 — QR display fix
+- Fixed Hall Ticket QR rendering when the QR JavaScript CDN is unavailable.
+- QR is now rendered as an image from a QR generation endpoint.
+- QR continues to point to the cloud-free `verify.html` verification page and does not require Supabase.
+- Existing student, hall ticket, result, fee, bus fee, reports, and online-sync features are preserved.
+
+# v1.2.7
+- Fixed Hall Ticket QR display by using a direct QR image endpoint; no QR JavaScript library is required.
+- QR continues to encode the cloud-free verification URL and student hall-ticket data.
+
+# v1.2.6
+- Fixed Hall Ticket QR Code display by using a direct QR image generator URL; QR now renders even when the JavaScript QR library fails to load.
+- QR content remains the cloud-free verification URL/data.
+
+## v1.2.5
+- Fixed Hall Ticket QR scanning: QR now opens a direct cloud-free verification page with embedded student and exam details.
+- QR verification does not depend on Supabase availability.
+- Existing Supabase portal QR behavior is replaced by the reliable static verification flow.
+
 ## v1.2.4
 - Password reset button now has a direct click fallback and visible success/error alert.
 
