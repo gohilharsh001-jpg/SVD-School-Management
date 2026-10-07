@@ -3,6 +3,6 @@
 // NEVER put a Supabase secret/service-role key here.
 window.HALL_TICKET_ONLINE_CONFIG = {
   SUPABASE_URL: 'https://cfxwwvcjqbahidgpkcwp.supabase.co',
-  SUPABASE_ANON_KEY: '',
+  SUPABASE_ANON_KEY: 'sb_publishable_SBjL3U74lZkTHS2PL27Kwg_d31kL0pg',
   SCHOOL_KEY: 'main-school'
 };
