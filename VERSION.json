@@ -1,20 +1,6 @@
 {
-  "version": "1.3.9",
-  "date": "2026-10-08",
-  "name": "School Management – Print Isolation & Manual Bulk Fields Fix",
-  "status": "stable",
-  "notes": "Receipt/result printing now prints only the intended receipt or result, and Bulk Student Entry fields can be manually selected.",
-  "build": "2026-10-08",
-  "changes": [
-    "Fee Receipt print now prints receipt only, not the Fee Collection form/screen",
-    "Bus Fee Receipt print now prints receipt only, not the Bus Fee form/screen",
-    "Student Result / Marksheet and Print All Results now print only result sheets, not the Result form/screen",
-    "Test Report print now prints only the selected report",
-    "Student Bulk Entry now has manual field selection and selected-column template generation",
-    "Bulk Entry selection is saved in Customize / Settings and controls Excel paste column order",
-    "Bulk Entry keeps 10-digit mobile and 18-digit CTS validation",
-    "Last saved fee/bus fee receipt is tracked so Print Receipt prints the intended entry",
-    "Removed stale Admission No. reference from Hall Ticket Receipt search",
-    "Preserved existing QR, sidebar scroll, admin login, student validation, schedule and principal signature features"
-  ]
+  "version": "1.3.12",
+  "name": "SVD School Management",
+  "release": "QR ROBUST FIX",
+  "date": "2026-10-08"
 }

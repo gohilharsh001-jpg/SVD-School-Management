@@ -54,7 +54,7 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
 .photo img{max-width:145px;max-height:170px;object-fit:contain}
 .photo span{font-weight:800;color:#537086;font-size:12px;text-align:center}
 .schedule-title{margin-top:14px;background:var(--blue);color:white;padding:8px;text-align:center;font-weight:900}
-.ticket table.schedule{width:100%;border-collapse:collapse}.ticket table.schedule th,.ticket table.schedule td{border:1px solid #9db6c9;padding:8px;text-align:center}.ticket table.schedule th{background:#e6f0f6}
+.ticket table.schedule{width:100%;border-collapse:collapse}.ticket table.schedule th,.ticket table.schedule td{border:1px solid #9db6c9;padding:8px;text-align:center}.ticket table.schedule th{background:#e6f0f6}.supervisor-sign-cell{min-width:120px}.supervisor-sign-line{display:inline-block;width:90px;border-bottom:1px solid #333;height:20px;vertical-align:bottom}
 .footer-block{display:grid;grid-template-columns:1fr 180px;gap:12px;margin-top:18px}.footer-note{border:1px solid #9db6c9;padding:12px;font-weight:700;font-size:12px;min-height:78px}.principal{border:1px solid #9db6c9;padding:40px 12px 10px;text-align:center;font-weight:900;color:var(--blue2)}
 
 /* print */
@@ -1132,7 +1132,11 @@ function ticketHTML(s){
   const school=db.school, c=db.customize;
   const logo=c.logo?`<img class="ticket-logo" src="${c.logo}" alt="Logo">`:'';
   const photo=s.photo?`<img src="${s.photo}" alt="">`:`<span>${esc(c.photoPlaceholder).replace(/\|/g,'<br>')}</span>`;
-  const schedule=db.exams.filter(e=>(!e.std||String(e.std)===String(s.std))&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase())).map(e=>{const a=(db.rooms||[]).find(x=>x.examId===e.id&&x.studentId===s.id);return `<tr><td>${esc(e.date)}</td><td>${esc(e.time)}</td><td>${esc(e.subject)}</td><td>${esc(a?.room||e.room||'')}</td><td>${esc(a?.seat||'')}</td></tr>`;}).join('');
+  const matchedExams=db.exams.filter(e=>(!e.std||String(e.std)===String(s.std))&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase()));
+  const allocations=matchedExams.map(e=>(db.rooms||[]).find(x=>x.examId===e.id&&x.studentId===s.id)).filter(Boolean);
+  const seatNo=allocations.length?allocations[0].seat:'';
+  const supervisorCell=`<td class="supervisor-sign-cell"><span class="supervisor-sign-line"></span></td>`;
+  const schedule=matchedExams.map(e=>`<tr><td>${esc(e.date)}</td><td>${esc(e.time)}</td><td>${esc(e.subject)}</td>${supervisorCell}</tr>`).join('');
   const divCell=c.showDiv?`<td>${esc(c.division)}</td><td>${esc(s.div)}</td>`:'';
   const grCell=c.showGR?`<td>${esc(c.grNo)}</td><td>${esc(s.gr)}</td>`:'';
   const mobileRow=c.showMobile?`<tr><td>${esc(c.mobile)}</td><td colspan="5">${esc(s.mobile)}</td></tr>`:'';
@@ -1142,14 +1146,14 @@ function ticketHTML(s){
     <div class="student-block">
       <table class="info-table">
         <tr><td>${esc(c.studentName)}</td><td colspan="5">${esc(s.name)}</td></tr>
-        <tr><td>${esc(c.standard)}</td><td>${esc(s.std)}</td>${divCell}<td>${esc(c.rollNo)}</td><td>${esc(s.roll)}</td></tr>
+        <tr><td>${esc(c.standard)}</td><td>${esc(s.std)}</td>${divCell}<td>Seat No.</td><td>${esc(seatNo)}</td></tr>
         ${grCell?`<tr>${grCell}</tr>`:''}${mobileRow}<tr><td>${esc(c.ctsId||'CTS ID')}</td><td colspan="5">${esc(s.ctsId||'')}</td></tr>
       </table>
       ${c.showPhoto?`<div class="photo">${photo}</div>`:''}
     </div>
     <div class="schedule-title">${esc(c.scheduleTitle)}</div>
     <table class="schedule" style="font-size:var(--ticket-font)">
-      <thead><tr><th>${esc(c.examDate)}</th><th>${esc(c.time)}</th><th>${esc(c.subject)}</th><th>Room</th><th>Seat</th></tr></thead>
+      <thead><tr><th>${esc(c.examDate)}</th><th>${esc(c.time)}</th><th>${esc(c.subject)}</th><th>${esc(c.supervisor||'Supervisor Sign')}</th></tr></thead>
       <tbody>${schedule}</tbody>
     </table>
     <div class="qr-box">${c.showQR?`<div><div id="qr-${hallTicketQRKey(s)}"></div><div style="font-size:9px;text-align:center;margin-top:4px;font-weight:700">SCAN TO VERIFY</div></div>`:``}</div><div class="footer-block"><div class="footer-note">${esc(school.footer)}</div><div class="principal">${school.principalSignature?`<img src="${school.principalSignature}" style="max-height:55px;max-width:150px;object-fit:contain"><br>`:''}${esc(school.principal||'Principal')}<br>${school.principalSignature?'Principal Signature':''}</div></div>
@@ -1171,25 +1175,26 @@ function renderQR(el,text,size){
   el.appendChild(img);
 }
 function hallTicketQRKey(s){return String(s.__qrKey||('roll-'+String(s.roll??'')+'-gr-'+String(s.gr??'')+'-cts-'+String(s.ctsId??'').replace(/[^a-zA-Z0-9_-]/g,'')));} function hallTicketQRData(s){
-  // QR opens the public verification page with readable student data.
-  // This avoids the previous dense/plain-text QR and the old base64-only format.
+  // Compatibility QR: direct URL parameters so it works with the currently deployed
+  // GitHub verify.html as well as newer verify pages. No Base64/atob dependency.
+  const matchedExams=(db.exams||[]).filter(e=>(!e.std||String(e.std)===String(s.std))&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase()));
+  const exams=matchedExams.map(e=>{
+    const a=(db.rooms||[]).find(x=>String(x.examId)===String(e.id)&&String(x.studentId)===String(s.id));
+    return {date:e.date||'',time:e.time||'',exam:e.subject||e.name||'',room:a?.room||'',seat:a?.seat||''};
+  });
+  const q=exams.map(e=>[e.date,e.time,e.exam,e.room,e.seat].map(v=>String(v||'').replace(/[|~]/g,' ')).join('~')).join('|');
   const base='https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html';
-  const rows=(db.exams||[]).filter(e=>(!e.std||String(e.std)===String(s.std))&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase())).map(e=>{
-    const a=(db.rooms||[]).find(x=>x.examId===e.id&&x.studentId===s.id);
-    const room=a?.room||e.room||'';
-    const seat=a?.seat||'';
-    return [e.date||'',e.time||'',e.subject||'',room,seat,e.type||'Exam'].join('~');
-  }).join('|');
-  const p=new URLSearchParams();
-  p.set('n',String(s.name||''));
-  p.set('c',String(s.ctsId||''));
-  p.set('g',String(s.gr||''));
-  p.set('r',String(s.roll||''));
-  p.set('s',String(s.std||''));
-  p.set('d',String(s.div||''));
-  p.set('e',String(db.school?.examName||''));
-  p.set('q',rows);
-  return base+'?'+p.toString();
+  const params=new URLSearchParams({
+    n:String(s.name||''),
+    c:String(s.ctsId||''),
+    g:String(s.gr||''),
+    r:String(s.roll||''),
+    s:String(s.std||''),
+    d:String(s.div||''),
+    e:String(db.school?.examName||''),
+    q:q
+  });
+  return base+'?'+params.toString();
 }
 
 function markGenerated(id){db.generated=db.generated||[];if(!db.generated.includes(id)){db.generated.push(id);localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}}

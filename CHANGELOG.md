@@ -1,3 +1,16 @@
+# v1.3.12
+
+- QR compatibility fix: QR now uses direct URL parameters compatible with the deployed verify.html.
+- No Base64/atob dependency.
+- Preserves unique student QR data and seat/schedule information.
+
+
+## v1.3.10 — Hall Ticket Seat & Supervisor Sign Fix
+- Hall Ticket now shows **Seat No.** in the position previously used for Roll No.
+- Removed **Room** and **Seat** columns from the Hall Ticket exam schedule.
+- Added **Supervisor Sign** column for every subject, with a signature line on each row.
+- Seat No. is pulled from the student’s exam allocation when available.
+- Preserved all v1.3.9 print-isolation and manual Bulk Entry fixes.
 # Changelog
 
 ## v1.3.9 — 2026-10-08
@@ -140,3 +153,10 @@ Every future feature must:
 - Added a visible X button in the top-right of the Admin Login popup.
 - Added a Close button next to Login.
 - Close hides the login overlay so Settings can be reached during first-time setup.
+
+
+## v1.3.11
+- Reworked Hall Ticket QR to use compact UTF-8 base64url payload.
+- QR now reliably carries student identity, seat number and exam schedule without long query strings.
+- Verification page decodes UTF-8 payload safely.
+- No Supabase dependency for QR verification.
