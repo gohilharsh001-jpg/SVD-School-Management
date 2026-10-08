@@ -1,20 +1,20 @@
 {
-  "version": "1.3.8",
-  "date": "2026-10-07",
-  "name": "School Management – Schedule, Student Validation, Marks & Signature Update",
+  "version": "1.3.9",
+  "date": "2026-10-08",
+  "name": "School Management – Print Isolation & Manual Bulk Fields Fix",
   "status": "stable",
-  "notes": "Hall Ticket QR reliability fix: QR now contains compact plain-text student and exam data for direct scanning, with larger QR rendering.",
-  "build": "2026-10-07",
+  "notes": "Receipt/result printing now prints only the intended receipt or result, and Bulk Student Entry fields can be manually selected.",
+  "build": "2026-10-08",
   "changes": [
-    "Separate exam/test schedules for Standards 9, 10, 11 and 12",
-    "Student mobile validation: exactly 10 digits",
-    "CTS ID validation: exactly 18 digits",
-    "Removed Admission No. from Student Entry, database, import/export and migrated old records",
-    "Delete option available for mistaken student records",
-    "Manual Student Entry field show/hide controls",
-    "Standard/subject-wise test and exam marks entry, marksheet and printable reports",
-    "WhatsApp result sending link using verified 10-digit student/parent mobile",
-    "Principal signature upload in School Settings and automatic Hall Ticket placement",
-    "QR schedule now follows each student's standard/division"
+    "Fee Receipt print now prints receipt only, not the Fee Collection form/screen",
+    "Bus Fee Receipt print now prints receipt only, not the Bus Fee form/screen",
+    "Student Result / Marksheet and Print All Results now print only result sheets, not the Result form/screen",
+    "Test Report print now prints only the selected report",
+    "Student Bulk Entry now has manual field selection and selected-column template generation",
+    "Bulk Entry selection is saved in Customize / Settings and controls Excel paste column order",
+    "Bulk Entry keeps 10-digit mobile and 18-digit CTS validation",
+    "Last saved fee/bus fee receipt is tracked so Print Receipt prints the intended entry",
+    "Removed stale Admission No. reference from Hall Ticket Receipt search",
+    "Preserved existing QR, sidebar scroll, admin login, student validation, schedule and principal signature features"
   ]
 }

@@ -1,3 +1,17 @@
+# Changelog
+
+## v1.3.9 — 2026-10-08
+- Fixed Fee Receipt printing: only the receipt prints.
+- Fixed Bus Fee Receipt printing: only the receipt prints.
+- Fixed Result / Marksheet printing: only result sheets print, not the form.
+- Fixed Print All Results and Test Report print isolation.
+- Added manual field selection for Student Bulk Entry / Excel paste.
+- Added selected-column template generation for bulk import.
+- Saved bulk field selection in Customize / Settings.
+- Preserved 10-digit mobile and 18-digit CTS validation.
+- Improved receipt selection to print the last saved entry correctly.
+- Removed stale Admission No. search reference.
+
 # v1.3.8 — School Management Update
 
 - Added separate exam/test schedule support for Standards 9, 10, 11 and 12.
@@ -46,7 +60,6 @@
 - Requires an 8-character minimum for new Supabase Auth passwords.
 - Existing local data, QR, Hall Ticket, Result, Fee, Bus Fee, Reports and Cloud Sync features remain unchanged.
 
-# Changelog
 
 ## v1.2.8 — QR display fix
 - Fixed Hall Ticket QR rendering when the QR JavaScript CDN is unavailable.
