@@ -1231,11 +1231,19 @@ function hallTicketQRData(s){
     const a=(db.rooms||[]).find(x=>String(x.examId)===String(e.id)&&String(x.studentId)===String(s.id));
     return {date:e.date||'',time:e.time||'',exam:e.subject||e.name||'',room:a?.room||'',seat:a?.seat||''};
   });
-  const payload={school:db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan',name:String(s.name||''),ctsId:String(s.ctsId||''),gr:String(s.gr||''),roll:String(s.roll||''),standard:String(s.std||''),division:String(s.div||''),examName:String(db.school?.examName||''),exams};
-  const bytes=new TextEncoder().encode(JSON.stringify(payload));
-  let binary='';for(let i=0;i<bytes.length;i++)binary+=String.fromCharCode(bytes[i]);
-  const token=btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-  return 'https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html?v='+token;
+  // Use explicit URL parameters with a JSON exam payload. This avoids fragile
+  // base64 decoding differences in some QR scanner/browser combinations.
+  const params=new URLSearchParams();
+  params.set('school',String(db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan'));
+  params.set('n',String(s.name||''));
+  params.set('c',String(s.ctsId||''));
+  params.set('g',String(s.gr||''));
+  params.set('r',String(s.roll||''));
+  params.set('s',String(s.std||''));
+  params.set('d',String(s.div||''));
+  params.set('e',String(db.school?.examName||''));
+  params.set('x',JSON.stringify(exams));
+  return 'https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html?'+params.toString();
 }
 
 function markGenerated(id){db.generated=db.generated||[];if(!db.generated.includes(id)){db.generated.push(id);localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}}

@@ -16,13 +16,20 @@ try{
   const p=new URLSearchParams(location.search);
   let x=decodeLegacy();
   if(!x){
-    const q=p.get('q')||'';
-    const exams=q?q.split('|').filter(Boolean).map(row=>{
-      const a=row.split('~');
-      return {date:a[0]||'',time:a[1]||'',exam:a[2]||'',room:a[3]||'',seat:a[4]||''};
-    }):[];
+    let exams=[];
+    const rawExams=p.get('x');
+    if(rawExams){
+      try { exams=JSON.parse(rawExams); if(!Array.isArray(exams)) exams=[]; }
+      catch(parseError) { exams=[]; }
+    } else {
+      const q=p.get('q')||'';
+      exams=q?q.split('|').filter(Boolean).map(row=>{
+        const a=row.split('~');
+        return {date:a[0]||'',time:a[1]||'',exam:a[2]||'',room:a[3]||'',seat:a[4]||''};
+      }):[];
+    }
     x={
-      school:'Shree S.V. Doshi Highschool, Kumbhan',
+      school:p.get('school')||'Shree S.V. Doshi Highschool, Kumbhan',
       name:p.get('n')||'',
       ctsId:p.get('c')||'',
       gr:p.get('g')||'',

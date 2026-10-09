@@ -1,3 +1,7 @@
+# v1.3.15 — QR Data URL Fix
+- QR payload now uses explicit URL parameters and JSON exam data.
+- Verification page supports the new QR format while retaining legacy QR compatibility.
+
 # Changelog
 
 ## v1.3.14 — QR Code Data + Print Fix (2026-10-09)
