@@ -1225,14 +1225,14 @@ function renderQR(el,text,size){
 }
 function hallTicketQRKey(s){return String(s.__qrKey||('roll-'+String(s.roll??'')+'-gr-'+String(s.gr??'')+'-cts-'+String(s.ctsId??'').replace(/[^a-zA-Z0-9_-]/g,'')));}
 function hallTicketQRData(s){
-  // Compact query parameters are decoded by verify.html and are compatible with common phone QR scanners.
+  // Compact JSON payload reduces QR module density while keeping the same QR display size.
   const matchedExams=(db.exams||[]).filter(e=>(!e.std||String(e.std)===String(s.std))&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase()));
-  const exams=matchedExams.map(e=>{const a=(db.rooms||[]).find(x=>String(x.examId)===String(e.id)&&String(x.studentId)===String(s.id));return [e.date||'',e.time||'',e.subject||e.name||'',a?.room||'',a?.seat||''].join('~');});
-  const p=new URLSearchParams();
-  p.set('n',String(s.name||''));p.set('c',String(s.ctsId||''));p.set('g',String(s.gr||''));p.set('r',String(s.roll||''));p.set('s',String(s.std||''));p.set('d',String(s.div||''));p.set('e',String(db.school?.examName||''));
-  p.set('school',String(db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan'));p.set('addr',String(db.school?.address||''));p.set('phone',String(db.school?.phone||''));p.set('room',String(s.roomNo||''));p.set('seat',String(s.seatNo||''));p.set('mobile',String(s.mobile||''));p.set('principal',String(db.school?.principal||'Principal'));p.set('footer',String(db.school?.instructions||db.school?.footer||''));
-  if(exams.length)p.set('q',exams.join('|'));
-  return 'https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html?'+p.toString();
+  const exams=matchedExams.map(e=>{const a=(db.rooms||[]).find(x=>String(x.examId)===String(e.id)&&String(x.studentId)===String(s.id));return {date:e.date||'',time:e.time||'',exam:e.subject||e.name||'',room:a?.room||s.roomNo||'',seat:a?.seat||s.seatNo||''};});
+  const payload={v:2,school:String(db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan'),addr:String(db.school?.address||''),phone:String(db.school?.phone||''),principal:String(db.school?.principal||'Principal'),footer:String(db.school?.instructions||db.school?.footer||''),name:String(s.name||''),ctsId:String(s.ctsId||''),gr:String(s.gr||''),roll:String(s.roll||''),standard:String(s.std||''),division:String(s.div||''),examName:String(db.school?.examName||''),roomNo:String(s.roomNo||''),seatNo:String(s.seatNo||''),mobile:String(s.mobile||''),exams};
+  const bytes=new TextEncoder().encode(JSON.stringify(payload));
+  let binary=''; for(let i=0;i<bytes.length;i++) binary+=String.fromCharCode(bytes[i]);
+  const token=btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  return 'https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html?d='+token;
 }
 
 function markGenerated(id){db.generated=db.generated||[];if(!db.generated.includes(id)){db.generated.push(id);localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}}

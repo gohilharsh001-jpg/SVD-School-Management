@@ -4,17 +4,17 @@
 <body><div class="wrap"><div class="card" id="app"><div class="head"><h2>🎫 Hall Ticket Verification</h2><div id="school"></div></div><div id="content"></div></div></div>
 <script>
 function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
-function decodeLegacy(){
-  const token=new URLSearchParams(location.search).get('v');
+function decodeToken(token){
   if(!token)return null;
   const b64=token.replace(/-/g,'+').replace(/_/g,'/')+'='.repeat((4-token.length%4)%4);
   const bin=atob(b64);
   const bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));
   return JSON.parse(new TextDecoder('utf-8').decode(bytes));
 }
+function decodeLegacy(){return decodeToken(new URLSearchParams(location.search).get('v'));}
 try{
   const p=new URLSearchParams(location.search);
-  let x=decodeLegacy();
+  let x=decodeToken(p.get('d')) || decodeLegacy();
   if(!x){
     const q=p.get('q')||'';
     const exams=q?q.split('|').filter(Boolean).map(row=>{
