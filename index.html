@@ -1225,18 +1225,19 @@ function renderQR(el,text,size){
 }
 function hallTicketQRKey(s){return String(s.__qrKey||('roll-'+String(s.roll??'')+'-gr-'+String(s.gr??'')+'-cts-'+String(s.ctsId??'').replace(/[^a-zA-Z0-9_-]/g,'')));}
 function hallTicketQRData(s){
-  // Compact UTF-8 JSON payload: avoids very long query strings and keeps student data out of QR image-generation services.
+  // Keep the proven query-parameter format consumed by verify.html; encode every field safely.
   const matchedExams=(db.exams||[]).filter(e=>(!e.std||String(e.std)===String(s.std))&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase()));
   const exams=matchedExams.map(e=>{
     const a=(db.rooms||[]).find(x=>String(x.examId)===String(e.id)&&String(x.studentId)===String(s.id));
-    return {date:e.date||'',time:e.time||'',exam:e.subject||e.name||'',room:a?.room||'',seat:a?.seat||''};
+    return [e.date||'',e.time||'',e.subject||e.name||'',a?.room||'',a?.seat||''].map(v=>String(v).replace(/[|~]/g,' ')).join('~');
   });
   const matchedAllocation=(db.rooms||[]).find(x=>matchedExams.some(e=>String(e.id)===String(x.examId))&&String(x.studentId)===String(s.id));
-  const payload={school:db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan',schoolAddress:String(db.school?.address||''),schoolPhone:String(db.school?.phone||''),footer:String(db.school?.footer||''),principal:String(db.school?.principal||'Principal'),name:String(s.name||''),ctsId:String(s.ctsId||''),gr:String(s.gr||''),roll:String(s.roll||''),standard:String(s.std||''),division:String(s.div||''),mobile:String(s.mobile||''),seatNo:String(matchedAllocation?.seat||''),roomNo:String(matchedAllocation?.room||''),examName:String(db.school?.examName||''),exams};
-  const bytes=new TextEncoder().encode(JSON.stringify(payload));
-  let binary='';for(let i=0;i<bytes.length;i++)binary+=String.fromCharCode(bytes[i]);
-  const token=btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-  return 'https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html?v='+token;
+  const p=new URLSearchParams();
+  p.set('n',String(s.name||''));p.set('c',String(s.ctsId||''));p.set('g',String(s.gr||''));p.set('r',String(s.roll||''));p.set('s',String(s.std||''));p.set('d',String(s.div||''));p.set('e',String(db.school?.examName||''));
+  p.set('q',exams.join('|'));
+  p.set('school',String(db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan'));
+  p.set('addr',String(db.school?.address||''));p.set('phone',String(db.school?.phone||''));
+  return 'https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html?'+p.toString();
 }
 
 function markGenerated(id){db.generated=db.generated||[];if(!db.generated.includes(id)){db.generated.push(id);localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}}

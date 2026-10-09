@@ -9,7 +9,7 @@ function decodeToken(token){const b64=token.replace(/-/g,'+').replace(/_/g,'/')+
 try{
  const p=new URLSearchParams(location.search);let x=null;
  if(p.get('v')) x=decodeToken(p.get('v'));
- else if(p.get('q')||p.get('n')){const q=p.get('q')||'';const exams=q?q.split('|').filter(Boolean).map(row=>{const a=row.split('~');return {date:a[0]||'',time:a[1]||'',exam:a[2]||'',room:a[3]||'',seat:a[4]||''}}):[];x={school:'Shree S.V. Doshi Highschool, Kumbhan',name:p.get('n')||'',ctsId:p.get('c')||'',gr:p.get('g')||'',roll:p.get('r')||'',standard:p.get('s')||'',division:p.get('d')||'',examName:p.get('e')||'',exams};}
+ else if(p.get('q')||p.get('n')){const q=p.get('q')||'';const exams=q?q.split('|').filter(Boolean).map(row=>{const a=row.split('~');return {date:a[0]||'',time:a[1]||'',exam:a[2]||'',room:a[3]||'',seat:a[4]||''}}):[];x={school:p.get('school')||'Shree S.V. Doshi Highschool, Kumbhan',schoolAddress:p.get('addr')||'',schoolPhone:p.get('phone')||'',name:p.get('n')||'',ctsId:p.get('c')||'',gr:p.get('g')||'',roll:p.get('r')||'',standard:p.get('s')||'',division:p.get('d')||'',examName:p.get('e')||'',exams};}
  if(!x||(!x.name&&!x.roll&&!x.gr&&!x.ctsId)) throw new Error('QR data not found. Please generate the Hall Ticket again from the latest version.');
  document.title='Hall Ticket - '+(x.name||'Student');
  const rows=(x.exams||[]).map(e=>'<tr><td>'+esc(e.date)+'</td><td>'+esc(e.time)+'</td><td>'+esc(e.exam)+'</td><td>'+esc(e.room)+'</td><td>'+esc(e.seat)+'</td></tr>').join('');
