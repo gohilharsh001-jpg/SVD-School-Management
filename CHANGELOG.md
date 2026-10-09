@@ -1,7 +1,3 @@
-# v1.3.15 — QR Data URL Fix
-- QR payload now uses explicit URL parameters and JSON exam data.
-- Verification page supports the new QR format while retaining legacy QR compatibility.
-
 # Changelog
 
 ## v1.3.14 — QR Code Data + Print Fix (2026-10-09)
@@ -181,3 +177,9 @@ Every future feature must:
 - Added a helpful email-rate-limit message and stopped repeated alerting for that provider limit.
 - Added Cloud overwrite confirmation for manual uploads, friendlier empty-cloud handling, and safer local/cloud sync behavior.
 - Added explicit authenticated table grants while keeping owner-based Row Level Security policies.
+
+
+## v1.3.15 - QR Scan Reliability Fix
+- Shortened QR payload to keep student identity fields compact.
+- Increased QR print/render dimensions for easier phone-camera scanning.
+- Verification page continues to read the compact `n`, `c`, `g`, `r`, `s`, `d`, `e`, and `q` parameters.
