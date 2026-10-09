@@ -1206,18 +1206,19 @@ function renderQR(el,text,size){
     return;
   }
   try{
+    // Keep QRCode.js output intact. The old code captured canvas.toDataURL()
+    // immediately, before qrcodejs had necessarily finished drawing the QR.
     new QRCode(el,{text:String(text||''),width:sz,height:sz,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
-    // Freeze the generated QR as a data image so it is reliable in print preview.
-    const canvas=el.querySelector('canvas');
-    if(canvas){
-      const img=document.createElement('img');
-      img.alt='Hall Ticket QR Code';img.width=sz;img.height=sz;
-      img.style.cssText='display:block;width:'+sz+'px;height:'+sz+'px;max-width:none;background:#fff;image-rendering:pixelated;border:4px solid #fff;box-sizing:content-box';
-      img.src=canvas.toDataURL('image/png');el.replaceChildren(img);
-    }else{
+    const styleQR=()=>{
       const img=el.querySelector('img');
-      if(img){img.alt='Hall Ticket QR Code';img.style.cssText='display:block;width:'+sz+'px;height:'+sz+'px;max-width:none;background:#fff;image-rendering:pixelated;border:4px solid #fff;box-sizing:content-box';}
-    }
+      if(img){img.alt='Hall Ticket QR Code';img.style.cssText='display:block;width:'+sz+'px;height:'+sz+'px;max-width:none;background:#fff;image-rendering:auto;border:4px solid #fff;box-sizing:content-box';}
+      const canvas=el.querySelector('canvas');
+      if(canvas)canvas.style.display='none';
+    };
+    styleQR();
+    const observer=new MutationObserver(()=>{styleQR();if(el.querySelector('img'))observer.disconnect();});
+    observer.observe(el,{childList:true,subtree:true});
+    setTimeout(()=>{styleQR();observer.disconnect();},500);
   }catch(err){
     el.innerHTML='<div style="font-size:10px;color:#b42318;text-align:center;width:'+sz+'px">QR data લાંબો છે અથવા જનરેટ ન થયો. Exam Schedule ટૂંકું કરો.</div>';
     console.error('Hall Ticket QR generation failed:',err);
@@ -1225,17 +1226,14 @@ function renderQR(el,text,size){
 }
 function hallTicketQRKey(s){return String(s.__qrKey||('roll-'+String(s.roll??'')+'-gr-'+String(s.gr??'')+'-cts-'+String(s.ctsId??'').replace(/[^a-zA-Z0-9_-]/g,'')));}
 function hallTicketQRData(s){
-  // Compact JSON payload reduces QR module density while keeping the same QR display size.
-  const matchedExams=(db.exams||[]).filter(e=>(!e.std||String(e.std)===String(s.std))&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase()));
-  const exams=matchedExams.map(e=>{const a=(db.rooms||[]).find(x=>String(x.examId)===String(e.id)&&String(x.studentId)===String(s.id));return {date:e.date||'',time:e.time||'',exam:e.subject||e.name||'',room:a?.room||s.roomNo||'',seat:a?.seat||s.seatNo||''};});
-  // Short property names keep the QR payload compact; verify.html expands them on scan.
-  const payload={v:3,a:String(db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan'),b:String(db.school?.address||''),c:String(db.school?.phone||''),d:String(db.school?.principal||'Principal'),f:String(db.school?.instructions||db.school?.footer||''),n:String(s.name||''),i:String(s.ctsId||''),g:String(s.gr||''),r:String(s.roll||''),s:String(s.std||''),u:String(s.div||''),e:String(db.school?.examName||''),o:String(s.roomNo||''),t:String(s.seatNo||''),m:String(s.mobile||''),q:exams.map(z=>[z.date,z.time,z.exam,z.room,z.seat])};
+  // QR intentionally contains student details only. Exam schedule is not embedded,
+  // keeping the QR payload short and easier for phone cameras to scan.
+  const payload={v:3,a:String(db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan'),n:String(s.name||''),i:String(s.ctsId||''),g:String(s.gr||''),r:String(s.roll||''),s:String(s.std||''),u:String(s.div||''),e:String(db.school?.examName||'')};
   const bytes=new TextEncoder().encode(JSON.stringify(payload));
   let binary=''; for(let i=0;i<bytes.length;i++) binary+=String.fromCharCode(bytes[i]);
   const token=btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
   return 'https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html?d='+token;
 }
-
 function markGenerated(id){db.generated=db.generated||[];if(!db.generated.includes(id)){db.generated.push(id);localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}}
 function renderAllocations(){const sel=document.getElementById('allocExam');if(!sel)return;const cur=sel.value;sel.innerHTML=db.exams.map(e=>`<option value="${e.id}">${esc(e.subject)} - ${esc(e.date)}</option>`).join('');if(cur)sel.value=cur;const ex=db.exams.find(e=>String(e.id)===String(sel.value));const list=(db.rooms||[]).filter(x=>!ex||x.examId===ex.id);document.getElementById('allocationPreview').innerHTML=list.length?list.map(x=>`<div class="allocation-card"><b>Roll ${esc(x.roll)}</b><div>${esc(x.name)}</div><span class="pill">Room ${esc(x.room)} · Seat ${esc(x.seat)}</span></div>`).join(''):'<div class="muted">No allocations yet.</div>';}
 function autoAllocate(){const ex=db.exams.find(e=>String(e.id)===String(document.getElementById('allocExam').value));if(!ex){alert('Select an exam.');return;}const cap=Math.max(1,Number(document.getElementById('allocCapacity').value)||30);let start=Math.max(1,Number(document.getElementById('allocStart').value)||1);let room=document.getElementById('allocRoom').value.trim()||ex.room||'101';const eligible=db.students.filter(s=>(!ex.std||String(s.std)===String(ex.std))&&(!ex.div||String(s.div)===String(ex.div))).sort((a,b)=>Number(a.roll)-Number(b.roll));db.rooms=(db.rooms||[]).filter(x=>x.examId!==ex.id);eligible.forEach((s,i)=>{const roomNo=String(Number(room)+Math.floor(i/cap));db.rooms.push({examId:ex.id,studentId:s.id,roll:s.roll,name:s.name,room:roomNo,seat:start+(i%cap)});});saveDB();renderAllocations();alert(eligible.length+' students allocated.');}
