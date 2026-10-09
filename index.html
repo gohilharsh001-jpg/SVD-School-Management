@@ -663,7 +663,7 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
         <label>Admin Email</label>
         <input id="resetEmail" type="email" placeholder="admin@example.com">
         <div class="btn-row" style="margin-top:14px">
-          <button class="btn btn-primary" id="btnSendReset" onclick="sendAuthPasswordReset()">📧 Send Reset Link</button>
+          <button class="btn btn-primary" id="btnSendReset">📧 Send Reset Link</button>
           <button class="btn btn-light" id="btnCancelReset">Close</button>
         </div>
         <div id="resetStatus" class="muted" style="margin-top:12px"></div>
@@ -688,14 +688,14 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
     <section id="page-backup" class="hidden">
       <div class="card">
         <h3 class="section-title">Backup / Import</h3>
-        <p class="muted">Backupમાં student data, photos, schedule અને school settings સાચવાશે.</p>
+        <p class="muted">Backupમાં student data, photos, schedule અને school settings સાચવાશે. Clear Testing Data ફક્ત આ browserના student/exam/result/fee records કાઢશે; school settings અને Cloud data અલગ રહેશે.</p>
         <div class="btn-row">
           <button class="btn btn-green" id="btnExportBackup">Download Backup</button>
           <label class="btn btn-light" style="display:inline-block;cursor:pointer">
             Restore Backup
             <input id="backupFile" type="file" accept=".json" style="display:none">
           </label>
-          <button class="btn btn-danger" id="btnReset">Reset Demo Data</button>
+          <button class="btn btn-danger" id="btnReset">Clear Testing Data</button>
         </div>
       </div>
     </section>
@@ -703,34 +703,29 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>
 const STORAGE_KEY='hall_ticket_free_db_v3';
 const SESSION_KEY='hall_ticket_admin_session_v1';
 
 const defaultCustomize={navDashboard:'🏠 Dashboard',navRooms:'🪑 Rooms / Seats',navPortal:'🌐 Student Portal',navStudents:'👨‍🎓 Student Entry',navDatabase:'🗂️ Student Database',navFees:'💰 Fee Collection',navResults:'📊 Result / Marks',navSchedule:'📅 Exam Schedule',navSchool:'🏫 School Settings',navTicket:'🎫 Hall Ticket',navHallReceipt:'✍️ Hall Ticket Receipt',navBackup:'💾 Backup / Import',navOnline:'☁️ Online Sync',navCustomize:'⚙️ Customize / Settings',btnSaveStudent:'Save Student',btnClear:'Clear',btnBulk:'Bulk Photos',btnPaste:'Paste from Excel',btnAddExam:'Add Exam',btnPrintCurrent:'Print Current',btnPrintAll:'Print All',studentName:'Student Name',standard:'Standard',division:'Division',rollNo:'Roll No.',grNo:'GR No.',mobile:'Student Mobile',ctsId:'CTS ID',studentPhoto:'Student Photo',examDate:'Exam Date',time:'Time',subject:'Subject',schoolName:'School Name',schoolPhone:'School Phone',address:'Address',examName:'Exam Name',principal:'Principal',footer:'Footer Instruction',ticketTitle:'',scheduleTitle:'EXAM SCHEDULE',photoPlaceholder:'STUDENT|PHOTO',supervisor:'Supervisor Sign',primaryColor:'#1f4e78',darkColor:'#17365d',greenColor:'#70ad47',lightColor:'#eaf3f8',font:'Nirmala UI,Segoe UI,Arial,sans-serif',ticketFont:12,logo:null,showDiv:true,showGR:true,showMobile:true,showPhoto:true,showQR:true,adminPassword:'1234',autoRoll:true,portal:true,studentFields:{name:true,std:true,div:true,roll:true,gr:true,mobile:true,ctsId:true,dob:true,gender:true,category:true,religion:true,village:true,parent:true,parentMobile:true,emergency:true,address:true,email:true,blood:true,admissionDate:true,status:true,photo:true},bulkFields:{name:true,std:true,div:true,roll:true,gr:true,mobile:true,ctsId:true,dob:true,gender:true,category:true,religion:true,village:true,parent:true,parentMobile:true,emergency:true,address:true,email:true,blood:true,admissionDate:true,status:true,photoFileName:true}};
 
-const demo = {
+const initialData = {
   school:{
     name:'Shree S.V.Doshi Highschool Kumbhan',
     address:'Kumbhan, Ta. Maliya, Dist. Morbi (Gujarat) - 363620',
-    phone:'9714301933',
-    examName:'First Term - 2026',
+    phone:'',
+    examName:'',
     principal:'Principal',
     footer:'ઉપર દર્શાવેલ દિવસ સિવાય અન્ય દિવસે પરીક્ષા આપવા માટે પ્રવેશ આપવામાં આવશે નહીં.'
   },
-  students:[
-    {id:1,name:'Rathod Hetalben Dineshbhai',std:9,div:'A',roll:1,gr:477,mobile:'6353682122',photo:null,photoFileName:'1.jpg'},
-    {id:2,name:'Rathod Hetalben Dineshbhai',std:9,div:'A',roll:2,gr:2,mobile:'6353682122',photo:null,photoFileName:''}
-  ],
-  exams:[
-    {id:1,date:'22-10-2026',time:'9:30 am To 12:30 pm',subject:'MATHS',std:'9',div:'A',type:'Exam'},
-    {id:2,date:'23-10-2026',time:'9:30 am To 12:30 pm',subject:'GUJARATI',std:'9',div:'A',type:'Exam'},
-    {id:3,date:'24-10-2026',time:'8:30 am To 11:30 am',subject:'HINDI',std:'9',div:'A',type:'Exam'},
-    {id:4,date:'26-10-2026',time:'9:30 am To 12:30 pm',subject:'SCIENCE',std:'9',div:'A',type:'Exam'},
-    {id:5,date:'27-10-2026',time:'9:30 am To 12:30 pm',subject:'ENGLISH',std:'9',div:'A',type:'Exam'},
-    {id:6,date:'28-10-2026',time:'9:30 am To 12:30 pm',subject:'SOCIAL SCIENCE',std:'9',div:'A',type:'Exam'},
-    {id:7,date:'29-10-2026',time:'9:30 am To 12:30 pm',subject:'SANSKRIT',std:'9',div:'A',type:'Exam'}
-  ]
+  students:[],
+  exams:[],
+  rooms:[],
+  generated:[],
+  busFees:[],
+  results:{},
+  fees:[]
 };
 
 let db = loadDB();
@@ -740,15 +735,15 @@ let selectedPhotoData = null;
 function loadDB(){
   try{
     const s=localStorage.getItem(STORAGE_KEY)||localStorage.getItem('hall_ticket_free_db_v2');
-    const old=s?JSON.parse(s):structuredClone(demo);
+    const old=s?JSON.parse(s):structuredClone(initialData);
     old.customize={...structuredClone(defaultCustomize),...(old.customize||{})}; old.customize.studentFields={...structuredClone(defaultCustomize.studentFields),...(old.customize.studentFields||{})}; old.customize.bulkFields={...structuredClone(defaultCustomize.bulkFields),...(old.customize.bulkFields||{})};
     old.students=Array.isArray(old.students)?old.students:[]; old.exams=Array.isArray(old.exams)?old.exams:[];
     old.rooms=Array.isArray(old.rooms)?old.rooms:[];
     old.generated=Array.isArray(old.generated)?old.generated:[]; old.busFees=Array.isArray(old.busFees)?old.busFees:[]; old.results=(old.results&&typeof old.results==='object')?old.results:{}; old.fees=Array.isArray(old.fees)?old.fees:[]; old.students.forEach(st=>{delete st.admissionNo;if(st.ctsId===undefined)st.ctsId='';delete st.admissionNo;if(st.dob===undefined)st.dob='';if(st.gender===undefined)st.gender='';if(st.parent===undefined)st.parent='';if(st.parentMobile===undefined)st.parentMobile='';if(st.emergency===undefined)st.emergency='';if(st.address===undefined)st.address='';if(st.email===undefined)st.email='';if(st.blood===undefined)st.blood='';if(st.admissionDate===undefined)st.admissionDate='';if(st.status===undefined)st.status='Active';if(st.category===undefined)st.category='';if(st.religion===undefined)st.religion='';if(st.village===undefined)st.village='';}); old.exams.forEach(ex=>{if(ex.maxMarks===undefined)ex.maxMarks=100;if(ex.passMarks===undefined)ex.passMarks=33;if(ex.type===undefined)ex.type='Exam';});
     return old;
-  }catch(e){ const d=structuredClone(demo); d.customize=structuredClone(defaultCustomize); return d; }
+  }catch(e){ const d=structuredClone(initialData); d.customize=structuredClone(defaultCustomize); return d; }
 }
-function saveDB(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); renderAll(); if(localStorage.getItem('hall_ticket_cloud_autosync')==='1' && typeof cloudPush==='function'){clearTimeout(window._cloudPushTimer);window._cloudPushTimer=setTimeout(()=>cloudPush(),500);} }
+function saveDB(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); renderAll(); if(localStorage.getItem('hall_ticket_cloud_autosync')==='1' && typeof cloudPush==='function'){clearTimeout(window._cloudPushTimer);window._cloudPushTimer=setTimeout(()=>cloudPush({silent:true}),500);} }
 function nextId(arr){ return arr.length?Math.max(...arr.map(x=>Number(x.id)||0))+1:1; }
 function esc(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
 
@@ -807,9 +802,45 @@ function cloudStatus(msg,ok=false){const e=document.getElementById('cloudStatus'
 function initCloud(){const c=cloudConfig(); if(!c.url||!c.key||!window.supabase)return null; if(!cloudClient)cloudClient=window.supabase.createClient(c.url,c.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'implicit'}}); return cloudClient;}
 function updateTopCloudStatus(connected=false,email=''){const e=document.getElementById('topCloudStatus');if(e)e.textContent=connected?('Storage: Browser local • Cloud: Connected'+(email?' • '+email:'')):'Storage: Browser local • Cloud: Not connected';}
 async function refreshCloudSessionStatus(){try{const client=initCloud();if(!client){updateTopCloudStatus(false);return;}const s=await client.auth.getSession();if(s.data.session){cloudStatus('Connected as '+s.data.session.user.email,true);updateTopCloudStatus(true,s.data.session.user.email);}else updateTopCloudStatus(false);}catch(e){updateTopCloudStatus(false);}}
-async function cloudConnect(){try{const c=cloudConfig();if(!c.url||!c.key)throw new Error('Supabase URL અને Publishable Key આપો.');localStorage.setItem('hall_ticket_sb_url',c.url);localStorage.setItem('hall_ticket_sb_key',c.key);localStorage.setItem('hall_ticket_online_school_key',c.schoolKey);const client=initCloud();const email=document.getElementById('sbEmail').value.trim(),password=document.getElementById('sbPassword').value;if(email&&password){const r=await client.auth.signInWithPassword({email,password});if(r.error)throw r.error;}const s=await client.auth.getSession();if(!s.data.session)throw new Error('Supabase Admin login જરૂરી છે. પ્રથમ Authentication → Users માં user બનાવો.');cloudStatus('Connected as '+s.data.session.user.email+' • First sync: Upload or Download પસંદ કરો.',true);updateTopCloudStatus(true,s.data.session.user.email);localStorage.removeItem('hall_ticket_cloud_autosync');}catch(e){cloudStatus('Error: '+e.message);updateTopCloudStatus(false);alert(e.message);}}
-async function cloudPush(){try{const c=cloudConfig(),client=initCloud();if(!client)throw new Error('પહેલા Connect કરો.');const sess=await client.auth.getSession();if(!sess.data.session)throw new Error('Cloud login જરૂરી છે.');const payload={school_key:c.schoolKey,owner_id:sess.data.session.user.id,data:db,updated_at:new Date().toISOString()};const r=await client.from('school_state').upsert(payload,{onConflict:'school_key'});if(r.error)throw r.error;localStorage.setItem('hall_ticket_cloud_autosync','1');cloudStatus('Data uploaded successfully • '+new Date().toLocaleString('en-IN')+' • Auto-sync ON',true);updateTopCloudStatus(true,sess.data.session.user.email);}catch(e){cloudStatus('Upload error: '+e.message);alert(e.message);}}
-async function cloudPull(){try{const c=cloudConfig(),client=initCloud();if(!client)throw new Error('પહેલા Connect કરો.');const sess=await client.auth.getSession();if(!sess.data.session)throw new Error('Cloud login જરૂરી છે.');const r=await client.from('school_state').select('data,updated_at').eq('school_key',c.schoolKey).single();if(r.error)throw r.error;if(!r.data?.data)throw new Error('Cloud data મળ્યો નથી.');if(!confirm('Cloud data download કરીને હાલના browser dataને replace કરવું?'))return;db=r.data.data;db.customize={...structuredClone(defaultCustomize),...(db.customize||{})};localStorage.setItem(STORAGE_KEY,JSON.stringify(db));localStorage.setItem('hall_ticket_cloud_autosync','1');renderAll();applyCustomize();cloudStatus('Cloud data downloaded • '+new Date(r.data.updated_at).toLocaleString('en-IN')+' • Auto-sync ON',true);updateTopCloudStatus(true,sess.data.session.user.email);alert('Cloud data restored successfully.');}catch(e){cloudStatus('Download error: '+e.message);alert(e.message);}}
+async function cloudConnect(){try{const c=cloudConfig();if(!c.url||!c.key)throw new Error('Supabase URL અને Publishable Key આપો.');localStorage.setItem('hall_ticket_sb_url',c.url);localStorage.setItem('hall_ticket_sb_key',c.key);localStorage.setItem('hall_ticket_online_school_key',c.schoolKey);const client=initCloud();const email=document.getElementById('sbEmail').value.trim(),password=document.getElementById('sbPassword').value;if(email&&password){const r=await client.auth.signInWithPassword({email,password});if(r.error)throw r.error;}const s=await client.auth.getSession();if(!s.data.session)throw new Error('Supabase Admin login જરૂરી છે. પ્રથમ Authentication → Users માં user બનાવો.');cloudStatus(localStorage.getItem('hall_ticket_cloud_autosync')==='1'?'Connected as '+s.data.session.user.email+' • Auto-sync ON':'Connected as '+s.data.session.user.email+' • First sync: Upload or Download પસંદ કરો.',true);updateTopCloudStatus(true,s.data.session.user.email);}catch(e){cloudStatus('Error: '+e.message);updateTopCloudStatus(false);alert(e.message);}}
+async function cloudPush(options={}){
+  try{
+    const c=cloudConfig(),client=initCloud();
+    if(!client)throw new Error('પહેલા Supabase URL અને Publishable Key ભરીને Connect કરો.');
+    const sess=await client.auth.getSession();
+    if(!sess.data.session)throw new Error('Cloud login જરૂરી છે.');
+    const existing=await client.from('school_state').select('school_key,updated_at').eq('school_key',c.schoolKey).maybeSingle();
+    if(existing.error)throw existing.error;
+    if(existing.data && options.silent!==true){
+      const stamp=existing.data.updated_at?new Date(existing.data.updated_at).toLocaleString('en-IN'):'unknown';
+      if(!confirm('આ School Key માટે Cloud data પહેલેથી છે (છેલ્લું update: '+stamp+'). Upload કરવાથી તે હાલના browser dataથી replace થશે. પહેલાં backup લીધું છે? આગળ વધવું?')){
+        cloudStatus('Upload cancelled. Cloud data બદલાયો નથી.');return;
+      }
+    }
+    const payload={school_key:c.schoolKey,owner_id:sess.data.session.user.id,data:db,updated_at:new Date().toISOString()};
+    const r=await client.from('school_state').upsert(payload,{onConflict:'school_key'});
+    if(r.error)throw r.error;
+    localStorage.setItem('hall_ticket_cloud_autosync','1');
+    cloudStatus('Data uploaded successfully • '+new Date().toLocaleString('en-IN')+' • Auto-sync ON',true);
+    updateTopCloudStatus(true,sess.data.session.user.email);
+  }catch(e){cloudStatus('Upload error: '+e.message);alert('Upload error: '+e.message);}
+}
+async function cloudPull(){
+  try{
+    const c=cloudConfig(),client=initCloud();
+    if(!client)throw new Error('પહેલા Supabase URL અને Publishable Key ભરીને Connect કરો.');
+    const sess=await client.auth.getSession();
+    if(!sess.data.session)throw new Error('Cloud login જરૂરી છે.');
+    const r=await client.from('school_state').select('data,updated_at').eq('school_key',c.schoolKey).maybeSingle();
+    if(r.error)throw r.error;
+    if(!r.data?.data)throw new Error('આ School Key માટે Cloud data હજી નથી. પ્રથમ sync માટે Upload Current Data વાપરો.');
+    if(!confirm('Cloud data download કરીને હાલના browser dataને replace કરવું?'))return;
+    db=r.data.data;db.customize={...structuredClone(defaultCustomize),...(db.customize||{})};
+    db.students=Array.isArray(db.students)?db.students:[];db.exams=Array.isArray(db.exams)?db.exams:[];db.rooms=Array.isArray(db.rooms)?db.rooms:[];db.generated=Array.isArray(db.generated)?db.generated:[];db.fees=Array.isArray(db.fees)?db.fees:[];db.busFees=Array.isArray(db.busFees)?db.busFees:[];db.results=db.results&&typeof db.results==='object'?db.results:{};
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(db));localStorage.setItem('hall_ticket_cloud_autosync','1');renderAll();applyCustomize();
+    cloudStatus('Cloud data downloaded • '+new Date(r.data.updated_at).toLocaleString('en-IN')+' • Auto-sync ON',true);updateTopCloudStatus(true,sess.data.session.user.email);alert('Cloud data restored successfully.');
+  }catch(e){cloudStatus('Download error: '+e.message);alert('Download error: '+e.message);}
+}
 async function cloudLogout(){if(cloudClient)await cloudClient.auth.signOut();localStorage.removeItem('hall_ticket_cloud_autosync');cloudStatus('Cloud logged out.');updateTopCloudStatus(false);}
 async function sendAuthPasswordReset(){
   try{
@@ -828,8 +859,15 @@ async function sendAuthPasswordReset(){
     alert('✅ Reset link Gmail પર મોકલાઈ છે. Gmailમાં નવી email તપાસો.');
   }catch(err){
     const e=document.getElementById('resetStatus');
-    if(e)e.textContent='❌ Error: '+err.message;
-    alert('❌ Reset link મોકલવામાં error: '+err.message);
+    const message=String(err?.message||err||'Unknown error');
+    if(/rate limit|email rate limit/i.test(message)){
+      const help='Supabase ઈમેલ મર્યાદા પૂરી થઈ છે. ફરીથી વારંવાર ક્લિક ન કરો. Gmailમાં પહેલેથી આવેલો સૌથી નવો Reset Link વાપરો; તે expire થયો હોય તો મર્યાદા ફરી ઉપલબ્ધ થાય ત્યાં સુધી રાહ જુઓ અથવા Supabaseમાં custom SMTP ગોઠવો.';
+      if(e)e.textContent='⚠️ '+help;
+      cloudStatus('Password reset email limit reached. Use the latest email already received; do not request repeated links.');
+      return;
+    }
+    if(e)e.textContent='❌ Error: '+message;
+    cloudStatus('Reset link error: '+message);
   }
 }
 function openCloudReset(){
@@ -1161,40 +1199,43 @@ function ticketHTML(s){
 }
 function renderQR(el,text,size){
   if(!el)return;
-  el.innerHTML='';
-  const img=document.createElement('img');
+  el.replaceChildren();
   const sz=size||120;
-  img.alt='QR Code';
-  img.width=sz; img.height=sz;
-  img.style.width=sz+'px'; img.style.height=sz+'px';
-  img.style.display='block'; img.style.background='#fff';
-  img.style.imageRendering='pixelated';
-  img.referrerPolicy='no-referrer';
-  img.src='https://api.qrserver.com/v1/create-qr-code/?size='+sz+'x'+sz+'&margin=10&ecc=M&data='+encodeURIComponent(text);
-  img.onerror=function(){el.innerHTML='<div style="font-size:10px;color:#b42318;text-align:center;width:'+sz+'px">QR unavailable<br>Connect to internet</div>';};
-  el.appendChild(img);
+  if(typeof QRCode==='undefined'){
+    el.innerHTML='<div style="font-size:10px;color:#b42318;text-align:center;width:'+sz+'px">QR library load ન થઈ. Internet તપાસી Ctrl+F5 કરો.</div>';
+    return;
+  }
+  try{
+    new QRCode(el,{text:String(text||''),width:sz,height:sz,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+    // Freeze the generated QR as a data image so it is reliable in print preview.
+    const canvas=el.querySelector('canvas');
+    if(canvas){
+      const img=document.createElement('img');
+      img.alt='Hall Ticket QR Code';img.width=sz;img.height=sz;
+      img.style.cssText='display:block;width:'+sz+'px;height:'+sz+'px;background:#fff;image-rendering:pixelated';
+      img.src=canvas.toDataURL('image/png');el.replaceChildren(img);
+    }else{
+      const img=el.querySelector('img');
+      if(img){img.alt='Hall Ticket QR Code';img.style.cssText='display:block;width:'+sz+'px;height:'+sz+'px;background:#fff;image-rendering:pixelated';}
+    }
+  }catch(err){
+    el.innerHTML='<div style="font-size:10px;color:#b42318;text-align:center;width:'+sz+'px">QR data લાંબો છે અથવા જનરેટ ન થયો. Exam Schedule ટૂંકું કરો.</div>';
+    console.error('Hall Ticket QR generation failed:',err);
+  }
 }
-function hallTicketQRKey(s){return String(s.__qrKey||('roll-'+String(s.roll??'')+'-gr-'+String(s.gr??'')+'-cts-'+String(s.ctsId??'').replace(/[^a-zA-Z0-9_-]/g,'')));} function hallTicketQRData(s){
-  // Compatibility QR: direct URL parameters so it works with the currently deployed
-  // GitHub verify.html as well as newer verify pages. No Base64/atob dependency.
+function hallTicketQRKey(s){return String(s.__qrKey||('roll-'+String(s.roll??'')+'-gr-'+String(s.gr??'')+'-cts-'+String(s.ctsId??'').replace(/[^a-zA-Z0-9_-]/g,'')));}
+function hallTicketQRData(s){
+  // Compact UTF-8 JSON payload: avoids very long query strings and keeps student data out of QR image-generation services.
   const matchedExams=(db.exams||[]).filter(e=>(!e.std||String(e.std)===String(s.std))&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase()));
   const exams=matchedExams.map(e=>{
     const a=(db.rooms||[]).find(x=>String(x.examId)===String(e.id)&&String(x.studentId)===String(s.id));
     return {date:e.date||'',time:e.time||'',exam:e.subject||e.name||'',room:a?.room||'',seat:a?.seat||''};
   });
-  const q=exams.map(e=>[e.date,e.time,e.exam,e.room,e.seat].map(v=>String(v||'').replace(/[|~]/g,' ')).join('~')).join('|');
-  const base='https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html';
-  const params=new URLSearchParams({
-    n:String(s.name||''),
-    c:String(s.ctsId||''),
-    g:String(s.gr||''),
-    r:String(s.roll||''),
-    s:String(s.std||''),
-    d:String(s.div||''),
-    e:String(db.school?.examName||''),
-    q:q
-  });
-  return base+'?'+params.toString();
+  const payload={school:db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan',name:String(s.name||''),ctsId:String(s.ctsId||''),gr:String(s.gr||''),roll:String(s.roll||''),standard:String(s.std||''),division:String(s.div||''),examName:String(db.school?.examName||''),exams};
+  const bytes=new TextEncoder().encode(JSON.stringify(payload));
+  let binary='';for(let i=0;i<bytes.length;i++)binary+=String.fromCharCode(bytes[i]);
+  const token=btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  return 'https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html?v='+token;
 }
 
 function markGenerated(id){db.generated=db.generated||[];if(!db.generated.includes(id)){db.generated.push(id);localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}}
@@ -1245,7 +1286,15 @@ backupFile.addEventListener('change',e=>{
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);db.customize={...structuredClone(defaultCustomize),...(db.customize||{})};db.rooms=db.rooms||[];db.generated=db.generated||[];db.fees=db.fees||[];db.busFees=db.busFees||[];db.students=(db.students||[]).map(st=>({status:'Active',admissionNo:'',dob:'',gender:'',parent:'',parentMobile:'',emergency:'',address:'',email:'',blood:'',admissionDate:'',...st}));saveDB();renderAllocations();alert('Backup restored.');}catch(err){alert('Invalid backup file.');}};r.readAsText(f);
 });
-btnReset.addEventListener('click',()=>{if(confirm('Reset database to demo data? Current data will be lost.')){db=structuredClone(demo);saveDB();}});
+btnReset.addEventListener('click',()=>{
+  const ok=confirm('આ browserના બધા Student, Exam, Room/Seat, Result/Marks, Fee, Bus Fee અને Hall Ticket Generated testing records કાઢી નાખવામાં આવશે. School Settings અને Customize જળવાશે. Cloud data આપમેળે બદલાશે નહીં. આગળ વધવું?');
+  if(!ok)return;
+  localStorage.removeItem('hall_ticket_cloud_autosync');
+  db={...db,students:[],exams:[],rooms:[],generated:[],fees:[],busFees:[],results:{}};
+  saveDB();
+  cloudStatus('Local testing data cleared. Cloud data unchanged. First sync માટે Upload Current Data દબાવો; Cloudમાં જૂનો record હશે તો overwrite confirmation આવશે.');
+  alert('Local testing data cleared. School settings and customization are preserved. Cloud data has not been changed.');
+});
 
 document.getElementById('studentSearch')?.addEventListener('input',renderStudents);document.getElementById('studentSearchStd')?.addEventListener('change',renderStudents);document.getElementById('studentSearchDiv')?.addEventListener('change',renderStudents);document.getElementById('btnClearSearch')?.addEventListener('click',()=>{studentSearch.value='';studentSearchStd.value='';studentSearchDiv.value='';renderStudents();});
 document.getElementById('btnLoadMarks')?.addEventListener('click',loadMarksTable);document.getElementById('btnSaveMarks')?.addEventListener('click',saveMarks);document.getElementById('resultExam')?.addEventListener('change',loadMarksTable);document.getElementById('resultStd')?.addEventListener('change',loadMarksTable);document.getElementById('resultDiv')?.addEventListener('change',loadMarksTable);document.getElementById('btnPreviewResult')?.addEventListener('click',previewResult);document.getElementById('btnPrintResult')?.addEventListener('click',printResult);document.getElementById('btnWhatsAppResult')?.addEventListener('click',whatsappResult);document.getElementById('btnPrintTestReport')?.addEventListener('click',printTestReport);document.getElementById('btnResultPrintAll')?.addEventListener('click',printAllResults);

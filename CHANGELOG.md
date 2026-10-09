@@ -1,3 +1,11 @@
+# Changelog
+
+## v1.3.14 — QR Code Data + Print Fix (2026-10-09)
+- Generate hall-ticket QR codes in the browser using QRCode.js instead of sending student details to a third-party QR image API.
+- Encode a compact UTF-8 JSON payload in the verification URL so Gujarati and other Unicode student names remain intact.
+- Freeze generated QR canvases as data images so they render more reliably in print preview.
+- Keep the existing verification page compatible with the `?v=` payload format.
+
 # v1.3.12
 
 - QR compatibility fix: QR now uses direct URL parameters compatible with the deployed verify.html.
@@ -160,3 +168,12 @@ Every future feature must:
 - QR now reliably carries student identity, seat number and exam schedule without long query strings.
 - Verification page decodes UTF-8 payload safely.
 - No Supabase dependency for QR verification.
+
+
+## 1.3.13 — 2026-10-09 — Cloud Safety + Clean Start
+- Removed sample student and exam records from fresh installations; retained school identity defaults.
+- Added a Clear Testing Data action that preserves school settings/customization and does not silently change Cloud data.
+- Fixed duplicate password-reset email requests caused by both inline and event-listener click handlers.
+- Added a helpful email-rate-limit message and stopped repeated alerting for that provider limit.
+- Added Cloud overwrite confirmation for manual uploads, friendlier empty-cloud handling, and safer local/cloud sync behavior.
+- Added explicit authenticated table grants while keeping owner-based Row Level Security policies.
