@@ -1206,7 +1206,7 @@ function renderQR(el,text,size){
     return;
   }
   try{
-    new QRCode(el,{text:String(text||''),width:sz,height:sz,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+    new QRCode(el,{text:String(text||''),width:sz,height:sz,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
     // Freeze the generated QR as a data image so it is reliable in print preview.
     const canvas=el.querySelector('canvas');
     if(canvas){
