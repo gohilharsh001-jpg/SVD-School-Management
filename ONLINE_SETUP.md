@@ -4,7 +4,7 @@
 
 ## 1) Supabase — already completed
 તમારા projectનું URL:
-`https://cfxwwvcjqbahidgpkcwp.supabase.co`
+`https://cfxwvwcjqbahidgpkcwp.supabase.co`
 
 Database schema અને Admin Auth user તમે પહેલેથી બનાવી ચૂક્યા છો.
 
