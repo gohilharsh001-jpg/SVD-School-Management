@@ -1,3 +1,8 @@
+## v1.3.17 - QR Data and Clarity Fix
+- Use QR URL parameters that are compatible with verify.html.
+- Increase QR size for sharper scan and print output.
+- Carry school, student and schedule fields to the full verification view.
+
 # Changelog
 
 ## v1.3.14 — QR Code Data + Print Fix (2026-10-09)
@@ -177,9 +182,3 @@ Every future feature must:
 - Added a helpful email-rate-limit message and stopped repeated alerting for that provider limit.
 - Added Cloud overwrite confirmation for manual uploads, friendlier empty-cloud handling, and safer local/cloud sync behavior.
 - Added explicit authenticated table grants while keeping owner-based Row Level Security policies.
-
-
-## v1.3.16 — Full Hall Ticket QR Verification
-- QR verification page now presents a full ticket-style layout with student identity, school details, room/seat allocation, exam schedule, instructions/footer, and print/save-as-PDF action.
-- QR payload now carries school address/phone, footer, principal label, mobile, and first matched room/seat when available.
-- Legacy QR payloads remain supported; fields absent from older QR codes show as unavailable.
