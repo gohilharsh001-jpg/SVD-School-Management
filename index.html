@@ -1225,24 +1225,18 @@ function renderQR(el,text,size){
 }
 function hallTicketQRKey(s){return String(s.__qrKey||('roll-'+String(s.roll??'')+'-gr-'+String(s.gr??'')+'-cts-'+String(s.ctsId??'').replace(/[^a-zA-Z0-9_-]/g,'')));}
 function hallTicketQRData(s){
-  // Keep the QR payload compact so phone cameras can decode it reliably.
-  // Student identity and exam details are embedded in the verification URL.
+  // Compact UTF-8 JSON payload: avoids very long query strings and keeps student data out of QR image-generation services.
   const matchedExams=(db.exams||[]).filter(e=>(!e.std||String(e.std)===String(s.std))&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase()));
   const exams=matchedExams.map(e=>{
     const a=(db.rooms||[]).find(x=>String(x.examId)===String(e.id)&&String(x.studentId)===String(s.id));
     return {date:e.date||'',time:e.time||'',exam:e.subject||e.name||'',room:a?.room||'',seat:a?.seat||''};
   });
-  const params=new URLSearchParams();
-  const put=(key,value)=>{const v=String(value??'').trim();if(v)params.set(key,v);};
-  put('n',s.name); put('c',s.ctsId); put('g',s.gr); put('r',s.roll);
-  put('s',s.std); put('d',s.div); put('e',db.school?.examName||'');
-  // Schedule is optional in the QR to keep the code easy to scan. Include it only
-  // when the compact payload remains reasonably short; student identity always stays.
-  if(exams.length){
-    const compact=exams.map(e=>[e.date,e.time,e.exam,e.room,e.seat].join('~')).join('|');
-    if(compact.length<=180) params.set('q',compact);
-  }
-  return 'https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html?'+params.toString();
+  const matchedAllocation=(db.rooms||[]).find(x=>matchedExams.some(e=>String(e.id)===String(x.examId))&&String(x.studentId)===String(s.id));
+  const payload={school:db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan',schoolAddress:String(db.school?.address||''),schoolPhone:String(db.school?.phone||''),footer:String(db.school?.footer||''),principal:String(db.school?.principal||'Principal'),name:String(s.name||''),ctsId:String(s.ctsId||''),gr:String(s.gr||''),roll:String(s.roll||''),standard:String(s.std||''),division:String(s.div||''),mobile:String(s.mobile||''),seatNo:String(matchedAllocation?.seat||''),roomNo:String(matchedAllocation?.room||''),examName:String(db.school?.examName||''),exams};
+  const bytes=new TextEncoder().encode(JSON.stringify(payload));
+  let binary='';for(let i=0;i<bytes.length;i++)binary+=String.fromCharCode(bytes[i]);
+  const token=btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  return 'https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html?v='+token;
 }
 
 function markGenerated(id){db.generated=db.generated||[];if(!db.generated.includes(id)){db.generated.push(id);localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}}
@@ -1276,12 +1270,12 @@ function renderTicket(){
   if(!db.students.length){ticketArea.innerHTML='<div class="card">No students.</div>';return;}
   if(!ticketRoll.value)ticketRoll.value=db.students[0].roll;
   const s=db.students.find(x=>Number(x.roll)===Number(ticketRoll.value))||db.students[0];
-  ticketArea.innerHTML=ticketHTML(s); markGenerated(s.id); if(db.customize.showQR!==false){const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),240);}
+  ticketArea.innerHTML=ticketHTML(s); markGenerated(s.id); if(db.customize.showQR!==false){const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),180);}
 }
 btnPrintCurrent.addEventListener('click',()=>{renderTicket();setTimeout(()=>window.print(),200)});
 btnPrintAll.addEventListener('click',()=>{
   if(!db.students.length){alert('No students.');return;}
-  const allForPrint=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)); allForPrint.forEach((st,i)=>st.__qrKey='ticket-'+i+'-'+String(st.id??'')+'-'+String(st.roll??'')); ticketArea.innerHTML=allForPrint.map(ticketHTML).join(''); allForPrint.forEach(s=>markGenerated(s.id)); if(db.customize.showQR!==false)db.students.forEach(s=>{const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),220);});
+  const allForPrint=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)); allForPrint.forEach((st,i)=>st.__qrKey='ticket-'+i+'-'+String(st.id??'')+'-'+String(st.roll??'')); ticketArea.innerHTML=allForPrint.map(ticketHTML).join(''); allForPrint.forEach(s=>markGenerated(s.id)); if(db.customize.showQR!==false)db.students.forEach(s=>{const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),150);});
   setTimeout(()=>window.print(),250);
 });
 
@@ -1380,7 +1374,7 @@ function printTestReport(){
   printOnly('print-result');
 }
 function showStudentPortalResult(id){const s=db.students.find(x=>x.id===id);if(s)document.getElementById('portalStudentOutput').innerHTML=resultHTML(s);}
-function showStudentPortalHallTicket(id){const s=db.students.find(x=>x.id===id);if(!s)return;s.__qrKey='portal-'+String(s.id??'')+'-'+String(s.roll??'');document.getElementById('portalStudentOutput').innerHTML=ticketHTML(s);if(db.customize.showQR!==false){const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),240);}}
+function showStudentPortalHallTicket(id){const s=db.students.find(x=>x.id===id);if(!s)return;s.__qrKey='portal-'+String(s.id??'')+'-'+String(s.roll??'');document.getElementById('portalStudentOutput').innerHTML=ticketHTML(s);if(db.customize.showQR!==false){const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),180);}}
 document.getElementById('btnPortalSearch')?.addEventListener('click',()=>{const cts=(document.getElementById('portalCTS')?.value||'').trim().toLowerCase(),roll=portalRoll.value.trim(),gr=portalGR.value.trim();const s=db.students.find(x=>(cts&&String(x.ctsId||'').toLowerCase()===cts)||(!cts&&String(x.roll)===roll&&(!gr||String(x.gr)===gr)));if(!s){portalResult.innerHTML='<div class="danger-text">Student not found. CTS ID / Roll No. check કરો.</div>';return;}const r=studentResultHTML(s);portalResult.innerHTML='<div class="card"><div class="btn-row"><button class="btn btn-primary" onclick="showStudentPortalHallTicket('+s.id+')">🎫 Hall Ticket</button><button class="btn btn-green" onclick="showStudentPortalResult('+s.id+')">📊 Result</button></div><div id="portalStudentOutput" style="margin-top:14px"></div></div>';window._portalStudentId=s.id;});
 document.getElementById('btnLogout')?.addEventListener('click',()=>{sessionStorage.removeItem(SESSION_KEY);location.reload();});
 function requireLogin(){if(new URLSearchParams(location.search).get('portal')==='1'){document.body.classList.add('portal-mode');showPage('portal');return;}if(window.__passwordRecoveryActive || isPasswordRecoveryLink())return;const pw=db.customize?.adminPassword||'1234';if(sessionStorage.getItem(SESSION_KEY)==='1')return;loginOverlay.classList.remove('hidden');adminPassword.focus();}const closeAdminLogin=()=>{loginOverlay.classList.add('hidden');loginError.textContent='';};btnCloseLogin?.addEventListener('click',closeAdminLogin);btnCloseLogin2?.addEventListener('click',closeAdminLogin);btnLogin.addEventListener('click',()=>{if(adminPassword.value===(db.customize?.adminPassword||'1234')){sessionStorage.setItem(SESSION_KEY,'1');loginOverlay.classList.add('hidden');loginError.textContent='';}else loginError.textContent='Incorrect password.';});adminPassword.addEventListener('keydown',e=>{if(e.key==='Enter')btnLogin.click();});

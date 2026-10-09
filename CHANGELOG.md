@@ -179,7 +179,7 @@ Every future feature must:
 - Added explicit authenticated table grants while keeping owner-based Row Level Security policies.
 
 
-## v1.3.15 - QR Scan Reliability Fix
-- Shortened QR payload to keep student identity fields compact.
-- Increased QR print/render dimensions for easier phone-camera scanning.
-- Verification page continues to read the compact `n`, `c`, `g`, `r`, `s`, `d`, `e`, and `q` parameters.
+## v1.3.16 — Full Hall Ticket QR Verification
+- QR verification page now presents a full ticket-style layout with student identity, school details, room/seat allocation, exam schedule, instructions/footer, and print/save-as-PDF action.
+- QR payload now carries school address/phone, footer, principal label, mobile, and first matched room/seat when available.
+- Legacy QR payloads remain supported; fields absent from older QR codes show as unavailable.
