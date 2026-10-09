@@ -15,6 +15,7 @@ function decodeLegacy(){return decodeToken(new URLSearchParams(location.search).
 try{
   const p=new URLSearchParams(location.search);
   let x=decodeToken(p.get('d')) || decodeLegacy();
+  if(x && x.v===3){x={school:x.a,schoolAddress:x.b,schoolPhone:x.c,principal:x.d,footer:x.f,name:x.n,ctsId:x.i,gr:x.g,roll:x.r,standard:x.s,division:x.u,examName:x.e,roomNo:x.o,seatNo:x.t,mobile:x.m,exams:(x.q||[]).map(z=>({date:z[0]||'',time:z[1]||'',exam:z[2]||'',room:z[3]||'',seat:z[4]||''}))};}
   if(!x){
     const q=p.get('q')||'';
     const exams=q?q.split('|').filter(Boolean).map(row=>{
@@ -38,18 +39,24 @@ try{
   document.title='Hall Ticket Verification - '+(x.school||'SVD School');
   document.getElementById('school').innerHTML='<b>'+esc(x.school||'Shree S.V. Doshi Highschool, Kumbhan')+'</b>';
   const rows=(x.exams||[]).map(e=>'<tr><td>'+esc(e.date)+'</td><td>'+esc(e.time)+'</td><td>'+esc(e.exam)+'</td><td>'+esc(e.room)+'</td><td>'+esc(e.seat)+'</td></tr>').join('');
+  const extra=(label,value)=>value?'<div><b>'+label+'</b><br>'+esc(value)+'</div>':'';
   document.getElementById('content').innerHTML=
-    '<p><span class="ok">✓ QR DATA VERIFIED</span></p>'+
-    '<div class="warn"><b>Verified from QR:</b> This page displays the information embedded in the QR code. It does not require Supabase.</div>'+
+    '<p><span class="ok">✓ QR DATA VERIFIED</span></p>'+ 
+    '<div class="warn"><b>Hall Ticket QR Verification:</b> Details shown below are embedded in this QR code.</div>'+ 
+    '<h3 style="text-align:center;margin-bottom:8px">'+esc(x.examName||'HALL TICKET')+'</h3>'+ 
     '<div class="meta">'+
-    '<div><b>Student Name</b><br>'+esc(x.name)+'</div>'+
-    '<div><b>CTS ID</b><br>'+esc(x.ctsId)+'</div>'+
-    '<div><b>GR No.</b><br>'+esc(x.gr)+'</div>'+
-    '<div><b>Roll No.</b><br>'+esc(x.roll)+'</div>'+
-    '<div><b>Standard / Division</b><br>'+esc(x.standard)+' / '+esc(x.division)+'</div>'+
-    '<div><b>Exam</b><br>'+esc(x.examName)+'</div>'+
-    '</div>'+
-    (rows?'<h3>Exam Schedule</h3><table class="schedule"><tr><th>Date</th><th>Time</th><th>Subject</th><th>Room</th><th>Seat</th></tr>'+rows+'</table>':'');
+    '<div><b>Student Name</b><br>'+esc(x.name)+'</div>'+ 
+    '<div><b>CTS ID</b><br>'+esc(x.ctsId)+'</div>'+ 
+    '<div><b>GR No.</b><br>'+esc(x.gr)+'</div>'+ 
+    '<div><b>Roll No.</b><br>'+esc(x.roll)+'</div>'+ 
+    '<div><b>Standard / Division</b><br>'+esc(x.standard)+' / '+esc(x.division)+'</div>'+ 
+    extra('Room No.',x.roomNo)+extra('Seat No.',x.seatNo)+extra('Student Mobile',x.mobile)+
+    extra('School Address',x.schoolAddress)+extra('School Phone',x.schoolPhone)+
+    '</div>'+ 
+    (rows?'<h3>Exam Schedule</h3><table class="schedule"><tr><th>Date</th><th>Time</th><th>Subject</th><th>Room</th><th>Seat</th></tr>'+rows+'</table>':'')+
+    (x.footer?'<div class="warn" style="margin-top:16px"><b>Instructions</b><br>'+esc(x.footer)+'</div>':'')+
+    '<p style="text-align:right;margin-top:22px"><b>'+esc(x.principal||'Principal')+'</b><br>Principal</p>'+ 
+    '<p style="text-align:center"><button onclick="window.print()" style="padding:10px 18px;cursor:pointer">Print Hall Ticket</button></p>';
 }catch(e){
   document.getElementById('content').innerHTML='<p style="color:#b42318;font-weight:700">Invalid or incomplete QR code.</p><p>'+esc(e.message)+'</p>';
 }
