@@ -1,3 +1,7 @@
+# v1.3.18
+- QR now encodes a compact base64url JSON payload to reduce QR pattern density without changing the displayed QR size.
+- Verification page decodes the compact payload and retains support for existing QR URL formats.
+
 ## v1.3.17 - QR Data and Clarity Fix
 - Use QR URL parameters that are compatible with verify.html.
 - Increase QR size for sharper scan and print output.

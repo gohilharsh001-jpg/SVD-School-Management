@@ -154,7 +154,20 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
           <button class="btn btn-primary" onclick="showPage('students')">➕ Add / Edit Student</button>
           <button class="btn btn-green" id="btnDbExportCsv">📥 Export CSV</button>
           <button class="btn btn-light" id="btnDbPrint">🖨️ Print Student List</button>
+          <button class="btn btn-light" id="btnBulkEditStudents">✏️ Bulk Edit Students</button>
         </div>
+      </div>
+      <div class="card">
+        <h3 class="section-title">🎟️ Standard-wise Seat No. Series</h3>
+        <p class="muted">દરેક ધોરણ માટે Series દાખલ કરો. ઉદાહરણ: Series <b>SVD_900</b> અને Roll No. <b>11</b> હોય તો Seat No. <b>SVD_911</b> બનશે. Series નો છેલ્લો નંબર Roll No. સાથે ઉમેરાશે.</p>
+        <div class="grid" id="seatSeriesSettings"></div>
+        <div class="btn-row" style="margin-top:10px"><button class="btn btn-green" id="btnSaveSeatSeries">Save Seat Series</button><span class="muted" id="seatSeriesStatus"></span></div>
+      </div>
+      <div class="card hidden" id="bulkEditPanel">
+        <h3 class="section-title">✏️ Bulk Edit Students</h3>
+        <p class="muted">હાલના Search / Standard / Division / Status filters મુજબ દેખાતા વિદ્યાર્થીઓના editable fields સુધારો. ખાલી field કરવાથી જૂની value ખાલી થઈ શકે છે; Save પહેલાં તપાસો.</p>
+        <div class="btn-row"><button class="btn btn-green" id="btnSaveBulkEdit">Save All Changes</button><button class="btn btn-light" id="btnCancelBulkEdit">Cancel</button></div>
+      </div>
       </div>
       <div class="grid-4">
         <div class="stat"><b id="dbTotal">0</b><span>Total Students</span></div>
@@ -836,7 +849,7 @@ async function cloudPull(){
     if(!r.data?.data)throw new Error('આ School Key માટે Cloud data હજી નથી. પ્રથમ sync માટે Upload Current Data વાપરો.');
     if(!confirm('Cloud data download કરીને હાલના browser dataને replace કરવું?'))return;
     db=r.data.data;db.customize={...structuredClone(defaultCustomize),...(db.customize||{})};
-    db.students=Array.isArray(db.students)?db.students:[];db.exams=Array.isArray(db.exams)?db.exams:[];db.rooms=Array.isArray(db.rooms)?db.rooms:[];db.generated=Array.isArray(db.generated)?db.generated:[];db.fees=Array.isArray(db.fees)?db.fees:[];db.busFees=Array.isArray(db.busFees)?db.busFees:[];db.results=db.results&&typeof db.results==='object'?db.results:{};
+    db.students=Array.isArray(db.students)?db.students:[];db.seatSeries=db.seatSeries&&typeof db.seatSeries==='object'?db.seatSeries:{};db.exams=Array.isArray(db.exams)?db.exams:[];db.rooms=Array.isArray(db.rooms)?db.rooms:[];db.generated=Array.isArray(db.generated)?db.generated:[];db.fees=Array.isArray(db.fees)?db.fees:[];db.busFees=Array.isArray(db.busFees)?db.busFees:[];db.results=db.results&&typeof db.results==='object'?db.results:{};
     localStorage.setItem(STORAGE_KEY,JSON.stringify(db));localStorage.setItem('hall_ticket_cloud_autosync','1');renderAll();applyCustomize();
     cloudStatus('Cloud data downloaded • '+new Date(r.data.updated_at).toLocaleString('en-IN')+' • Auto-sync ON',true);updateTopCloudStatus(true,sess.data.session.user.email);alert('Cloud data restored successfully.');
   }catch(e){cloudStatus('Download error: '+e.message);alert('Download error: '+e.message);}
@@ -1087,13 +1100,71 @@ btnPasteImport.addEventListener('click',()=>{
   saveDB();studentPaste.value='';alert(added+' students imported. '+skipped+' skipped (invalid/duplicate data).');
 });
 
+function getSeatSeries(std){
+  const map=db.seatSeries&&typeof db.seatSeries==='object'?db.seatSeries:{};
+  return String(map[String(std)]||'').trim();
+}
+function generatedSeatNo(student){
+  if(!student)return '';
+  const series=getSeatSeries(student.std);
+  const roll=String(student.roll??'').trim();
+  if(!series||!roll||!/^\d+$/.test(roll))return String(student.seatNo||'');
+  const m=series.match(/^(.*?)(\d+)$/);
+  if(!m)return String(student.seatNo||'');
+  return m[1]+String(Number(m[2])+Number(roll));
+}
+function renderSeatSeriesSettings(){
+  const box=document.getElementById('seatSeriesSettings'); if(!box)return;
+  const standards=[...new Set([...(db.students||[]).map(s=>String(s.std||'').trim()),'8','9','10','11','12'].filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  db.seatSeries=db.seatSeries&&typeof db.seatSeries==='object'?db.seatSeries:{};
+  box.innerHTML=standards.map(st=>`<div><label>Standard ${esc(st)} — Series</label><input data-seat-series-std="${esc(st)}" value="${esc(db.seatSeries[st]||'')}" placeholder="Example: SVD_900"><small class="muted">Preview Roll 11: ${esc((()=>{const v=String(db.seatSeries[st]||'').trim(),m=v.match(/^(.*?)(\d+)$/);return m?m[1]+(Number(m[2])+11):'Enter series ending in a number'})())}</small></div>`).join('');
+}
+function saveSeatSeriesSettings(){
+  const map={...(db.seatSeries||{})};
+  for(const el of document.querySelectorAll('[data-seat-series-std]')){
+    const st=el.getAttribute('data-seat-series-std'),v=el.value.trim();
+    if(v&&!/^(.*?)(\d+)$/.test(v)){alert('Seriesના અંતે નંબર હોવો જરૂરી છે. ઉદાહરણ: SVD_900');el.focus();return;}
+    if(v)map[st]=v;else delete map[st];
+  }
+  db.seatSeries=map;saveDB();renderSeatSeriesSettings();
+  const status=document.getElementById('seatSeriesStatus');if(status)status.textContent='Seat Series saved.';
+  alert('Seat Series સેવ થઈ ગઈ. Hall Ticket ફરી Generate કરો.');
+}
+function toggleBulkEdit(){
+  const panel=document.getElementById('bulkEditPanel');if(!panel)return;
+  const opening=panel.classList.contains('hidden');
+  panel.classList.toggle('hidden',!opening);
+  window.bulkEditStudents=opening;
+  renderStudentDatabase();
+}
+function saveBulkStudentEdits(){
+  const rows=[...document.querySelectorAll('#dbTableBody tr[data-student-id]')];
+  const changes=[];
+  for(const tr of rows){
+    const id=Number(tr.dataset.studentId),s=db.students.find(x=>Number(x.id)===id);if(!s)continue;
+    const val=k=>tr.querySelector(`[data-bulk-edit="${k}"]`)?.value??String(s[k]??'');
+    const name=val('name').trim(),rollRaw=val('roll').trim(),std=val('std').trim(),div=val('div').trim(),grRaw=val('gr').trim(),cts=val('ctsId').trim(),mobile=val('parentMobile').trim();
+    if(!name||!/^\d+$/.test(rollRaw)||Number(rollRaw)<=0){alert('દરેક વિદ્યાર્થીનું નામ અને માન્ય Roll No. જરૂરી છે.');return;}
+    if(mobile&&!/^\d{10}$/.test(mobile)){alert('Parent Mobile 10 digit હોવો જોઈએ.');return;}
+    if(cts&&!/^\d{18}$/.test(cts)){alert('CTS ID 18 digit હોવો જોઈએ.');return;}
+    changes.push({s,p:{name,roll:Number(rollRaw),std:std===''?'':Number(std),div,gr:grRaw===''?'':Number(grRaw),ctsId:cts,parentMobile:mobile,dob:val('dob'),gender:val('gender'),parent:val('parent'),status:val('status')}});
+  }
+  const ids=new Set();for(const x of changes){const key=String(x.p.std)+'|'+String(x.p.div).toLowerCase()+'|'+String(x.p.roll);if(ids.has(key)){alert('એક જ ધોરણ/Division માં duplicate Roll No. છે.');return;}ids.add(key);}
+  if(!confirm(changes.length+' વિદ્યાર્થીઓની વિગતો Save કરવી?'))return;
+  changes.forEach(({s,p})=>Object.assign(s,p));saveDB();renderStudentDatabase();alert(changes.length+' વિદ્યાર્થીઓની વિગતો Update થઈ. Seat No. પણ Series પ્રમાણે ફરી ગણાશે.');
+}
 function renderStudentDatabase(){
   const q=(document.getElementById('dbSearch')?.value||'').trim().toLowerCase();
   const std=(document.getElementById('dbStd')?.value||''); const div=(document.getElementById('dbDiv')?.value||''); const status=(document.getElementById('dbStatus')?.value||'');
   const list=db.students.filter(s=>(!q||[s.name,s.ctsId,s.gr,s.roll,s.parentMobile,s.parent].some(v=>String(v??'').toLowerCase().includes(q)))&&(!std||String(s.std)===std)&&(!div||String(s.div)===div)&&(!status||String(s.status||'Active')===status));
   document.getElementById('dbTotal').textContent=db.students.length; document.getElementById('dbActive').textContent=db.students.filter(s=>(s.status||'Active')==='Active').length; document.getElementById('dbWithCTS').textContent=db.students.filter(s=>s.ctsId).length; document.getElementById('dbWithPhoto').textContent=db.students.filter(s=>s.photo).length;
   const ss=document.getElementById('dbStd'),ds=document.getElementById('dbDiv'); const sv=ss.value,dv=ds.value; ss.innerHTML='<option value="">All Standards</option>'+[...new Set(db.students.map(s=>s.std).filter(Boolean))].sort((a,b)=>Number(a)-Number(b)).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');ds.innerHTML='<option value="">All Divisions</option>'+[...new Set(db.students.map(s=>s.div).filter(Boolean))].sort().map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');ss.value=sv;ds.value=dv;
-  document.getElementById('dbTableBody').innerHTML=list.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(s=>`<tr><td>${esc(s.roll)}</td><td>${esc(s.name)}</td><td>${esc(s.std)}</td><td>${esc(s.div)}</td><td>${esc(s.gr)}</td><td>${esc(s.ctsId)}</td><td>${esc(s.dob)}</td><td>${esc(s.gender)}</td><td>${esc(s.parent)}</td><td>${esc(s.parentMobile)}</td><td><span class="pill">${esc(s.status||'Active')}</span></td><td><button class="btn btn-light" onclick="editStudent(${s.id});showPage('students')">Edit</button> <button class="btn btn-danger" onclick="deleteStudent(${s.id})">Delete</button></td></tr>`).join('')||'<tr><td colspan="12" class="muted">No students found.</td></tr>';
+  const bulk=!!window.bulkEditStudents;
+  document.getElementById('dbTableBody').innerHTML=list.slice().sort((a,b)=>Number(a.std)-Number(b.std)||String(a.div).localeCompare(String(b.div))||Number(a.roll)-Number(b.roll)).map(s=>{
+    const cell=(key,value,type='text')=>bulk?`<input data-bulk-edit="${key}" type="${type}" value="${esc(value??'')}" style="min-width:90px;width:100%;box-sizing:border-box">`:esc(value??'');
+    return `<tr ${bulk?`data-student-id="${s.id}"`:''}><td>${cell('roll',s.roll,'number')}</td><td>${cell('name',s.name)}</td><td>${cell('std',s.std,'number')}</td><td>${cell('div',s.div)}</td><td>${cell('gr',s.gr,'number')}</td><td>${cell('ctsId',s.ctsId)}</td><td>${cell('dob',s.dob,'date')}</td><td>${bulk?`<select data-bulk-edit="gender"><option ${s.gender==='Male'?'selected':''}>Male</option><option ${s.gender==='Female'?'selected':''}>Female</option><option ${s.gender==='Other'?'selected':''}>Other</option><option value="" ${!s.gender?'selected':''}>—</option></select>`:esc(s.gender||'')}</td><td>${cell('parent',s.parent)}</td><td>${cell('parentMobile',s.parentMobile)}</td><td>${bulk?`<select data-bulk-edit="status">${['Active','Left School','Alumni','Inactive'].map(v=>`<option ${String(s.status||'Active')===v?'selected':''}>${v}</option>`).join('')}</select>`:`<span class="pill">${esc(s.status||'Active')}</span>`}</td><td>${bulk?`<span class="muted">Bulk Edit</span>`:`<button class="btn btn-light" onclick="editStudent(${s.id});showPage('students')">Edit</button> <button class="btn btn-danger" onclick="deleteStudent(${s.id})">Delete</button>`}</td></tr>`;
+  }).join('')||'<tr><td colspan="12" class="muted">No students found.</td></tr>';
+  renderSeatSeriesSettings();
 }
 function exportStudentCSV(){
   const headers=['Student Name','Standard','Division','Roll No','GR No','CTS ID','DOB','Gender','Parent/Guardian','Parent Mobile','Emergency Contact','Address','Email','Blood Group','Admission Date','Status','Category','Religion','Village'];
@@ -1172,7 +1243,7 @@ function ticketHTML(s){
   const photo=s.photo?`<img src="${s.photo}" alt="">`:`<span>${esc(c.photoPlaceholder).replace(/\|/g,'<br>')}</span>`;
   const matchedExams=db.exams.filter(e=>(!e.std||String(e.std)===String(s.std))&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase()));
   const allocations=matchedExams.map(e=>(db.rooms||[]).find(x=>x.examId===e.id&&x.studentId===s.id)).filter(Boolean);
-  const seatNo=allocations.length?allocations[0].seat:'';
+  const seatNo=generatedSeatNo(s)||(allocations.length?allocations[0].seat:'');
   const supervisorCell=`<td class="supervisor-sign-cell"><span class="supervisor-sign-line"></span></td>`;
   const schedule=matchedExams.map(e=>`<tr><td>${esc(e.date)}</td><td>${esc(e.time)}</td><td>${esc(e.subject)}</td>${supervisorCell}</tr>`).join('');
   const divCell=c.showDiv?`<td>${esc(c.division)}</td><td>${esc(s.div)}</td>`:'';
@@ -1228,7 +1299,7 @@ function hallTicketQRKey(s){return String(s.__qrKey||('roll-'+String(s.roll??'')
 function hallTicketQRData(s){
   // QR intentionally contains student details only. Exam schedule is not embedded,
   // keeping the QR payload short and easier for phone cameras to scan.
-  const payload={v:3,a:String(db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan'),n:String(s.name||''),i:String(s.ctsId||''),g:String(s.gr||''),r:String(s.roll||''),s:String(s.std||''),u:String(s.div||''),e:String(db.school?.examName||'')};
+  const payload={v:3,a:String(db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan'),n:String(s.name||''),i:String(s.ctsId||''),g:String(s.gr||''),r:String(s.roll||''),s:String(s.std||''),u:String(s.div||''),e:String(db.school?.examName||''),t:String(generatedSeatNo(s)||'')};
   const bytes=new TextEncoder().encode(JSON.stringify(payload));
   let binary=''; for(let i=0;i<bytes.length;i++) binary+=String.fromCharCode(bytes[i]);
   const token=btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
@@ -1298,7 +1369,11 @@ document.getElementById('btnStudentFeeReport')?.addEventListener('click',printSt
 document.getElementById('btnSaveBusFee')?.addEventListener('click',saveBusFee);document.getElementById('btnClearBusFee')?.addEventListener('click',clearBusFeeForm);document.getElementById('btnBusReceipt')?.addEventListener('click',()=>{const id=window.editingBusFeeId||window.lastSavedBusFeeId||((db.busFees||[]).length?db.busFees[db.busFees.length-1].id:null);if(id)printBusFeeReceipt(id);else alert('Save a bus fee entry first.');});document.getElementById('busSearch')?.addEventListener('input',renderBusFeesTable);document.getElementById('busFilterMode')?.addEventListener('change',renderBusFeesTable);document.getElementById('busFilterStatus')?.addEventListener('change',renderBusFeesTable);document.getElementById('btnBusPrintList')?.addEventListener('click',printBusFeeList);
 document.getElementById('btnSaveFee')?.addEventListener('click',saveFee);document.getElementById('btnClearFee')?.addEventListener('click',clearFeeForm);document.getElementById('btnFeeReceipt')?.addEventListener('click',()=>{const id=window.editingFeeId||window.lastSavedFeeId||((db.fees||[]).length?db.fees[db.fees.length-1].id:null);if(id)printFeeReceipt(id);else alert('Save a fee entry first.');});document.getElementById('feeSearch')?.addEventListener('input',renderFeesTable);document.getElementById('feeFilterMode')?.addEventListener('change',renderFeesTable);document.getElementById('feeFilterStatus')?.addEventListener('change',renderFeesTable);document.getElementById('btnFeePrintList')?.addEventListener('click',printFeeList);document.getElementById('feeStudent')?.addEventListener('change',()=>{});
 document.getElementById('btnAutoAllocate')?.addEventListener('click',autoAllocate);document.getElementById('btnClearAlloc')?.addEventListener('click',clearAlloc);document.getElementById('allocExam')?.addEventListener('change',renderAllocations);
-document.getElementById('dbSearch')?.addEventListener('input',renderStudentDatabase);document.getElementById('dbStd')?.addEventListener('change',renderStudentDatabase);document.getElementById('dbDiv')?.addEventListener('change',renderStudentDatabase);document.getElementById('dbStatus')?.addEventListener('change',renderStudentDatabase);document.getElementById('btnDbClear')?.addEventListener('click',()=>{dbSearch.value='';dbStd.value='';dbDiv.value='';dbStatus.value='';renderStudentDatabase();});document.getElementById('btnDbExportCsv')?.addEventListener('click',exportStudentCSV);document.getElementById('btnDbPrint')?.addEventListener('click',printStudentDatabase);
+document.getElementById('dbSearch')?.addEventListener('input',renderStudentDatabase);document.getElementById('dbStd')?.addEventListener('change',renderStudentDatabase);document.getElementById('dbDiv')?.addEventListener('change',renderStudentDatabase);document.getElementById('dbStatus')?.addEventListener('change',renderStudentDatabase);document.getElementById('btnDbClear')?.addEventListener('click',()=>{dbSearch.value='';dbStd.value='';dbDiv.value='';dbStatus.value='';renderStudentDatabase();});document.getElementById('btnDbExportCsv')?.addEventListener('click',exportStudentCSV);
+document.getElementById('btnSaveSeatSeries')?.addEventListener('click',saveSeatSeriesSettings);
+document.getElementById('btnBulkEditStudents')?.addEventListener('click',toggleBulkEdit);
+document.getElementById('btnSaveBulkEdit')?.addEventListener('click',saveBulkStudentEdits);
+document.getElementById('btnCancelBulkEdit')?.addEventListener('click',()=>{window.bulkEditStudents=false;document.getElementById('bulkEditPanel')?.classList.add('hidden');renderStudentDatabase();});document.getElementById('btnDbPrint')?.addEventListener('click',printStudentDatabase);
 function money(n){return '₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});}
 function nextReceipt(){const nums=(db.fees||[]).map(f=>parseInt(String(f.receiptNo||'').replace(/\D/g,''),10)).filter(Number.isFinite);return 'FEE-'+String((Math.max(0,...nums)+1)).padStart(4,'0');}
 function feeStudentLabel(s){return `${s.roll||''} - ${s.name||''}${s.ctsId?' | CTS: '+s.ctsId:''}`;}
