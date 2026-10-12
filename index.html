@@ -94,25 +94,18 @@ html, body { width:100%; max-width:100%; overflow-x:hidden; }
   .main .grid, .main .grid-2, .main .grid-3, .main .grid-4 { grid-template-columns:minmax(0,1fr) !important; }
 }
 
-/* FINAL LAYOUT FIX: keep desktop content clear of fixed sidebar and allow horizontal data scrolling */
-@media (min-width: 901px) {
-  html, body { min-width: 0 !important; width: 100% !important; overflow-x: auto !important; }
-  .app { display: block !important; width: 100% !important; min-width: 0 !important; }
-  .sidebar { position: fixed !important; left: 0 !important; top: 0 !important; bottom: 0 !important; width: 254px !important; z-index: 1000 !important; }
-  main.main, .main { position: relative !important; left: 0 !important; transform: none !important; margin-left: 254px !important; width: calc(100% - 254px) !important; max-width: none !important; min-width: 0 !important; padding: 22px !important; overflow-x: auto !important; }
-  .main > * { max-width: 100% !important; min-width: 0 !important; }
-  .main .card { width: 100% !important; }
-  .main .grid, .main .grid-2, .main .grid-3, .main .grid-4 { min-width: 0 !important; }
-  .table-wrap { max-width: 100% !important; overflow-x: auto !important; }
+/* Hall Ticket print isolation: print only ticket(s), not the entire application page */
+@media print {
+  body.print-hallticket .sidebar,
+  body.print-hallticket .topbar,
+  body.print-hallticket #loginOverlay,
+  body.print-hallticket main section:not(#page-ticket),
+  body.print-hallticket #page-ticket > .card.no-print { display:none !important; }
+  body.print-hallticket #page-ticket { display:block !important; visibility:visible !important; position:static !important; margin:0 !important; padding:0 !important; width:100% !important; }
+  body.print-hallticket #page-ticket .ticket-area { display:block !important; visibility:visible !important; margin:0 !important; padding:0 !important; width:100% !important; overflow:visible !important; }
+  body.print-hallticket #page-ticket .ticket { display:block !important; visibility:visible !important; break-after:page; page-break-after:always; }
+  body.print-hallticket #page-ticket .ticket:last-child { break-after:auto; page-break-after:auto; }
 }
-@media (max-width: 900px) {
-  .app { display: block !important; }
-  .sidebar { position: relative !important; width: 100% !important; max-height: 42vh !important; }
-  main.main, .main { position: relative !important; left: 0 !important; transform: none !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; padding: 12px !important; overflow-x: auto !important; }
-  .main .grid, .main .grid-2, .main .grid-3, .main .grid-4 { grid-template-columns: minmax(0, 1fr) !important; }
-}
-/* When changing navigation pages, reset horizontal scroll on the content container */
-
 </style>
 <style>
 .searchbar{display:flex;gap:8px;flex-wrap:wrap}.searchbar input,.searchbar select{flex:1;min-width:160px}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--light);color:var(--blue2);font-size:11px;font-weight:700}.danger-text{color:#a00000;font-weight:800}.login-overlay{position:fixed;inset:0;background:rgba(10,30,50,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}.login-box{width:min(420px,100%);background:#fff;border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3)}.login-box h2{margin-top:0;color:var(--blue2)}.modal{position:fixed;inset:0;background:rgba(10,30,50,.6);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px}.modal-card{background:#fff;border-radius:14px;padding:20px;width:min(900px,100%);max-height:90vh;overflow:auto}.qr-box{display:flex;justify-content:center;align-items:center;padding:10px}.receipt-sign{min-width:150px;height:28px;border-bottom:1px solid #222;display:inline-block}.received-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#e8f5e9;color:#176b2c;font-weight:700;font-size:12px}.pending-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#fff3cd;color:#856404;font-weight:700;font-size:12px}.receipt-print-title{display:none} @media print{.receipt-print-title{display:block;text-align:center;margin-bottom:12px}.hall-receipt-table{width:100%;border-collapse:collapse}.hall-receipt-table th,.hall-receipt-table td{border:1px solid #333;padding:6px;font-size:11px}.hall-receipt-table .no-print{display:none!important}
@@ -804,7 +797,6 @@ function nextId(arr){ return arr.length?Math.max(...arr.map(x=>Number(x.id)||0))
 function esc(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
 
 function showPage(page){
-  const mainContent=document.querySelector('main.main'); if(mainContent){mainContent.scrollLeft=0; mainContent.scrollTop=0;} window.scrollTo(0,0);
   document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
   document.getElementById('page-'+page).classList.remove('hidden');
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
@@ -1393,11 +1385,11 @@ function renderTicket(){
   const s=db.students.find(x=>Number(x.roll)===Number(ticketRoll.value))||db.students[0];
   ticketArea.innerHTML=ticketHTML(s); markGenerated(s.id); if(db.customize.showQR!==false){const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),240);}
 }
-btnPrintCurrent.addEventListener('click',()=>{renderTicket();setTimeout(()=>window.print(),200)});
+btnPrintCurrent.addEventListener('click',()=>{renderTicket();document.body.classList.add('print-hallticket');const clean=()=>{document.body.classList.remove('print-hallticket');window.removeEventListener('afterprint',clean)};window.addEventListener('afterprint',clean);setTimeout(()=>window.print(),200)});
 btnPrintAll.addEventListener('click',()=>{
   if(!db.students.length){alert('No students.');return;}
   const allForPrint=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)); allForPrint.forEach((st,i)=>st.__qrKey='ticket-'+i+'-'+String(st.id??'')+'-'+String(st.roll??'')); ticketArea.innerHTML=allForPrint.map(ticketHTML).join(''); allForPrint.forEach(s=>markGenerated(s.id)); if(db.customize.showQR!==false)db.students.forEach(s=>{const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),220);});
-  setTimeout(()=>window.print(),250);
+  document.body.classList.add('print-hallticket'); const clean=()=>{document.body.classList.remove('print-hallticket');window.removeEventListener('afterprint',clean)}; window.addEventListener('afterprint',clean); setTimeout(()=>window.print(),250);
 });
 
 btnExportBackup.addEventListener('click',()=>{
