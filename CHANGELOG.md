@@ -209,3 +209,9 @@ Every future feature must:
 - Added Standard, Division, and Student Name dropdowns.
 - Print Selected prints only the selected student ticket; Print Class prints all tickets for selected standard/division.
 - Print isolation hides all other menus and dashboard data. QR and student photo are retained with compact A4 print styling.
+
+
+## Isolated Hall Ticket printing fix (2026-10-12)
+- Print Current and Print Class now open a dedicated print document containing only generated ticket markup, eliminating unrelated app sections and their blank pages.
+- A4 portrait layout compacted to keep student details, schedule, QR code, photo and principal area together.
+- QR generation remains enabled in the generated ticket before print.

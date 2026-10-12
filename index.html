@@ -1534,13 +1534,65 @@ function renderTicket(){
 }
 function prepareTicketPrint(students){
   if(!students.length){alert('આ પસંદગીમાં કોઈ વિદ્યાર્થી મળ્યો નથી.');return;}
+  // Render QR in the existing page, then print only the generated ticket markup in an isolated document.
   ticketArea.innerHTML=students.map(ticketHTML).join('');
   students.forEach(s=>markGenerated(s.id));
-  if(db.customize.showQR!==false){students.forEach(s=>{const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),115);});}
-  document.body.classList.add('ticket-only-print');
-  const cleanup=()=>{document.body.classList.remove('ticket-only-print');renderTicket();};
-  window.addEventListener('afterprint',cleanup,{once:true});
-  setTimeout(()=>window.print(),450);
+  if(db.customize.showQR!==false){
+    students.forEach(s=>{
+      const q=document.getElementById('qr-'+hallTicketQRKey(s));
+      renderQR(q,hallTicketQRData(s),78);
+    });
+  }
+  const sourceStyle=document.querySelector('style')?.textContent||'';
+  const printWindow=window.open('','_blank','width=900,height=700');
+  if(!printWindow){
+    alert('Print window ખૂલ્યું નથી. Browserમાં pop-ups allow કરીને ફરી પ્રયાસ કરો.');
+    return;
+  }
+  const tickets=[...ticketArea.querySelectorAll('.ticket')].map(t=>t.outerHTML).join('');
+  const printCSS=`
+    @page { size:A4 portrait; margin:7mm; }
+    * { box-sizing:border-box; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    html,body { margin:0!important; padding:0!important; width:100%; background:#fff!important; }
+    body { font-family:Arial,sans-serif; }
+    .print-root { display:block!important; width:100%!important; margin:0!important; padding:0!important; }
+    .ticket { display:block!important; position:relative!important; width:100%!important; max-width:100%!important;
+      height:auto!important; min-height:0!important; margin:0!important; padding:4mm!important;
+      overflow:hidden!important; border:1px solid #1f4e78!important; box-shadow:none!important;
+      break-after:page!important; page-break-after:always!important; }
+    .ticket:last-child { break-after:auto!important; page-break-after:auto!important; }
+    .ticket-head { display:flex!important; align-items:center!important; justify-content:center!important; gap:8px!important; text-align:center!important; }
+    .school-name { font-size:16pt!important; line-height:1.15!important; }
+    .school-address { font-size:8pt!important; }
+    .exam-banner { font-size:11pt!important; margin:2mm 0!important; }
+    .student-block { display:flex!important; align-items:flex-start!important; gap:3mm!important; }
+    .info-table,.schedule { width:100%!important; border-collapse:collapse!important; table-layout:fixed!important; }
+    .info-table td,.schedule th,.schedule td { padding:2px 3px!important; font-size:8pt!important; line-height:1.15!important; overflow-wrap:anywhere!important; }
+    .photo { flex:0 0 22mm!important; width:22mm!important; height:27mm!important; overflow:hidden!important; }
+    .photo img { width:100%!important; height:100%!important; object-fit:cover!important; }
+    .schedule-title { margin:2mm 0 1mm!important; font-size:9pt!important; text-align:center!important; }
+    .schedule { font-size:8pt!important; }
+    .schedule th,.schedule td { padding:2px!important; }
+    .supervisor-sign-line { display:inline-block!important; width:14mm!important; border-bottom:1px solid #000!important; height:5mm!important; }
+    .qr-box { display:flex!important; justify-content:flex-start!important; align-items:center!important; margin:2mm 0!important; min-height:0!important; }
+    .qr-box img,.qr-box canvas { display:block!important; width:20mm!important; height:20mm!important; max-width:20mm!important; max-height:20mm!important; }
+    .qr-box table { width:20mm!important; height:20mm!important; }
+    .footer-block { display:flex!important; gap:2mm!important; margin-top:2mm!important; align-items:stretch!important; }
+    .footer-note { flex:1!important; min-height:10mm!important; padding:2mm!important; font-size:8pt!important; }
+    .principal { width:25mm!important; padding:5mm 2mm 2mm!important; font-size:8pt!important; }
+    .principal img { max-height:12mm!important; max-width:22mm!important; }
+  `;
+  printWindow.document.open();
+  printWindow.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Hall Ticket Print</title><style>'+sourceStyle+'</style><style>'+printCSS+'</style></head><body><div class="print-root">'+tickets+'</div></body></html>');
+  printWindow.document.close();
+  setTimeout(()=>{
+    const imgs=[...printWindow.document.images];
+    Promise.all(imgs.map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=img.onerror=resolve;setTimeout(resolve,1500);}))).then(()=>{
+      printWindow.focus();
+      printWindow.print();
+      printWindow.onafterprint=()=>{try{printWindow.close();}catch(e){};renderTicket();};
+    });
+  },350);
 }
 btnPrintCurrent.addEventListener('click',()=>{
   const s=db.students.find(x=>String(x.id)===String(ticketRoll.value));
