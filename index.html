@@ -1188,19 +1188,7 @@ function exportStudentCSV(){
   const rows=db.students.map(s=>[s.name,s.std,s.div,s.roll,s.gr,s.ctsId,s.dob,s.gender,s.parent,s.parentMobile,s.emergency,s.address,s.email,s.blood,s.admissionDate,s.status||'Active',s.category,s.religion,s.village]);
   const csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n'); const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='School_Student_Database.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
-function printStudentDatabase(){ const rows=[...document.querySelectorAll('#dbTable tbody tr')].map(tr=>tr.outerHTML).join(''); const w=window.open('','_blank'); if(!w)return; w.document.write(`<html><head><title>Student Database</title><style>body{font-family:Arial;padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #777;padding:6px;font-size:11px}th{background:#eee}</style></head><body><h2>${esc(db.school.name)}</h2><h3>Student Database</h3><table><thead>${document.querySelector('#dbTable thead').innerHTML}</thead><tbody>${rows}</tbody></table><script>
-// Keep Student Entry content aligned to the left; prevent stale horizontal scroll from hiding fields.
-window.addEventListener('load', function () {
-  try {
-    document.documentElement.scrollLeft = 0;
-    document.body.scrollLeft = 0;
-    document.querySelectorAll('.main, .main .card, .main textarea, .main .table-wrap').forEach(function (el) {
-      if (el.scrollLeft > 0) el.scrollLeft = 0;
-    });
-  } catch (e) {}
-});
-</script>
-</body></html>`);w.document.close();w.print();}
+function printStudentDatabase(){ const rows=[...document.querySelectorAll('#dbTable tbody tr')].map(tr=>tr.outerHTML).join(''); const w=window.open('','_blank'); if(!w)return; w.document.write(`<html><head><title>Student Database</title><style>body{font-family:Arial;padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #777;padding:6px;font-size:11px}th{background:#eee}</style></head><body><h2>${esc(db.school.name)}</h2><h3>Student Database</h3><table><thead>${document.querySelector('#dbTable thead').innerHTML}</thead><tbody>${rows}</tbody></table></body></html>`);w.document.close();w.print();}
 
 function getReportStudents(){
   const cat=document.getElementById('reportCategory')?.value||'', gen=document.getElementById('reportGender')?.value||'', std=document.getElementById('reportStd')?.value||'', village=document.getElementById('reportVillage')?.value||'', religion=document.getElementById('reportReligion')?.value||'', status=document.getElementById('reportStatus')?.value||'', q=(document.getElementById('reportSearch')?.value||'').trim().toLowerCase();
