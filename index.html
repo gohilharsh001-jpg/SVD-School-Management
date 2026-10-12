@@ -7,14 +7,14 @@
 <style>
 :root{--blue:#1f4e78;--blue2:#17365d;--light:#eaf3f8;--green:#70ad47;--red:#c00000;--bg:#f4f7fb;--border:#c9d8e6}
 *{box-sizing:border-box}
-body{margin:0;font-family:"Nirmala UI","Segoe UI",Arial,sans-serif;background:var(--bg);color:#1d2a35}
-.app{display:flex;min-height:100vh}
-.sidebar{width:240px;background:linear-gradient(180deg,#17365d,#1f4e78);color:#fff;padding:18px 12px;position:fixed;top:0;bottom:0;left:0}
+html{overflow-x:hidden}body{margin:0;min-width:0;overflow-x:hidden;font-family:"Nirmala UI","Segoe UI",Arial,sans-serif;background:var(--bg);color:#1d2a35}
+.app{display:flex;min-height:100vh;width:100%;min-width:0}
+.sidebar{width:240px;background:linear-gradient(180deg,#17365d,#1f4e78);color:#fff;padding:18px 12px;position:fixed;top:0;bottom:0;left:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;z-index:1000;scrollbar-width:thin}
 .brand{padding:10px 12px 22px;border-bottom:1px solid rgba(255,255,255,.2);margin-bottom:12px}
 .brand h1{font-size:19px;margin:0 0 4px}.brand p{margin:0;font-size:12px;opacity:.82}
 .nav button{display:block;width:100%;border:0;background:transparent;color:#fff;text-align:left;padding:12px 14px;border-radius:8px;margin:5px 0;font-size:14px;cursor:pointer}
 .nav button:hover,.nav button.active{background:rgba(255,255,255,.15)}
-.main{margin-left:240px;width:calc(100% - 240px);padding:22px}
+.main{margin-left:240px;width:calc(100% - 240px);min-width:0;padding:22px;overflow-x:hidden}
 .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
 .topbar h2{margin:0;color:var(--blue2)}
 .card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:0 3px 14px rgba(20,40,60,.06);margin-bottom:18px}
@@ -66,7 +66,7 @@ table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:9px 8px;
   .ticket{width:auto;min-height:0;margin:0;border:2px solid var(--blue);box-shadow:none;page-break-after:always}
 }
 @media(max-width:900px){
-  .sidebar{position:static;width:100%;height:auto}.app{display:block}.main{margin:0;width:100%;padding:12px}.grid,.grid-4{grid-template-columns:1fr}
+  .sidebar{position:relative;width:100%;height:auto;max-height:42vh;overflow-y:auto}.app{display:block}.main{margin:0;width:100%;padding:12px;overflow-x:visible}.grid,.grid-4{grid-template-columns:1fr}
 }
 
 .fee-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}.fee-stat{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px}.fee-stat b{font-size:22px;display:block}.fee-table{width:100%;border-collapse:collapse}.fee-table th,.fee-table td{border:1px solid #b8cbd8;padding:7px;text-align:left}.fee-table th{background:#e6f0f6}.fee-receipt{max-width:800px;margin:0 auto;background:#fff;padding:24px;border:1px solid #b8cbd8}.fee-receipt-head{text-align:center;border-bottom:2px solid var(--blue);padding-bottom:12px;margin-bottom:14px}.fee-receipt-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.fee-paid{color:#167a25;font-weight:800}.fee-pending{color:#a00000;font-weight:800}
