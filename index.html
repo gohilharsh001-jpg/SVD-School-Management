@@ -138,6 +138,31 @@ html, body { width:100%; max-width:100%; overflow-x:hidden; }
   body.print-hallticket #page-ticket .ticket .principal { padding:12mm 2mm 2mm !important; font-size:9pt !important; }
 }
 
+
+/* FINAL OVERRIDE: print only the Hall Ticket section. Do not merely hide other sections,
+   because visibility:hidden preserves their blank layout and creates extra printed pages. */
+@media print {
+  @page { size: A4 portrait; margin: 7mm; }
+  body.print-hallticket { margin:0 !important; padding:0 !important; background:#fff !important; }
+  body.print-hallticket #loginOverlay,
+  body.print-hallticket .sidebar,
+  body.print-hallticket .topbar,
+  body.print-hallticket .no-print { display:none !important; }
+  body.print-hallticket .app { display:block !important; margin:0 !important; padding:0 !important; width:100% !important; min-height:0 !important; }
+  body.print-hallticket main.main { display:block !important; margin:0 !important; padding:0 !important; width:100% !important; max-width:none !important; min-height:0 !important; overflow:visible !important; }
+  body.print-hallticket main.main > *:not(#page-ticket) { display:none !important; }
+  body.print-hallticket #page-ticket { display:block !important; visibility:visible !important; position:static !important; width:100% !important; max-width:none !important; margin:0 !important; padding:0 !important; background:#fff !important; overflow:visible !important; }
+  body.print-hallticket #page-ticket > *:not(.ticket-area) { display:none !important; }
+  body.print-hallticket #page-ticket .ticket-area { display:block !important; visibility:visible !important; position:static !important; width:100% !important; margin:0 !important; padding:0 !important; overflow:visible !important; }
+  body.print-hallticket #page-ticket .ticket-area .ticket { display:block !important; visibility:visible !important; position:relative !important; width:100% !important; max-width:100% !important; margin:0 auto !important; padding:5mm !important; box-sizing:border-box !important; break-after:page !important; page-break-after:always !important; }
+  body.print-hallticket #page-ticket .ticket-area .ticket:last-child { break-after:auto !important; page-break-after:auto !important; }
+  body.print-hallticket #page-ticket .ticket .qr-box,
+  body.print-hallticket #page-ticket .ticket .qr-box *,
+  body.print-hallticket #page-ticket .ticket [id^="qr-"],
+  body.print-hallticket #page-ticket .ticket [id^="qr-"] canvas,
+  body.print-hallticket #page-ticket .ticket [id^="qr-"] img { display:block !important; visibility:visible !important; }
+}
+
 </style>
 <style>
 .searchbar{display:flex;gap:8px;flex-wrap:wrap}.searchbar input,.searchbar select{flex:1;min-width:160px}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--light);color:var(--blue2);font-size:11px;font-weight:700}.danger-text{color:#a00000;font-weight:800}.login-overlay{position:fixed;inset:0;background:rgba(10,30,50,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}.login-box{width:min(420px,100%);background:#fff;border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3)}.login-box h2{margin-top:0;color:var(--blue2)}.modal{position:fixed;inset:0;background:rgba(10,30,50,.6);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px}.modal-card{background:#fff;border-radius:14px;padding:20px;width:min(900px,100%);max-height:90vh;overflow:auto}.qr-box{display:flex;justify-content:center;align-items:center;padding:10px}.receipt-sign{min-width:150px;height:28px;border-bottom:1px solid #222;display:inline-block}.received-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#e8f5e9;color:#176b2c;font-weight:700;font-size:12px}.pending-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#fff3cd;color:#856404;font-weight:700;font-size:12px}.receipt-print-title{display:none} @media print{.receipt-print-title{display:block;text-align:center;margin-bottom:12px}.hall-receipt-table{width:100%;border-collapse:collapse}.hall-receipt-table th,.hall-receipt-table td{border:1px solid #333;padding:6px;font-size:11px}.hall-receipt-table .no-print{display:none!important}
