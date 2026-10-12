@@ -1047,7 +1047,7 @@ btnSaveStudent.addEventListener('click',()=>{
   if(parentMobile && !/^\d{10}$/.test(parentMobile)){alert('Parent Mobile must be exactly 10 digits.');sParentMobile.focus();return;}
   if(ctsId && !/^\d{18}$/.test(ctsId)){alert('CTS ID must be exactly 18 digits.');sCTSId.focus();return;}
   if(ctsId && db.students.some(s=>String(s.ctsId||'').toLowerCase()===ctsId.toLowerCase() && s.id!==editingStudentId)){alert('Duplicate CTS ID already exists.');return;}
-  const duplicate=db.students.find(s=>Number(s.roll)===roll && s.id!==editingStudentId);
+  const duplicate=db.students.find(s=>Number(s.roll)===roll && String(s.std??'')===String(Number(sStd.value)||'') && String(s.div??'').trim().toLowerCase()===String(sDiv.value||'').trim().toLowerCase() && s.id!==editingStudentId);
   if(duplicate){alert('આ Roll No. પહેલેથી છે.');return;}
   const payload={name,std:Number(sStd.value)||'',div:sDiv.value.trim(),roll,gr:Number(sGR.value)||'',mobile,ctsId,dob:sDOB.value,gender:sGender.value,category:sCategory.value,religion:sReligion.value,village:sVillage.value.trim(),parent:sParent.value.trim(),parentMobile,emergency:sEmergency.value.trim(),address:sAddress.value.trim(),email:sEmail.value.trim(),blood:sBlood.value,admissionDate:sAdmissionDate.value,status:sStatus.value||'Active',photo:selectedPhotoData,photoFileName:sPhoto.files[0]?.name||''};
   if(editingStudentId){const s=db.students.find(x=>x.id===editingStudentId);Object.assign(s,payload);}
@@ -1079,25 +1079,36 @@ document.querySelectorAll('#bulkFieldVisibilityBox [data-bulk-field]').forEach(e
 document.getElementById('btnBulkTemplate')?.addEventListener('click',()=>{const fields=selectedBulkFields();if(!fields.length){alert('At least one bulk field select કરો.');return;}document.getElementById('studentPaste').value=fields.map(x=>x[1]).join('\t');updateBulkTemplate();document.getElementById('studentPaste').focus();});
 btnImportPaste.addEventListener('click',()=>{pasteBox.classList.toggle('hidden');updateBulkTemplate();});
 btnPasteImport.addEventListener('click',()=>{
-  const rows=studentPaste.value.trim().split(/\r?\n/).filter(Boolean);
+  const raw=studentPaste.value.trim();
+  if(!raw){alert('પહેલાં Excelમાંથી student data paste કરો.');return;}
+  const rows=raw.split(/\r?\n/).filter(line=>line.trim()!=='');
   const fields=selectedBulkFields();
-  if(!fields.length){alert('Bulk Entry માટે ઓછામાં ઓછું એક field select કરો.');return;}
-  let added=0,skipped=0;
-  for(const row of rows){
-    const c=row.split('\t'); if(c.length<fields.length){skipped++;continue;}
+  if(!fields.some(([k])=>k==='name')||!fields.some(([k])=>k==='roll')){alert('Bulk Entry માટે Student Name અને Roll No. બંને fields select કરો.');return;}
+  let added=0,skipped=0;const issues=[];
+  const sameKey=(a,b)=>Number(a.roll)===Number(b.roll)&&String(a.std??'')===String(b.std??'')&&String(a.div??'').trim().toLowerCase()===String(b.div??'').trim().toLowerCase();
+  rows.forEach((row,index)=>{
+    const c=row.split('\t');
+    // Allow the optional generated column-heading row at the top.
+    if(index===0 && c.some(v=>/student name|roll no\.?|standard/i.test(v.trim())) && c.length===fields.length){skipped++;return;}
+    if(c.length<fields.length){skipped++;issues.push(`Row ${index+1}: columns ઓછા છે`);return;}
     const obj={};fields.forEach(([key],i)=>obj[key]=String(c[i]??'').trim());
-    const name=obj.name||'', rollRaw=obj.roll||''; if(!name||!rollRaw){skipped++;continue;}
-    const roll=Number(rollRaw),mm=obj.mobile||'',pp=obj.parentMobile||'',cc=obj.ctsId||'';
-    if(!/^\d+$/.test(rollRaw)||roll<=0){skipped++;continue;}
-    if(mm && !/^\d{10}$/.test(mm)){skipped++;continue;}
-    if(pp && !/^\d{10}$/.test(pp)){skipped++;continue;}
-    if(cc && !/^\d{18}$/.test(cc)){skipped++;continue;}
-    if(db.students.some(s=>Number(s.roll)===roll)){skipped++;continue;}
-    if(cc && db.students.some(s=>String(s.ctsId||'')===cc)){skipped++;continue;}
-    db.students.push({id:nextId(db.students),name,std:Number(obj.std)||'',div:obj.div||'',roll,gr:Number(obj.gr)||'',mobile:mm,ctsId:cc,dob:obj.dob||'',gender:obj.gender||'',category:obj.category||'',religion:obj.religion||'',village:obj.village||'',parent:obj.parent||'',parentMobile:pp,emergency:obj.emergency||'',address:obj.address||'',email:obj.email||'',blood:obj.blood||'',admissionDate:obj.admissionDate||'',status:obj.status||'Active',photo:null,photoFileName:obj.photoFileName||''});
+    const name=obj.name||'', rollRaw=(obj.roll||'').replace(/\s/g,'');
+    if(!name||!rollRaw){skipped++;issues.push(`Row ${index+1}: Name અથવા Roll No. ખાલી છે`);return;}
+    const roll=Number(rollRaw),std=Number(obj.std)||9,div=(obj.div||'A').trim();
+    const mm=obj.mobile||'',pp=obj.parentMobile||'',cc=obj.ctsId||'';
+    if(!/^\d+$/.test(rollRaw)||!Number.isSafeInteger(roll)||roll<=0){skipped++;issues.push(`Row ${index+1}: Roll No. ખોટો છે`);return;}
+    if(mm && !/^\d{10}$/.test(mm)){skipped++;issues.push(`Row ${index+1}: Student Mobile 10 digitsનો નથી`);return;}
+    if(pp && !/^\d{10}$/.test(pp)){skipped++;issues.push(`Row ${index+1}: Parent Mobile 10 digitsનો નથી`);return;}
+    if(cc && !/^\d{18}$/.test(cc)){skipped++;issues.push(`Row ${index+1}: CTS ID 18 digitsનો નથી`);return;}
+    if(db.students.some(s=>sameKey(s,{roll,std,div}))){skipped++;issues.push(`Row ${index+1}: આ Standard/Divisionમાં Roll No. પહેલેથી છે`);return;}
+    if(cc && db.students.some(s=>String(s.ctsId||'').trim().toLowerCase()===cc.toLowerCase())){skipped++;issues.push(`Row ${index+1}: CTS ID duplicate છે`);return;}
+    db.students.push({id:nextId(db.students),name,std,div,roll,gr:obj.gr||'',mobile:mm,ctsId:cc,dob:obj.dob||'',gender:obj.gender||'',category:obj.category||'',religion:obj.religion||'',village:obj.village||'',parent:obj.parent||'',parentMobile:pp,emergency:obj.emergency||'',address:obj.address||'',email:obj.email||'',blood:obj.blood||'',admissionDate:obj.admissionDate||'',status:obj.status||'Active',photo:null,photoFileName:obj.photoFileName||''});
     added++;
-  }
-  saveDB();studentPaste.value='';alert(added+' students imported. '+skipped+' skipped (invalid/duplicate data).');
+  });
+  saveDB();
+  if(added===rows.length-skipped)studentPaste.value='';
+  const detail=issues.length?'\n\nDetails (first 8):\n'+issues.slice(0,8).join('\n'):'';
+  alert(`${added} students imported. ${skipped} skipped.${detail}`);
 });
 
 function getSeatSeries(std){
