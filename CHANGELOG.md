@@ -186,3 +186,26 @@ Every future feature must:
 - Added a helpful email-rate-limit message and stopped repeated alerting for that provider limit.
 - Added Cloud overwrite confirmation for manual uploads, friendlier empty-cloud handling, and safer local/cloud sync behavior.
 - Added explicit authenticated table grants while keeping owner-based Row Level Security policies.
+\n\n## Hall Ticket list-first layout (2026-10-12)\n- Added student roster above generated hall ticket(s) on the Hall Ticket page.\n- Print order: roster first, then hall ticket(s) on following page(s).\n- Enabled QR visibility in hall ticket print CSS.\n\n\n## Hall Ticket print isolation fix (2026-10-12)\n- Print mode now hides all app content except the Hall Ticket student roster and ticket area.\n- Added a compact student roster before hall tickets, matching requested order.\n- Each hall ticket starts on a new page.\n
+
+## Hall Ticket only + QR print fix (2026-10-12)
+- Print mode hides all application pages and the student list; only the Hall Ticket template is visible.
+- QR code container/canvas/image is explicitly visible in print mode.
+- A4 portrait print page with margins and one ticket per page.
+
+
+## Final Hall Ticket-only print isolation (2026-10-12)
+- Uses display:none for every sibling page to prevent blank/layout pages from being printed.
+- Keeps only the Hall Ticket section and QR code visible in print preview.
+
+
+## Hall Ticket A4 one-page print repair (2026-10-12)
+- Isolates print output to the Hall Ticket section only.
+- Constrains QR code to approximately 29 mm square so the ticket fits one A4 page.
+- Reduces print-only spacing and typography while preserving the on-screen preview.
+
+
+## Hall Ticket student selector and class print (2026-10-12)
+- Added Standard, Division, and Student Name dropdowns.
+- Print Selected prints only the selected student ticket; Print Class prints all tickets for selected standard/division.
+- Print isolation hides all other menus and dashboard data. QR and student photo are retained with compact A4 print styling.

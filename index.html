@@ -163,6 +163,42 @@ html, body { width:100%; max-width:100%; overflow-x:hidden; }
   body.print-hallticket #page-ticket .ticket [id^="qr-"] img { display:block !important; visibility:visible !important; }
 }
 
+
+/* Hall Ticket workflow: print only ticket(s), never dashboard or other menus */
+@page { size: A4 portrait; margin: 7mm; }
+@media print {
+  body.ticket-only-print * { visibility:hidden !important; }
+  body.ticket-only-print #page-ticket,
+  body.ticket-only-print #page-ticket #ticketArea,
+  body.ticket-only-print #page-ticket #ticketArea * { visibility:visible !important; }
+  body.ticket-only-print .sidebar,
+  body.ticket-only-print .topbar,
+  body.ticket-only-print #ticketControls,
+  body.ticket-only-print section:not(#page-ticket),
+  body.ticket-only-print #page-ticket .no-print { display:none !important; }
+  body.ticket-only-print #page-ticket { display:block !important; position:static !important; width:100% !important; margin:0 !important; padding:0 !important; }
+  body.ticket-only-print #ticketArea { display:block !important; position:static !important; width:100% !important; margin:0 !important; padding:0 !important; overflow:visible !important; }
+  body.ticket-only-print .ticket { display:block !important; width:100% !important; max-width:100% !important; min-height:0 !important; height:auto !important; margin:0 !important; padding:5mm !important; box-sizing:border-box !important; border:1.5px solid #1f4e78 !important; box-shadow:none !important; overflow:hidden !important; break-after:page !important; page-break-after:always !important; }
+  body.ticket-only-print .ticket:last-child { break-after:auto !important; page-break-after:auto !important; }
+  body.ticket-only-print .ticket .school-name { font-size:17pt !important; }
+  body.ticket-only-print .ticket .school-address { font-size:8pt !important; }
+  body.ticket-only-print .ticket .exam-banner { font-size:12pt !important; padding:4px !important; margin-top:5px !important; }
+  body.ticket-only-print .ticket .student-block { grid-template-columns:minmax(0,1fr) 95px !important; gap:6px !important; margin-top:6px !important; }
+  body.ticket-only-print .ticket .photo { min-height:95px !important; max-height:100px !important; }
+  body.ticket-only-print .ticket .photo img { max-width:88px !important; max-height:94px !important; }
+  body.ticket-only-print .ticket .info-table td { padding:4px !important; font-size:8pt !important; }
+  body.ticket-only-print .ticket .schedule-title { margin-top:6px !important; padding:4px !important; font-size:9pt !important; }
+  body.ticket-only-print .ticket table.schedule { font-size:8pt !important; }
+  body.ticket-only-print .ticket table.schedule th, body.ticket-only-print .ticket table.schedule td { padding:4px !important; }
+  body.ticket-only-print .ticket .supervisor-sign-cell { min-width:65px !important; }
+  body.ticket-only-print .ticket .supervisor-sign-line { width:55px !important; height:12px !important; }
+  body.ticket-only-print .ticket .qr-box { display:flex !important; justify-content:flex-start !important; padding:3px 0 !important; }
+  body.ticket-only-print .ticket .qr-box canvas, body.ticket-only-print .ticket .qr-box img { width:92px !important; height:92px !important; }
+  body.ticket-only-print .ticket .footer-block { grid-template-columns:minmax(0,1fr) 115px !important; gap:6px !important; margin-top:5px !important; }
+  body.ticket-only-print .ticket .footer-note { min-height:35px !important; padding:5px !important; font-size:8pt !important; }
+  body.ticket-only-print .ticket .principal { padding:18px 5px 5px !important; font-size:8pt !important; }
+}
+
 </style>
 <style>
 .searchbar{display:flex;gap:8px;flex-wrap:wrap}.searchbar input,.searchbar select{flex:1;min-width:160px}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--light);color:var(--blue2);font-size:11px;font-weight:700}.danger-text{color:#a00000;font-weight:800}.login-overlay{position:fixed;inset:0;background:rgba(10,30,50,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}.login-box{width:min(420px,100%);background:#fff;border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3)}.login-box h2{margin-top:0;color:var(--blue2)}.modal{position:fixed;inset:0;background:rgba(10,30,50,.6);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px}.modal-card{background:#fff;border-radius:14px;padding:20px;width:min(900px,100%);max-height:90vh;overflow:auto}.qr-box{display:flex;justify-content:center;align-items:center;padding:10px}.receipt-sign{min-width:150px;height:28px;border-bottom:1px solid #222;display:inline-block}.received-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#e8f5e9;color:#176b2c;font-weight:700;font-size:12px}.pending-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#fff3cd;color:#856404;font-weight:700;font-size:12px}.receipt-print-title{display:none} @media print{.receipt-print-title{display:block;text-align:center;margin-bottom:12px}.hall-receipt-table{width:100%;border-collapse:collapse}.hall-receipt-table th,.hall-receipt-table td{border:1px solid #333;padding:6px;font-size:11px}.hall-receipt-table .no-print{display:none!important}
@@ -172,6 +208,44 @@ html, body { width:100%; max-width:100%; overflow-x:hidden; }
 } 
 .allocation-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.allocation-card{border:1px solid var(--border);border-radius:10px;padding:12px;background:#fff}.public-portal{max-width:900px;margin:30px auto;padding:20px}.status-ok{color:#167a25;font-weight:800}.status-warn{color:#9b6500;font-weight:800}.result-sheet{max-width:900px;margin:0 auto;background:#fff;padding:24px;border:1px solid #ccd8e0}.result-head{text-align:center;border-bottom:2px solid var(--blue);padding-bottom:12px;margin-bottom:14px}.result-head h2{margin:4px 0;color:var(--blue2)}.result-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}.result-table{width:100%;border-collapse:collapse}.result-table th,.result-table td{border:1px solid #9db6c9;padding:7px;text-align:center}.result-table th{background:#e6f0f6}.result-total{display:flex;justify-content:flex-end;margin-top:12px}.result-grade{font-size:18px;font-weight:900}.result-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.marks-input{width:90px;min-width:70px;padding:6px}.portal-result-card{margin-top:16px}.portal-mode .sidebar,.portal-mode .topbar,.portal-mode .login-overlay{display:none!important}.portal-mode .main{margin:0;max-width:1000px}.portal-mode #page-portal{display:block!important}.portal-mode main section{display:none!important}.portal-mode #page-portal{min-height:100vh}
 </style>
+
+<style id="hall-ticket-a4-print-final">
+@media print {
+  @page { size: A4 portrait; margin: 6mm; }
+  html, body { width:100% !important; height:auto !important; margin:0 !important; padding:0 !important; overflow:visible !important; background:#fff !important; }
+  body.print-hallticket > *:not(.app) { display:none !important; }
+  body.print-hallticket .sidebar, body.print-hallticket .topbar, body.print-hallticket .no-print, body.print-hallticket #loginOverlay { display:none !important; }
+  body.print-hallticket .app { display:block !important; position:static !important; width:100% !important; min-height:0 !important; margin:0 !important; padding:0 !important; }
+  body.print-hallticket main.main { display:block !important; position:static !important; width:100% !important; max-width:100% !important; min-height:0 !important; margin:0 !important; padding:0 !important; overflow:visible !important; }
+  body.print-hallticket main.main > * { display:none !important; }
+  body.print-hallticket main.main > #page-ticket { display:block !important; position:static !important; width:100% !important; max-width:100% !important; min-height:0 !important; margin:0 !important; padding:0 !important; overflow:visible !important; background:#fff !important; }
+  body.print-hallticket #page-ticket > * { display:none !important; }
+  body.print-hallticket #page-ticket > .ticket-area { display:block !important; width:100% !important; max-width:100% !important; margin:0 !important; padding:0 !important; overflow:visible !important; background:#fff !important; }
+  body.print-hallticket #page-ticket .ticket { display:block !important; position:relative !important; width:100% !important; max-width:100% !important; min-height:0 !important; height:auto !important; margin:0 !important; padding:4mm !important; border:1px solid #1f4e78 !important; box-shadow:none !important; overflow:hidden !important; box-sizing:border-box !important; font-size:9pt !important; break-inside:avoid !important; page-break-inside:avoid !important; break-after:page !important; page-break-after:always !important; }
+  body.print-hallticket #page-ticket .ticket:last-child { break-after:auto !important; page-break-after:auto !important; }
+  body.print-hallticket #page-ticket .ticket .school-name { font-size:16pt !important; line-height:1.15 !important; }
+  body.print-hallticket #page-ticket .ticket .school-address { font-size:8pt !important; }
+  body.print-hallticket #page-ticket .ticket .exam-banner { margin-top:2mm !important; padding:2mm !important; font-size:11pt !important; }
+  body.print-hallticket #page-ticket .ticket .student-block { grid-template-columns:minmax(0,1fr) 30mm !important; gap:2mm !important; margin-top:2mm !important; }
+  body.print-hallticket #page-ticket .ticket .photo { min-height:29mm !important; }
+  body.print-hallticket #page-ticket .ticket .photo img { max-width:27mm !important; max-height:28mm !important; }
+  body.print-hallticket #page-ticket .ticket .info-table td { padding:1mm !important; font-size:8pt !important; line-height:1.15 !important; }
+  body.print-hallticket #page-ticket .ticket .schedule-title { margin-top:2mm !important; padding:1.5mm !important; font-size:9pt !important; }
+  body.print-hallticket #page-ticket .ticket table.schedule { font-size:8pt !important; }
+  body.print-hallticket #page-ticket .ticket table.schedule th, body.print-hallticket #page-ticket .ticket table.schedule td { padding:1mm !important; font-size:8pt !important; line-height:1.1 !important; }
+  body.print-hallticket #page-ticket .ticket .supervisor-sign-line { height:12px !important; width:24mm !important; }
+  body.print-hallticket #page-ticket .ticket .qr-box { display:flex !important; visibility:visible !important; justify-content:flex-start !important; align-items:center !important; padding:1mm 0 0 !important; margin:0 !important; min-height:0 !important; }
+  body.print-hallticket #page-ticket .ticket .qr-box > div { display:block !important; visibility:visible !important; }
+  body.print-hallticket #page-ticket .ticket .qr-box [id^="qr-"] { display:block !important; visibility:visible !important; width:30mm !important; height:30mm !important; max-width:30mm !important; max-height:30mm !important; overflow:hidden !important; }
+  body.print-hallticket #page-ticket .ticket .qr-box [id^="qr-"] img { display:block !important; visibility:visible !important; width:29mm !important; height:29mm !important; max-width:29mm !important; max-height:29mm !important; object-fit:contain !important; }
+  body.print-hallticket #page-ticket .ticket .qr-box [id^="qr-"] canvas { display:none !important; }
+  body.print-hallticket #page-ticket .ticket .qr-box div[style*="font-size:9px"] { font-size:7pt !important; margin-top:0.5mm !important; }
+  body.print-hallticket #page-ticket .ticket .footer-block { grid-template-columns:minmax(0,1fr) 35mm !important; gap:2mm !important; margin-top:2mm !important; }
+  body.print-hallticket #page-ticket .ticket .footer-note { min-height:10mm !important; padding:1.5mm !important; font-size:7.5pt !important; }
+  body.print-hallticket #page-ticket .ticket .principal { padding:8mm 1mm 1mm !important; font-size:8pt !important; }
+}
+</style>
+
 </head>
 <body>
 <div id="loginOverlay" class="login-overlay hidden no-print"><div class="login-box" style="position:relative"><button type="button" id="btnCloseLogin" aria-label="Close" title="Close" style="position:absolute;right:10px;top:10px;border:0;background:transparent;font-size:26px;line-height:1;cursor:pointer;color:#667;z-index:2">×</button><h2>🔐 Admin Login</h2><p class="muted">Hall Ticket System access માટે password દાખલ કરો.</p><label>Admin Password</label><input id="adminPassword" type="password" autocomplete="current-password"><div class="btn-row"><button class="btn btn-primary" id="btnLogin">Login</button><button type="button" class="btn btn-light" id="btnCloseLogin2">Close</button></div><div id="loginError" class="danger-text" style="margin-top:10px"></div><div class="muted" style="margin-top:12px">First use: Settingsમાં Admin Password set કરો.</div></div></div>
@@ -435,14 +509,18 @@ html, body { width:100%; max-width:100%; overflow-x:hidden; }
     </section>
 
     <section id="page-ticket" class="hidden">
-      <div class="card no-print">
-        <div class="grid">
-          <div><label>Select Roll No.</label><select id="ticketRoll"></select></div>
-          <div style="display:flex;align-items:end;gap:8px">
-            <button class="btn btn-primary" id="btnPrintCurrent">Print Current</button>
-            <button class="btn btn-green" id="btnPrintAll">Print All</button>
+      <div class="card no-print" id="ticketControls">
+        <h3 class="section-title">🎫 Generate Hall Ticket</h3>
+        <div class="grid grid-4">
+          <div><label>Standard / Class</label><select id="ticketStd"><option value="">Select Standard</option></select></div>
+          <div><label>Division</label><select id="ticketDiv"><option value="">All Divisions</option></select></div>
+          <div><label>Select Student</label><select id="ticketRoll"><option value="">Select Student Name</option></select></div>
+          <div style="display:flex;align-items:end;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" id="btnPrintCurrent">Generate & Print Selected</button>
+            <button class="btn btn-green" id="btnPrintAll">Generate & Print Class</button>
           </div>
         </div>
+        <p class="muted">એક વિદ્યાર્થી પસંદ કરીને તેની Hall Ticket પ્રિન્ટ કરો, અથવા Standard/Division પસંદ કરીને આખા વર્ગની Hall Tickets એકસાથે પ્રિન્ટ કરો.</p>
       </div>
       <div class="ticket-area" id="ticketArea"></div>
     </section>
@@ -1335,10 +1413,21 @@ btnSaveSchool.addEventListener('click',()=>{db.school={...db.school,name:schoolN
 document.getElementById('principalSignature')?.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;resizePhoto(f,d=>{db.school.principalSignature=d;const p=document.getElementById('principalSignaturePreview');if(p){p.src=d;p.classList.remove('hidden');}saveDB();alert('Principal signature uploaded. હવે Hall Ticketમાં automatic આવશે.');});});
 
 function renderRolls(){
-  const cur=ticketRoll.value;
-  ticketRoll.innerHTML=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(s=>`<option value="${s.roll}">Roll ${esc(s.roll)} - ${esc(s.name)}</option>`).join('');
-  if(cur && [...ticketRoll.options].some(o=>o.value===cur)) ticketRoll.value=cur;
+  const cur=ticketRoll.value, stdSel=document.getElementById('ticketStd'), divSel=document.getElementById('ticketDiv');
+  const stdCur=stdSel.value, divCur=divSel.value;
+  const standards=[...new Set((db.students||[]).map(s=>String(s.std||'')).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  stdSel.innerHTML='<option value="">Select Standard</option>'+standards.map(x=>`<option value="${esc(x)}">Standard ${esc(x)}</option>`).join('');
+  if(standards.includes(stdCur))stdSel.value=stdCur;
+  const divs=[...new Set((db.students||[]).filter(s=>!stdSel.value||String(s.std)===stdSel.value).map(s=>String(s.div||'')).filter(Boolean))].sort();
+  divSel.innerHTML='<option value="">All Divisions</option>'+divs.map(x=>`<option value="${esc(x)}">Division ${esc(x)}</option>`).join('');
+  if(divs.includes(divCur))divSel.value=divCur;
+  const list=(db.students||[]).filter(s=>(!stdSel.value||String(s.std)===stdSel.value)&&(!divSel.value||String(s.div||'')===divSel.value)).sort((a,b)=>Number(a.roll)-Number(b.roll)||String(a.name).localeCompare(String(b.name)));
+  ticketRoll.innerHTML='<option value="">Select Student Name</option>'+list.map(s=>`<option value="${esc(s.id)}">${esc(s.name)} — Std ${esc(s.std)}-${esc(s.div)} — Roll ${esc(s.roll)}</option>`).join('');
+  if(cur && list.some(s=>String(s.id)===String(cur)))ticketRoll.value=cur;
+  else if(list.length===1)ticketRoll.value=String(list[0].id);
 }
+document.getElementById('ticketStd').addEventListener('change',()=>{renderRolls();renderTicket();});
+document.getElementById('ticketDiv').addEventListener('change',()=>{renderRolls();renderTicket();});
 ticketRoll.addEventListener('change',renderTicket);
 
 function ticketHTML(s){
@@ -1437,16 +1526,34 @@ function clearHallReceiptMarks(){if(!confirm('Clear all Hall Ticket received mar
 ['hallReceiptSearch','hallReceiptStatus','hallReceiptStd','hallReceiptDiv'].forEach(id=>document.getElementById(id)?.addEventListener('input',renderHallReceiptPage));
 
 function renderTicket(){
-  if(!db.students.length){ticketArea.innerHTML='<div class="card">No students.</div>';return;}
-  if(!ticketRoll.value)ticketRoll.value=db.students[0].roll;
-  const s=db.students.find(x=>Number(x.roll)===Number(ticketRoll.value))||db.students[0];
-  ticketArea.innerHTML=ticketHTML(s); markGenerated(s.id); if(db.customize.showQR!==false){const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),240);}
+  if(!db.students.length){ticketArea.innerHTML='<div class="card no-print">No students found. Please add students first.</div>';return;}
+  const s=db.students.find(x=>String(x.id)===String(ticketRoll.value));
+  if(!s){ticketArea.innerHTML='<div class="card no-print">Standard પસંદ કરો અને પછી Student Name પસંદ કરો.</div>';return;}
+  ticketArea.innerHTML=ticketHTML(s); markGenerated(s.id);
+  if(db.customize.showQR!==false){const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),115);}
 }
-btnPrintCurrent.addEventListener('click',()=>{renderTicket();document.body.classList.add('print-hallticket');const clean=()=>{document.body.classList.remove('print-hallticket');window.removeEventListener('afterprint',clean)};window.addEventListener('afterprint',clean);setTimeout(()=>window.print(),200)});
+function prepareTicketPrint(students){
+  if(!students.length){alert('આ પસંદગીમાં કોઈ વિદ્યાર્થી મળ્યો નથી.');return;}
+  ticketArea.innerHTML=students.map(ticketHTML).join('');
+  students.forEach(s=>markGenerated(s.id));
+  if(db.customize.showQR!==false){students.forEach(s=>{const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),115);});}
+  document.body.classList.add('ticket-only-print');
+  const cleanup=()=>{document.body.classList.remove('ticket-only-print');renderTicket();};
+  window.addEventListener('afterprint',cleanup,{once:true});
+  setTimeout(()=>window.print(),450);
+}
+btnPrintCurrent.addEventListener('click',()=>{
+  const s=db.students.find(x=>String(x.id)===String(ticketRoll.value));
+  if(!s){alert('કૃપા કરીને dropdownમાંથી વિદ્યાર્થીનું નામ પસંદ કરો.');return;}
+  prepareTicketPrint([s]);
+});
 btnPrintAll.addEventListener('click',()=>{
-  if(!db.students.length){alert('No students.');return;}
-  const allForPrint=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)); allForPrint.forEach((st,i)=>st.__qrKey='ticket-'+i+'-'+String(st.id??'')+'-'+String(st.roll??'')); ticketArea.innerHTML=allForPrint.map(ticketHTML).join(''); allForPrint.forEach(s=>markGenerated(s.id)); if(db.customize.showQR!==false)db.students.forEach(s=>{const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),220);});
-  document.body.classList.add('print-hallticket'); const clean=()=>{document.body.classList.remove('print-hallticket');window.removeEventListener('afterprint',clean)}; window.addEventListener('afterprint',clean); setTimeout(()=>window.print(),250);
+  const std=document.getElementById('ticketStd').value, div=document.getElementById('ticketDiv').value;
+  if(!std){alert('આખા વર્ગની Hall Ticket માટે પહેલાં Standard પસંદ કરો.');return;}
+  const list=(db.students||[]).filter(s=>String(s.std)===String(std)&&(!div||String(s.div||'')===String(div))).sort((a,b)=>Number(a.roll)-Number(b.roll));
+  if(!list.length){alert('આ Standard/Divisionમાં કોઈ વિદ્યાર્થી મળ્યો નથી.');return;}
+  if(!confirm(`Standard ${std}${div?' - Division '+div:''} ના ${list.length} વિદ્યાર્થીઓની Hall Tickets પ્રિન્ટ કરવી છે?`))return;
+  prepareTicketPrint(list);
 });
 
 btnExportBackup.addEventListener('click',()=>{
