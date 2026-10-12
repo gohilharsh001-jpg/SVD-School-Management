@@ -829,15 +829,9 @@ function nextId(arr){ return arr.length?Math.max(...arr.map(x=>Number(x.id)||0))
 function esc(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
 
 function showPage(page){
-  // IMPORTANT: Several page sections are outside <main> because of legacy markup.
-  // Hide every page globally, not only sections nested inside main, then reveal exactly one.
-  document.querySelectorAll('section[id^="page-"]').forEach(s=>s.classList.add('hidden'));
-  const targetPage=document.getElementById('page-'+page);
-  if(!targetPage){console.warn('Page not found:',page);return;}
-  targetPage.classList.remove('hidden');
+  document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
+  document.getElementById('page-'+page).classList.remove('hidden');
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
-  window.scrollTo(0,0);
-  const mainEl=document.querySelector('.main'); if(mainEl){mainEl.scrollTop=0;mainEl.scrollLeft=0;}
   const titles={dashboard:'Dashboard',students:'Student Entry',schedule:'Exam Schedule',school:'School Settings',ticket:'Hall Ticket',backup:'Backup / Import',customize:'Customize / Settings',rooms:'Rooms / Seats',portal:'Student Portal',results:'Result / Marks',fees:'Fee Collection',busfees:'Bus Fee',database:'Student Database',studentreports:'Student Reports',hallreceipt:'Hall Ticket Receipt',online:'Online Sync'};
   document.getElementById('pageTitle').textContent=titles[page]||'Hall Ticket System';
   if(page==='ticket') renderTicket(); if(page==='hallreceipt') renderHallReceiptPage();
