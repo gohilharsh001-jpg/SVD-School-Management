@@ -214,3 +214,10 @@ Every future feature must:
 ## Hall Ticket menu-only print fix (2026-10-12)
 - Fixed a print-mode class mismatch: Hall Ticket printing now activates the A4 `print-hallticket` CSS rules as well as the existing ticket-only rules.
 - Print waits for ticket images to finish loading before opening the print dialog.
+
+
+## Sidebar hover + page navigation fix (2026-10-12)
+- Sidebar is collapsed to a narrow icon strip and expands on hover/focus.
+- Main content uses the reduced sidebar width while collapsed.
+- Menu navigation hides all page sections globally and reveals only the selected page, preventing Hall Ticket or other prior-page content from remaining visible.
+- Resets page scroll when switching menus.

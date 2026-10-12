@@ -199,6 +199,20 @@ html, body { width:100%; max-width:100%; overflow-x:hidden; }
   body.ticket-only-print .ticket .principal { padding:18px 5px 5px !important; font-size:8pt !important; }
 }
 
+
+/* Sidebar auto-collapse; expands when the pointer enters the left edge */
+.sidebar{width:54px !important;padding:18px 6px !important;transition:width .2s ease,padding .2s ease;overflow-x:hidden !important;}
+.sidebar .brand{padding:10px 6px 22px !important;white-space:nowrap;overflow:hidden;}
+.sidebar .brand h1,.sidebar .brand p{opacity:0;transition:opacity .12s ease;}
+.sidebar .nav button{white-space:nowrap;overflow:hidden;text-overflow:clip;padding:12px 8px !important;font-size:0 !important;}
+.sidebar .nav button::first-letter{font-size:16px;}
+.sidebar:hover,.sidebar:focus-within{width:240px !important;padding:18px 12px !important;box-shadow:5px 0 18px rgba(0,0,0,.18);}
+.sidebar:hover .brand,.sidebar:focus-within .brand{padding:10px 12px 22px !important;}
+.sidebar:hover .brand h1,.sidebar:hover .brand p,.sidebar:focus-within .brand h1,.sidebar:focus-within .brand p{opacity:1;}
+.sidebar:hover .nav button,.sidebar:focus-within .nav button{font-size:14px !important;padding:12px 14px !important;}
+.main{margin-left:54px !important;width:calc(100% - 54px) !important;}
+@media(max-width:700px){.sidebar{width:48px !important}.sidebar:hover,.sidebar:focus-within{width:220px !important}.main{margin-left:48px !important;width:calc(100% - 48px) !important;padding:12px !important}}
+
 </style>
 <style>
 .searchbar{display:flex;gap:8px;flex-wrap:wrap}.searchbar input,.searchbar select{flex:1;min-width:160px}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--light);color:var(--blue2);font-size:11px;font-weight:700}.danger-text{color:#a00000;font-weight:800}.login-overlay{position:fixed;inset:0;background:rgba(10,30,50,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}.login-box{width:min(420px,100%);background:#fff;border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3)}.login-box h2{margin-top:0;color:var(--blue2)}.modal{position:fixed;inset:0;background:rgba(10,30,50,.6);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px}.modal-card{background:#fff;border-radius:14px;padding:20px;width:min(900px,100%);max-height:90vh;overflow:auto}.qr-box{display:flex;justify-content:center;align-items:center;padding:10px}.receipt-sign{min-width:150px;height:28px;border-bottom:1px solid #222;display:inline-block}.received-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#e8f5e9;color:#176b2c;font-weight:700;font-size:12px}.pending-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#fff3cd;color:#856404;font-weight:700;font-size:12px}.receipt-print-title{display:none} @media print{.receipt-print-title{display:block;text-align:center;margin-bottom:12px}.hall-receipt-table{width:100%;border-collapse:collapse}.hall-receipt-table th,.hall-receipt-table td{border:1px solid #333;padding:6px;font-size:11px}.hall-receipt-table .no-print{display:none!important}
@@ -932,9 +946,14 @@ function nextId(arr){ return arr.length?Math.max(...arr.map(x=>Number(x.id)||0))
 function esc(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
 
 function showPage(page){
-  document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
-  document.getElementById('page-'+page).classList.remove('hidden');
+  // Hide every page section globally, including legacy sections that may sit outside <main>.
+  document.querySelectorAll('section[id^="page-"]').forEach(s=>s.classList.add('hidden'));
+  const targetPage=document.getElementById('page-'+page);
+  if(!targetPage){console.warn('Page not found:',page);return;}
+  targetPage.classList.remove('hidden');
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+  window.scrollTo(0,0);
+  const mainEl=document.querySelector('.main'); if(mainEl){mainEl.scrollTop=0;mainEl.scrollLeft=0;}
   const titles={dashboard:'Dashboard',students:'Student Entry',schedule:'Exam Schedule',school:'School Settings',ticket:'Hall Ticket',backup:'Backup / Import',customize:'Customize / Settings',rooms:'Rooms / Seats',portal:'Student Portal',results:'Result / Marks',fees:'Fee Collection',busfees:'Bus Fee',database:'Student Database',studentreports:'Student Reports',hallreceipt:'Hall Ticket Receipt',online:'Online Sync'};
   document.getElementById('pageTitle').textContent=titles[page]||'Hall Ticket System';
   if(page==='ticket') renderTicket(); if(page==='hallreceipt') renderHallReceiptPage();
