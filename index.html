@@ -93,6 +93,26 @@ html, body { width:100%; max-width:100%; overflow-x:hidden; }
   .main { margin:0 !important; width:100% !important; max-width:100% !important; padding:12px !important; overflow-x:hidden !important; }
   .main .grid, .main .grid-2, .main .grid-3, .main .grid-4 { grid-template-columns:minmax(0,1fr) !important; }
 }
+
+/* FINAL LAYOUT FIX: keep desktop content clear of fixed sidebar and allow horizontal data scrolling */
+@media (min-width: 901px) {
+  html, body { min-width: 0 !important; width: 100% !important; overflow-x: auto !important; }
+  .app { display: block !important; width: 100% !important; min-width: 0 !important; }
+  .sidebar { position: fixed !important; left: 0 !important; top: 0 !important; bottom: 0 !important; width: 254px !important; z-index: 1000 !important; }
+  main.main, .main { position: relative !important; left: 0 !important; transform: none !important; margin-left: 254px !important; width: calc(100% - 254px) !important; max-width: none !important; min-width: 0 !important; padding: 22px !important; overflow-x: auto !important; }
+  .main > * { max-width: 100% !important; min-width: 0 !important; }
+  .main .card { width: 100% !important; }
+  .main .grid, .main .grid-2, .main .grid-3, .main .grid-4 { min-width: 0 !important; }
+  .table-wrap { max-width: 100% !important; overflow-x: auto !important; }
+}
+@media (max-width: 900px) {
+  .app { display: block !important; }
+  .sidebar { position: relative !important; width: 100% !important; max-height: 42vh !important; }
+  main.main, .main { position: relative !important; left: 0 !important; transform: none !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; padding: 12px !important; overflow-x: auto !important; }
+  .main .grid, .main .grid-2, .main .grid-3, .main .grid-4 { grid-template-columns: minmax(0, 1fr) !important; }
+}
+/* When changing navigation pages, reset horizontal scroll on the content container */
+
 </style>
 <style>
 .searchbar{display:flex;gap:8px;flex-wrap:wrap}.searchbar input,.searchbar select{flex:1;min-width:160px}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--light);color:var(--blue2);font-size:11px;font-weight:700}.danger-text{color:#a00000;font-weight:800}.login-overlay{position:fixed;inset:0;background:rgba(10,30,50,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}.login-box{width:min(420px,100%);background:#fff;border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3)}.login-box h2{margin-top:0;color:var(--blue2)}.modal{position:fixed;inset:0;background:rgba(10,30,50,.6);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px}.modal-card{background:#fff;border-radius:14px;padding:20px;width:min(900px,100%);max-height:90vh;overflow:auto}.qr-box{display:flex;justify-content:center;align-items:center;padding:10px}.receipt-sign{min-width:150px;height:28px;border-bottom:1px solid #222;display:inline-block}.received-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#e8f5e9;color:#176b2c;font-weight:700;font-size:12px}.pending-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#fff3cd;color:#856404;font-weight:700;font-size:12px}.receipt-print-title{display:none} @media print{.receipt-print-title{display:block;text-align:center;margin-bottom:12px}.hall-receipt-table{width:100%;border-collapse:collapse}.hall-receipt-table th,.hall-receipt-table td{border:1px solid #333;padding:6px;font-size:11px}.hall-receipt-table .no-print{display:none!important}
@@ -102,42 +122,6 @@ html, body { width:100%; max-width:100%; overflow-x:hidden; }
 } 
 .allocation-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.allocation-card{border:1px solid var(--border);border-radius:10px;padding:12px;background:#fff}.public-portal{max-width:900px;margin:30px auto;padding:20px}.status-ok{color:#167a25;font-weight:800}.status-warn{color:#9b6500;font-weight:800}.result-sheet{max-width:900px;margin:0 auto;background:#fff;padding:24px;border:1px solid #ccd8e0}.result-head{text-align:center;border-bottom:2px solid var(--blue);padding-bottom:12px;margin-bottom:14px}.result-head h2{margin:4px 0;color:var(--blue2)}.result-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}.result-table{width:100%;border-collapse:collapse}.result-table th,.result-table td{border:1px solid #9db6c9;padding:7px;text-align:center}.result-table th{background:#e6f0f6}.result-total{display:flex;justify-content:flex-end;margin-top:12px}.result-grade{font-size:18px;font-weight:900}.result-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.marks-input{width:90px;min-width:70px;padding:6px}.portal-result-card{margin-top:16px}.portal-mode .sidebar,.portal-mode .topbar,.portal-mode .login-overlay{display:none!important}.portal-mode .main{margin:0;max-width:1000px}.portal-mode #page-portal{display:block!important}.portal-mode main section{display:none!important}.portal-mode #page-portal{min-height:100vh}
 </style>
-
-<style id="svd-layout-navigation-repair">
-/* Final layout repair: keep sidebar separate and allow wide content to scroll */
-html, body { width:100%; max-width:100%; margin:0; }
-body { overflow-x:hidden !important; }
-.app { display:flex !important; align-items:stretch; width:100% !important; min-width:0 !important; }
-.sidebar {
-  position:fixed !important; top:0 !important; left:0 !important; bottom:0 !important;
-  width:254px !important; min-width:254px !important; max-width:254px !important;
-  height:100vh !important; overflow-y:auto !important; overflow-x:hidden !important;
-  z-index:1000 !important;
-}
-main.main {
-  display:block !important; position:relative !important;
-  margin-left:254px !important; width:calc(100% - 254px) !important;
-  max-width:calc(100% - 254px) !important; min-width:0 !important;
-  padding:22px !important; overflow-x:auto !important; overflow-y:visible !important;
-}
-main.main > section { width:100%; min-width:0; }
-main.main .card, main.main .table-wrap, main.main .table-responsive {
-  max-width:100%; min-width:0;
-}
-main.main table { max-width:100%; }
-main.main .card { overflow-x:auto; }
-main.main input, main.main select, main.main textarea { max-width:100%; min-width:0; }
-main.main .grid, main.main .grid-2, main.main .grid-3, main.main .grid-4 {
-  min-width:0; max-width:100%;
-}
-@media (max-width:900px) {
-  .app { display:block !important; }
-  .sidebar { position:relative !important; width:100% !important; min-width:0 !important; max-width:100% !important; height:auto !important; max-height:42vh !important; }
-  main.main { margin-left:0 !important; width:100% !important; max-width:100% !important; padding:12px !important; overflow-x:auto !important; }
-}
-/* New menu selection should always start at the top of the selected page */
-</style>
-
 </head>
 <body>
 <div id="loginOverlay" class="login-overlay hidden no-print"><div class="login-box" style="position:relative"><button type="button" id="btnCloseLogin" aria-label="Close" title="Close" style="position:absolute;right:10px;top:10px;border:0;background:transparent;font-size:26px;line-height:1;cursor:pointer;color:#667;z-index:2">×</button><h2>🔐 Admin Login</h2><p class="muted">Hall Ticket System access માટે password દાખલ કરો.</p><label>Admin Password</label><input id="adminPassword" type="password" autocomplete="current-password"><div class="btn-row"><button class="btn btn-primary" id="btnLogin">Login</button><button type="button" class="btn btn-light" id="btnCloseLogin2">Close</button></div><div id="loginError" class="danger-text" style="margin-top:10px"></div><div class="muted" style="margin-top:12px">First use: Settingsમાં Admin Password set કરો.</div></div></div>
@@ -820,12 +804,10 @@ function nextId(arr){ return arr.length?Math.max(...arr.map(x=>Number(x.id)||0))
 function esc(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
 
 function showPage(page){
+  const mainContent=document.querySelector('main.main'); if(mainContent){mainContent.scrollLeft=0; mainContent.scrollTop=0;} window.scrollTo(0,0);
   document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
-  const targetPage=document.getElementById('page-'+page);
-  if(!targetPage){console.warn('Page not found:',page);return;}
-  targetPage.classList.remove('hidden');
+  document.getElementById('page-'+page).classList.remove('hidden');
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
-  window.scrollTo({top:0,left:0,behavior:'auto'});
   const titles={dashboard:'Dashboard',students:'Student Entry',schedule:'Exam Schedule',school:'School Settings',ticket:'Hall Ticket',backup:'Backup / Import',customize:'Customize / Settings',rooms:'Rooms / Seats',portal:'Student Portal',results:'Result / Marks',fees:'Fee Collection',busfees:'Bus Fee',database:'Student Database',studentreports:'Student Reports',hallreceipt:'Hall Ticket Receipt',online:'Online Sync'};
   document.getElementById('pageTitle').textContent=titles[page]||'Hall Ticket System';
   if(page==='ticket') renderTicket(); if(page==='hallreceipt') renderHallReceiptPage();
