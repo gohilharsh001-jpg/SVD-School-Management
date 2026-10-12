@@ -211,7 +211,6 @@ Every future feature must:
 - Print isolation hides all other menus and dashboard data. QR and student photo are retained with compact A4 print styling.
 
 
-## Isolated Hall Ticket printing fix (2026-10-12)
-- Print Current and Print Class now open a dedicated print document containing only generated ticket markup, eliminating unrelated app sections and their blank pages.
-- A4 portrait layout compacted to keep student details, schedule, QR code, photo and principal area together.
-- QR generation remains enabled in the generated ticket before print.
+## Hall Ticket menu-only print fix (2026-10-12)
+- Fixed a print-mode class mismatch: Hall Ticket printing now activates the A4 `print-hallticket` CSS rules as well as the existing ticket-only rules.
+- Print waits for ticket images to finish loading before opening the print dialog.
