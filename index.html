@@ -106,6 +106,38 @@ html, body { width:100%; max-width:100%; overflow-x:hidden; }
   body.print-hallticket #page-ticket .ticket { display:block !important; visibility:visible !important; break-after:page; page-break-after:always; }
   body.print-hallticket #page-ticket .ticket:last-child { break-after:auto; page-break-after:auto; }
 }
+
+/* Hall ticket A4 print fit + hide QR only on printed paper */
+@page { size: A4 portrait; margin: 7mm; }
+@media print {
+  body.print-hallticket { background:#fff !important; margin:0 !important; padding:0 !important; }
+  body.print-hallticket #page-ticket .ticket-area { width:100% !important; padding:0 !important; margin:0 !important; background:#fff !important; overflow:visible !important; }
+  body.print-hallticket #page-ticket .ticket {
+    width:100% !important; max-width:100% !important; min-height:0 !important; height:auto !important;
+    margin:0 !important; padding:5mm !important; border:1px solid #1f4e78 !important;
+    box-shadow:none !important; box-sizing:border-box !important; overflow:hidden !important;
+    font-size:10pt !important; break-inside:avoid !important; page-break-inside:avoid !important;
+    break-after:page; page-break-after:always;
+  }
+  body.print-hallticket #page-ticket .ticket:last-child { break-after:auto !important; page-break-after:auto !important; }
+  body.print-hallticket #page-ticket .ticket .qr-box,
+  body.print-hallticket #page-ticket .ticket [id^="qr-"],
+  body.print-hallticket #page-ticket .ticket .qr-box img,
+  body.print-hallticket #page-ticket .ticket .qr-box canvas { display:none !important; visibility:hidden !important; }
+  body.print-hallticket #page-ticket .ticket .school-name { font-size:18pt !important; }
+  body.print-hallticket #page-ticket .ticket .exam-banner { margin-top:2mm !important; padding:2mm !important; font-size:12pt !important; }
+  body.print-hallticket #page-ticket .ticket .student-block { grid-template-columns:minmax(0,1fr) 34mm !important; gap:3mm !important; margin-top:3mm !important; }
+  body.print-hallticket #page-ticket .ticket .photo { min-height:35mm !important; }
+  body.print-hallticket #page-ticket .ticket .photo img { max-width:30mm !important; max-height:34mm !important; }
+  body.print-hallticket #page-ticket .ticket .schedule-title { margin-top:3mm !important; padding:2mm !important; }
+  body.print-hallticket #page-ticket .ticket table.schedule th,
+  body.print-hallticket #page-ticket .ticket table.schedule td,
+  body.print-hallticket #page-ticket .ticket .info-table td { padding:1.5mm !important; font-size:9pt !important; }
+  body.print-hallticket #page-ticket .ticket .footer-block { grid-template-columns:minmax(0,1fr) 42mm !important; gap:3mm !important; margin-top:3mm !important; }
+  body.print-hallticket #page-ticket .ticket .footer-note { min-height:18mm !important; padding:2mm !important; font-size:9pt !important; }
+  body.print-hallticket #page-ticket .ticket .principal { padding:12mm 2mm 2mm !important; font-size:9pt !important; }
+}
+
 </style>
 <style>
 .searchbar{display:flex;gap:8px;flex-wrap:wrap}.searchbar input,.searchbar select{flex:1;min-width:160px}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--light);color:var(--blue2);font-size:11px;font-weight:700}.danger-text{color:#a00000;font-weight:800}.login-overlay{position:fixed;inset:0;background:rgba(10,30,50,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}.login-box{width:min(420px,100%);background:#fff;border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3)}.login-box h2{margin-top:0;color:var(--blue2)}.modal{position:fixed;inset:0;background:rgba(10,30,50,.6);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px}.modal-card{background:#fff;border-radius:14px;padding:20px;width:min(900px,100%);max-height:90vh;overflow:auto}.qr-box{display:flex;justify-content:center;align-items:center;padding:10px}.receipt-sign{min-width:150px;height:28px;border-bottom:1px solid #222;display:inline-block}.received-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#e8f5e9;color:#176b2c;font-weight:700;font-size:12px}.pending-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#fff3cd;color:#856404;font-weight:700;font-size:12px}.receipt-print-title{display:none} @media print{.receipt-print-title{display:block;text-align:center;margin-bottom:12px}.hall-receipt-table{width:100%;border-collapse:collapse}.hall-receipt-table th,.hall-receipt-table td{border:1px solid #333;padding:6px;font-size:11px}.hall-receipt-table .no-print{display:none!important}
