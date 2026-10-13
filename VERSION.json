@@ -1,6 +1,6 @@
 {
-  "version": "1.4.6",
+  "version": "1.5.2",
   "name": "SVD School Management",
   "notes": "Fix page isolation and layout for all menu sections, including legacy sections outside main.",
-  "release": "Remove duplicate Principal labels from QR verification view"
+  "release": "Fit Hall Ticket on A4 portrait page; QR removed"
 }

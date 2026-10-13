@@ -326,3 +326,38 @@ Every future feature must:
 ## v1.4.6 — QR verification Principal label cleanup
 - Removed the default Principal fallback from legacy QR query parsing.
 - QR verification result intentionally displays student details only; Principal/signature metadata is not rendered, avoiding duplicate “Principal Principal” text.
+
+
+## v1.4.7 — Match print to on-screen view
+- Updated only print layout CSS so Hall Ticket is centered on A4 and tables use the ticket width, matching the on-screen layout.
+- Preserved QR generator, payload, render function, and verification behavior unchanged.
+
+
+## v1.4.8 — QR removed from Hall Ticket
+- Removed the QR block and SCAN TO VERIFY label from the Hall Ticket view and print output.
+- Kept the rest of the Hall Ticket layout and print-fit CSS unchanged.
+
+
+## v1.4.9 — Final A4 print layout and QR removal
+- Forced the Hall Ticket print container and student/schedule tables to use the full A4 printable width.
+- Set A4 portrait margins and consistent sizing for student information, photo, schedule, footer, and principal signature.
+- Added a high-priority hide rule for QR blocks so old cached markup cannot show a QR on the ticket.
+- QR generation/verification code is not changed; only QR display on the Hall Ticket is hidden.
+
+
+## v1.5.0 — Final A4 print layout fix
+- Added a final high-priority print stylesheet to force Hall Ticket details and exam schedule to use the full ticket width on A4 portrait.
+- Fixed student information/photo grid and footer/signature layout in print preview.
+- QR is hidden from print and QR rendering is disabled for the Hall Ticket screen/print; QR verification URL/payload functions and verification page were not modified.
+
+
+## v1.5.1 — Match reference PDF print layout
+- Changed Hall Ticket print to A4 landscape, with a full-width bordered ticket matching the uploaded reference PDF.
+- Expanded student details and exam schedule tables to the available page width; retained photo, notice and principal signature blocks.
+- Kept QR hidden/removed from Hall Ticket output.
+
+
+## v1.5.2 — A4 Portrait Fit
+- Changed Hall Ticket print from landscape to portrait A4.
+- Reduced print spacing and adjusted photo, student table, schedule and footer blocks to fit the portrait page.
+- Kept QR hidden from Hall Ticket output.

@@ -1414,7 +1414,72 @@ function exportStudentCSV(){
   const rows=db.students.map(s=>[s.name,s.std,s.div,s.roll,s.gr,s.ctsId,s.dob,s.gender,s.parent,s.parentMobile,s.emergency,s.address,s.email,s.blood,s.admissionDate,s.status||'Active',s.category,s.religion,s.village]);
   const csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n'); const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='School_Student_Database.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
-function printStudentDatabase(){ const rows=[...document.querySelectorAll('#dbTable tbody tr')].map(tr=>tr.outerHTML).join(''); const w=window.open('','_blank'); if(!w)return; w.document.write(`<html><head><title>Student Database</title><style>body{font-family:Arial;padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #777;padding:6px;font-size:11px}th{background:#eee}</style></head><body><h2>${esc(db.school.name)}</h2><h3>Student Database</h3><table><thead>${document.querySelector('#dbTable thead').innerHTML}</thead><tbody>${rows}</tbody></table></body></html>`);w.document.close();w.print();}
+function printStudentDatabase(){ const rows=[...document.querySelectorAll('#dbTable tbody tr')].map(tr=>tr.outerHTML).join(''); const w=window.open('','_blank'); if(!w)return; w.document.write(`<html><head><title>Student Database</title><style>body{font-family:Arial;padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #777;padding:6px;font-size:11px}th{background:#eee}</style></head><body><h2>${esc(db.school.name)}</h2><h3>Student Database</h3><table><thead>${document.querySelector('#dbTable thead').innerHTML}</thead><tbody>${rows}</tbody></table>
+<style id="final-print-fit-v150">
+/* Final print fix: use the same full-width ticket layout as the screen preview. */
+@page { size: A4 portrait; margin: 5mm; }
+@media print {
+  html, body { margin:0 !important; padding:0 !important; width:100% !important; background:#fff !important; overflow:visible !important; }
+  body.ticket-only-print *, body.print-hallticket * { visibility:visible !important; }
+  body.ticket-only-print .sidebar, body.print-hallticket .sidebar,
+  body.ticket-only-print .topbar, body.print-hallticket .topbar,
+  body.ticket-only-print #loginOverlay, body.print-hallticket #loginOverlay,
+  body.ticket-only-print #ticketControls, body.print-hallticket #ticketControls,
+  body.ticket-only-print #page-ticket > .no-print, body.print-hallticket #page-ticket > .no-print,
+  body.ticket-only-print .qr-box, body.print-hallticket .qr-box,
+  body.ticket-only-print [id^="qr-"], body.print-hallticket [id^="qr-"] { display:none !important; }
+  body.ticket-only-print #page-ticket, body.print-hallticket #page-ticket,
+  body.ticket-only-print #ticketArea, body.print-hallticket #ticketArea,
+  body.ticket-only-print .ticket-area, body.print-hallticket .ticket-area {
+    display:block !important; position:static !important; width:100% !important; max-width:none !important;
+    margin:0 !important; padding:0 !important; overflow:visible !important; background:#fff !important;
+  }
+  body.ticket-only-print .ticket, body.print-hallticket .ticket {
+    display:flex !important; flex-direction:column !important; position:relative !important;
+    width:190mm !important; max-width:190mm !important; min-width:190mm !important;
+    height:277mm !important; min-height:277mm !important; max-height:277mm !important;
+    box-sizing:border-box !important; margin:0 auto !important; padding:7mm !important;
+    border:1px solid #214f78 !important; border-radius:0 !important; box-shadow:none !important;
+    overflow:hidden !important; font-size:10pt !important; background:#fff !important;
+    break-inside:avoid !important; page-break-inside:avoid !important;
+  }
+  body.ticket-only-print .ticket-head, body.print-hallticket .ticket-head,
+  body.ticket-only-print .exam-banner, body.print-hallticket .exam-banner,
+  body.ticket-only-print .student-block, body.print-hallticket .student-block,
+  body.ticket-only-print .schedule-title, body.print-hallticket .schedule-title,
+  body.ticket-only-print .footer-block, body.print-hallticket .footer-block {
+    width:100% !important; max-width:100% !important; box-sizing:border-box !important;
+  }
+  body.ticket-only-print .student-block, body.print-hallticket .student-block {
+    display:grid !important; grid-template-columns:minmax(0,1fr) 28mm !important; gap:3mm !important;
+    align-items:start !important; margin:0 0 3mm !important;
+  }
+  body.ticket-only-print .info-table, body.print-hallticket .info-table,
+  body.ticket-only-print table.schedule, body.print-hallticket table.schedule {
+    display:table !important; width:100% !important; min-width:100% !important; max-width:100% !important;
+    table-layout:fixed !important; border-collapse:collapse !important; margin:0 !important;
+  }
+  body.ticket-only-print .info-table td, body.print-hallticket .info-table td,
+  body.ticket-only-print .schedule th, body.print-hallticket .schedule th,
+  body.ticket-only-print .schedule td, body.print-hallticket .schedule td {
+    padding:1.5mm !important; white-space:normal !important; overflow-wrap:anywhere !important;
+    line-height:1.25 !important; box-sizing:border-box !important;
+  }
+  body.ticket-only-print .photo, body.print-hallticket .photo {
+    display:flex !important; width:28mm !important; height:34mm !important; min-height:34mm !important;
+    max-height:34mm !important; overflow:hidden !important; justify-content:center !important; align-items:center !important;
+  }
+  body.ticket-only-print .photo img, body.print-hallticket .photo img {
+    display:block !important; max-width:27mm !important; max-height:33mm !important; object-fit:contain !important;
+  }
+  body.ticket-only-print .footer-block, body.print-hallticket .footer-block {
+    display:grid !important; grid-template-columns:minmax(0,1fr) 34mm !important; gap:3mm !important;
+    margin-top:auto !important; padding-top:2mm !important;
+  }
+}
+</style>
+
+</body></html>`);w.document.close();w.print();}
 
 function getReportStudents(){
   const cat=document.getElementById('reportCategory')?.value||'', gen=document.getElementById('reportGender')?.value||'', std=document.getElementById('reportStd')?.value||'', village=document.getElementById('reportVillage')?.value||'', religion=document.getElementById('reportReligion')?.value||'', status=document.getElementById('reportStatus')?.value||'', q=(document.getElementById('reportSearch')?.value||'').trim().toLowerCase();
@@ -1579,7 +1644,175 @@ function printStudentReports(){
   body.print-hallticket #page-ticket .ticket .qr-box [id^="qr-"] canvas { width:35mm !important; height:35mm !important; max-width:35mm !important; max-height:35mm !important; image-rendering:pixelated !important; }
 }
 
-</style></head><body><h2>${esc(db.school.name)}</h2><h3>${esc(title)}</h3>${summary}<h3>Detailed Student List</h3>${detail}</body></html>`);w.document.close();w.print();}
+
+/* v1.4.7 — Print should match the on-screen Hall Ticket layout.
+   Layout-only overrides: QR code generation/payload are untouched. */
+@page { size: A4 portrait; margin: 5mm; }
+@media print {
+  html, body { margin:0 !important; padding:0 !important; width:100% !important; height:auto !important; background:#fff !important; overflow:visible !important; }
+  body.print-hallticket .app,
+  body.ticket-only-print .app { display:block !important; position:static !important; width:100% !important; min-height:0 !important; margin:0 !important; padding:0 !important; }
+  body.print-hallticket main.main,
+  body.ticket-only-print main.main { display:block !important; position:static !important; width:100% !important; max-width:none !important; min-height:0 !important; margin:0 !important; padding:0 !important; overflow:visible !important; }
+  body.print-hallticket #page-ticket,
+  body.ticket-only-print #page-ticket { display:block !important; position:static !important; width:100% !important; max-width:none !important; margin:0 !important; padding:0 !important; overflow:visible !important; }
+  body.print-hallticket #page-ticket .ticket-area,
+  body.ticket-only-print #page-ticket .ticket-area,
+  body.print-hallticket #page-ticket #ticketArea,
+  body.ticket-only-print #page-ticket #ticketArea { display:block !important; width:100% !important; max-width:none !important; margin:0 !important; padding:0 !important; background:#fff !important; overflow:visible !important; }
+  body.print-hallticket #page-ticket .ticket,
+  body.ticket-only-print #page-ticket .ticket {
+    display:flex !important; flex-direction:column !important; position:relative !important;
+    width:190mm !important; max-width:190mm !important; height:277mm !important; min-height:277mm !important;
+    margin:0 auto !important; padding:7mm !important; box-sizing:border-box !important;
+    border:1px solid #1f4e78 !important; border-radius:0 !important; box-shadow:none !important;
+    overflow:hidden !important; font-size:10pt !important;
+    break-after:page !important; page-break-after:always !important;
+  }
+  body.print-hallticket #page-ticket .ticket:last-child,
+  body.ticket-only-print #page-ticket .ticket:last-child { break-after:auto !important; page-break-after:auto !important; }
+  body.print-hallticket #page-ticket .ticket .ticket-head,
+  body.ticket-only-print #page-ticket .ticket .ticket-head { display:flex !important; width:100% !important; align-items:center !important; justify-content:center !important; text-align:center !important; margin:0 0 3mm !important; }
+  body.print-hallticket #page-ticket .ticket .school-name,
+  body.ticket-only-print #page-ticket .ticket .school-name { font-size:15pt !important; line-height:1.2 !important; }
+  body.print-hallticket #page-ticket .ticket .school-address,
+  body.ticket-only-print #page-ticket .ticket .school-address { font-size:7.5pt !important; }
+  body.print-hallticket #page-ticket .ticket .exam-banner,
+  body.ticket-only-print #page-ticket .ticket .exam-banner { display:block !important; width:100% !important; box-sizing:border-box !important; text-align:center !important; margin:2mm 0 3mm !important; padding:2mm !important; }
+  body.print-hallticket #page-ticket .ticket .student-block,
+  body.ticket-only-print #page-ticket .ticket .student-block { display:grid !important; grid-template-columns:minmax(0,1fr) 28mm !important; gap:3mm !important; width:100% !important; align-items:start !important; margin:0 0 3mm !important; }
+  body.print-hallticket #page-ticket .ticket .info-table,
+  body.ticket-only-print #page-ticket .ticket .info-table,
+  body.print-hallticket #page-ticket .ticket .schedule,
+  body.ticket-only-print #page-ticket .ticket .schedule { display:table !important; width:100% !important; max-width:100% !important; table-layout:auto !important; border-collapse:collapse !important; margin:0 !important; }
+  body.print-hallticket #page-ticket .ticket .info-table td,
+  body.ticket-only-print #page-ticket .ticket .info-table td,
+  body.print-hallticket #page-ticket .ticket .schedule th,
+  body.ticket-only-print #page-ticket .ticket .schedule th,
+  body.print-hallticket #page-ticket .ticket .schedule td,
+  body.ticket-only-print #page-ticket .ticket .schedule td { padding:1.5mm !important; line-height:1.2 !important; white-space:normal !important; }
+  body.print-hallticket #page-ticket .ticket .photo,
+  body.ticket-only-print #page-ticket .ticket .photo { width:28mm !important; height:34mm !important; min-height:34mm !important; max-height:34mm !important; overflow:hidden !important; }
+  body.print-hallticket #page-ticket .ticket .photo img,
+  body.ticket-only-print #page-ticket .ticket .photo img { max-width:27mm !important; max-height:33mm !important; object-fit:contain !important; }
+  body.print-hallticket #page-ticket .ticket .schedule-title,
+  body.ticket-only-print #page-ticket .ticket .schedule-title { width:100% !important; text-align:center !important; margin:1mm 0 2mm !important; padding:1.5mm !important; box-sizing:border-box !important; }
+  body.print-hallticket #page-ticket .ticket .footer-block,
+  body.ticket-only-print #page-ticket .ticket .footer-block { display:grid !important; grid-template-columns:minmax(0,1fr) 34mm !important; gap:3mm !important; width:100% !important; margin-top:auto !important; padding-top:2mm !important; }
+  body.print-hallticket #page-ticket .ticket .footer-note,
+  body.ticket-only-print #page-ticket .ticket .footer-note,
+  body.print-hallticket #page-ticket .ticket .principal,
+  body.ticket-only-print #page-ticket .ticket .principal { box-sizing:border-box !important; }
+}
+
+
+/* v1.4.9 — final print layout fix; QR removed from the ticket display */
+.qr-box, .ticket [id^="qr-"], .ticket canvas[aria-label*="QR"], .ticket .qr-code,
+.ticket .scan-to-verify { display:none !important; }
+@page { size:A4 portrait; margin:5mm; }
+@media print {
+  html, body { width:100% !important; margin:0 !important; padding:0 !important; background:#fff !important; overflow:visible !important; }
+  body.print-hallticket .app, body.ticket-only-print .app { display:block !important; width:100% !important; margin:0 !important; padding:0 !important; }
+  body.print-hallticket .sidebar, body.ticket-only-print .sidebar,
+  body.print-hallticket .topbar, body.ticket-only-print .topbar,
+  body.print-hallticket .no-print, body.ticket-only-print .no-print { display:none !important; }
+  body.print-hallticket .main, body.ticket-only-print .main { display:block !important; width:100% !important; max-width:none !important; margin:0 !important; padding:0 !important; overflow:visible !important; }
+  body.print-hallticket #page-ticket, body.ticket-only-print #page-ticket { display:block !important; width:100% !important; max-width:none !important; margin:0 !important; padding:0 !important; overflow:visible !important; }
+  body.print-hallticket .ticket-area, body.ticket-only-print .ticket-area { display:block !important; width:100% !important; max-width:none !important; margin:0 !important; padding:0 !important; background:#fff !important; overflow:visible !important; }
+  body.print-hallticket .ticket, body.ticket-only-print .ticket {
+    display:block !important; width:190mm !important; max-width:190mm !important;
+    height:277mm !important; min-height:277mm !important; max-height:277mm !important;
+    margin:0 auto !important; padding:7mm !important; box-sizing:border-box !important;
+    border:1px solid #214f78 !important; border-radius:0 !important; box-shadow:none !important;
+    overflow:hidden !important; font-size:10pt !important; page-break-after:always !important; break-after:page !important;
+  }
+  body.print-hallticket .ticket:last-child, body.ticket-only-print .ticket:last-child { page-break-after:auto !important; break-after:auto !important; }
+  body.print-hallticket .ticket .ticket-head, body.ticket-only-print .ticket .ticket-head { width:100% !important; display:flex !important; justify-content:center !important; text-align:center !important; margin:0 0 2mm !important; }
+  body.print-hallticket .ticket .school-name, body.ticket-only-print .ticket .school-name { font-size:15pt !important; line-height:1.2 !important; }
+  body.print-hallticket .ticket .school-address, body.ticket-only-print .ticket .school-address { font-size:7.5pt !important; }
+  body.print-hallticket .ticket .exam-banner, body.ticket-only-print .ticket .exam-banner { width:100% !important; box-sizing:border-box !important; margin:2mm 0 3mm !important; padding:2mm !important; font-size:11pt !important; }
+  body.print-hallticket .ticket .student-block, body.ticket-only-print .ticket .student-block { display:grid !important; grid-template-columns:minmax(0,1fr) 28mm !important; gap:3mm !important; width:100% !important; margin:0 0 3mm !important; align-items:start !important; }
+  body.print-hallticket .ticket .info-table, body.ticket-only-print .ticket .info-table,
+  body.print-hallticket .ticket .schedule, body.ticket-only-print .ticket .schedule { width:100% !important; max-width:100% !important; table-layout:fixed !important; border-collapse:collapse !important; margin:0 !important; }
+  body.print-hallticket .ticket .info-table td, body.ticket-only-print .ticket .info-table td,
+  body.print-hallticket .ticket .schedule th, body.ticket-only-print .ticket .schedule th,
+  body.print-hallticket .ticket .schedule td, body.ticket-only-print .ticket .schedule td {
+    padding:1.4mm !important; line-height:1.2 !important; font-size:8pt !important; white-space:normal !important; overflow-wrap:anywhere !important;
+  }
+  body.print-hallticket .ticket .photo, body.ticket-only-print .ticket .photo { width:28mm !important; height:34mm !important; min-height:34mm !important; max-height:34mm !important; overflow:hidden !important; }
+  body.print-hallticket .ticket .photo img, body.ticket-only-print .ticket .photo img { max-width:27mm !important; max-height:33mm !important; object-fit:contain !important; }
+  body.print-hallticket .ticket .schedule-title, body.ticket-only-print .ticket .schedule-title { display:block !important; width:100% !important; box-sizing:border-box !important; margin:1mm 0 2mm !important; padding:1.5mm !important; font-size:10pt !important; }
+  body.print-hallticket .ticket .footer-block, body.ticket-only-print .ticket .footer-block { display:grid !important; grid-template-columns:minmax(0,1fr) 34mm !important; gap:3mm !important; width:100% !important; margin-top:5mm !important; padding-top:0 !important; }
+  body.print-hallticket .ticket .footer-note, body.ticket-only-print .ticket .footer-note { min-height:25mm !important; padding:2mm !important; font-size:8pt !important; }
+  body.print-hallticket .ticket .principal, body.ticket-only-print .ticket .principal { padding:10mm 2mm 2mm !important; font-size:8pt !important; }
+}
+
+</style></head><body><h2>${esc(db.school.name)}</h2><h3>${esc(title)}</h3>${summary}<h3>Detailed Student List</h3>${detail}
+<style id="final-print-fit-v150">
+/* Final print fix: use the same full-width ticket layout as the screen preview. */
+@page { size: A4 portrait; margin: 5mm; }
+@media print {
+  html, body { margin:0 !important; padding:0 !important; width:100% !important; background:#fff !important; overflow:visible !important; }
+  body.ticket-only-print *, body.print-hallticket * { visibility:visible !important; }
+  body.ticket-only-print .sidebar, body.print-hallticket .sidebar,
+  body.ticket-only-print .topbar, body.print-hallticket .topbar,
+  body.ticket-only-print #loginOverlay, body.print-hallticket #loginOverlay,
+  body.ticket-only-print #ticketControls, body.print-hallticket #ticketControls,
+  body.ticket-only-print #page-ticket > .no-print, body.print-hallticket #page-ticket > .no-print,
+  body.ticket-only-print .qr-box, body.print-hallticket .qr-box,
+  body.ticket-only-print [id^="qr-"], body.print-hallticket [id^="qr-"] { display:none !important; }
+  body.ticket-only-print #page-ticket, body.print-hallticket #page-ticket,
+  body.ticket-only-print #ticketArea, body.print-hallticket #ticketArea,
+  body.ticket-only-print .ticket-area, body.print-hallticket .ticket-area {
+    display:block !important; position:static !important; width:100% !important; max-width:none !important;
+    margin:0 !important; padding:0 !important; overflow:visible !important; background:#fff !important;
+  }
+  body.ticket-only-print .ticket, body.print-hallticket .ticket {
+    display:flex !important; flex-direction:column !important; position:relative !important;
+    width:190mm !important; max-width:190mm !important; min-width:190mm !important;
+    height:277mm !important; min-height:277mm !important; max-height:277mm !important;
+    box-sizing:border-box !important; margin:0 auto !important; padding:7mm !important;
+    border:1px solid #214f78 !important; border-radius:0 !important; box-shadow:none !important;
+    overflow:hidden !important; font-size:10pt !important; background:#fff !important;
+    break-inside:avoid !important; page-break-inside:avoid !important;
+  }
+  body.ticket-only-print .ticket-head, body.print-hallticket .ticket-head,
+  body.ticket-only-print .exam-banner, body.print-hallticket .exam-banner,
+  body.ticket-only-print .student-block, body.print-hallticket .student-block,
+  body.ticket-only-print .schedule-title, body.print-hallticket .schedule-title,
+  body.ticket-only-print .footer-block, body.print-hallticket .footer-block {
+    width:100% !important; max-width:100% !important; box-sizing:border-box !important;
+  }
+  body.ticket-only-print .student-block, body.print-hallticket .student-block {
+    display:grid !important; grid-template-columns:minmax(0,1fr) 28mm !important; gap:3mm !important;
+    align-items:start !important; margin:0 0 3mm !important;
+  }
+  body.ticket-only-print .info-table, body.print-hallticket .info-table,
+  body.ticket-only-print table.schedule, body.print-hallticket table.schedule {
+    display:table !important; width:100% !important; min-width:100% !important; max-width:100% !important;
+    table-layout:fixed !important; border-collapse:collapse !important; margin:0 !important;
+  }
+  body.ticket-only-print .info-table td, body.print-hallticket .info-table td,
+  body.ticket-only-print .schedule th, body.print-hallticket .schedule th,
+  body.ticket-only-print .schedule td, body.print-hallticket .schedule td {
+    padding:1.5mm !important; white-space:normal !important; overflow-wrap:anywhere !important;
+    line-height:1.25 !important; box-sizing:border-box !important;
+  }
+  body.ticket-only-print .photo, body.print-hallticket .photo {
+    display:flex !important; width:28mm !important; height:34mm !important; min-height:34mm !important;
+    max-height:34mm !important; overflow:hidden !important; justify-content:center !important; align-items:center !important;
+  }
+  body.ticket-only-print .photo img, body.print-hallticket .photo img {
+    display:block !important; max-width:27mm !important; max-height:33mm !important; object-fit:contain !important;
+  }
+  body.ticket-only-print .footer-block, body.print-hallticket .footer-block {
+    display:grid !important; grid-template-columns:minmax(0,1fr) 34mm !important; gap:3mm !important;
+    margin-top:auto !important; padding-top:2mm !important;
+  }
+}
+</style>
+
+</body></html>`);w.document.close();w.print();}
 function exportStudentReports(){
   const list=getReportStudents(), type=document.getElementById('reportType').value; const headers=['Student Name','Standard','Division','Roll No','GR No','CTS ID','Gender','Category','Religion','Village','Status']; const rows=list.map(s=>[s.name,s.std,s.div,s.roll,s.gr,s.ctsId,s.gender,s.category,s.religion,s.village,s.status||'Active']); const csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n'); const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`Student_Report_${type}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
@@ -1661,7 +1894,7 @@ function ticketHTML(s){
       <thead><tr><th>${esc(c.examDate)}</th><th>${esc(c.time)}</th><th>${esc(c.subject)}</th><th>${esc(c.supervisor||'Supervisor Sign')}</th></tr></thead>
       <tbody>${schedule}</tbody>
     </table>
-    <div class="qr-box">${c.showQR?`<div><div id="qr-${hallTicketQRKey(s)}"></div><div style="font-size:9px;text-align:center;margin-top:4px;font-weight:700">SCAN TO VERIFY</div></div>`:``}</div><div class="footer-block"><div class="footer-note">${esc(school.footer)}</div><div class="principal">${school.principalSignature?`<img src="${school.principalSignature}" style="max-height:55px;max-width:150px;object-fit:contain"><br>`:''}${esc(school.principal||'Principal')}<br>${school.principalSignature?'Principal Signature':''}</div></div>
+    <div class="footer-block"><div class="footer-note">${esc(school.footer)}</div><div class="principal">${school.principalSignature?`<img src="${school.principalSignature}" style="max-height:55px;max-width:150px;object-fit:contain"><br>`:''}${esc(school.principal||'Principal')}<br>${school.principalSignature?'Principal Signature':''}</div></div>
   </div>`;
 }
 function renderQR(el,text,size){
@@ -1744,13 +1977,11 @@ function renderTicket(){
   const s=db.students.find(x=>String(x.id)===String(ticketRoll.value));
   if(!s){ticketArea.innerHTML='<div class="card no-print">Standard પસંદ કરો અને પછી Student Name પસંદ કરો.</div>';return;}
   ticketArea.innerHTML=ticketHTML(s); markGenerated(s.id);
-  if(db.customize.showQR!==false){const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),260);}
 }
 function prepareTicketPrint(students){
   if(!students.length){alert('આ પસંદગીમાં કોઈ વિદ્યાર્થી મળ્યો નથી.');return;}
   ticketArea.innerHTML=students.map(ticketHTML).join('');
   students.forEach(s=>markGenerated(s.id));
-  if(db.customize.showQR!==false){students.forEach(s=>{const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),260);});}
   document.body.classList.add('ticket-only-print','print-hallticket');
   const cleanup=()=>{document.body.classList.remove('ticket-only-print','print-hallticket');renderTicket();};
   window.addEventListener('afterprint',cleanup,{once:true});
@@ -1877,5 +2108,122 @@ function requireLogin(){if(new URLSearchParams(location.search).get('portal')===
 
 renderAll();showPage('dashboard');renderAllocations();renderResultPage();refreshCloudSessionStatus();handlePasswordRecovery();requireLogin();
 </script>
+
+<style id="final-print-fit-v150">
+/* Final print fix: use the same full-width ticket layout as the screen preview. */
+@page { size: A4 portrait; margin: 5mm; }
+@media print {
+  html, body { margin:0 !important; padding:0 !important; width:100% !important; background:#fff !important; overflow:visible !important; }
+  body.ticket-only-print *, body.print-hallticket * { visibility:visible !important; }
+  body.ticket-only-print .sidebar, body.print-hallticket .sidebar,
+  body.ticket-only-print .topbar, body.print-hallticket .topbar,
+  body.ticket-only-print #loginOverlay, body.print-hallticket #loginOverlay,
+  body.ticket-only-print #ticketControls, body.print-hallticket #ticketControls,
+  body.ticket-only-print #page-ticket > .no-print, body.print-hallticket #page-ticket > .no-print,
+  body.ticket-only-print .qr-box, body.print-hallticket .qr-box,
+  body.ticket-only-print [id^="qr-"], body.print-hallticket [id^="qr-"] { display:none !important; }
+  body.ticket-only-print #page-ticket, body.print-hallticket #page-ticket,
+  body.ticket-only-print #ticketArea, body.print-hallticket #ticketArea,
+  body.ticket-only-print .ticket-area, body.print-hallticket .ticket-area {
+    display:block !important; position:static !important; width:100% !important; max-width:none !important;
+    margin:0 !important; padding:0 !important; overflow:visible !important; background:#fff !important;
+  }
+  body.ticket-only-print .ticket, body.print-hallticket .ticket {
+    display:flex !important; flex-direction:column !important; position:relative !important;
+    width:190mm !important; max-width:190mm !important; min-width:190mm !important;
+    height:277mm !important; min-height:277mm !important; max-height:277mm !important;
+    box-sizing:border-box !important; margin:0 auto !important; padding:7mm !important;
+    border:1px solid #214f78 !important; border-radius:0 !important; box-shadow:none !important;
+    overflow:hidden !important; font-size:10pt !important; background:#fff !important;
+    break-inside:avoid !important; page-break-inside:avoid !important;
+  }
+  body.ticket-only-print .ticket-head, body.print-hallticket .ticket-head,
+  body.ticket-only-print .exam-banner, body.print-hallticket .exam-banner,
+  body.ticket-only-print .student-block, body.print-hallticket .student-block,
+  body.ticket-only-print .schedule-title, body.print-hallticket .schedule-title,
+  body.ticket-only-print .footer-block, body.print-hallticket .footer-block {
+    width:100% !important; max-width:100% !important; box-sizing:border-box !important;
+  }
+  body.ticket-only-print .student-block, body.print-hallticket .student-block {
+    display:grid !important; grid-template-columns:minmax(0,1fr) 28mm !important; gap:3mm !important;
+    align-items:start !important; margin:0 0 3mm !important;
+  }
+  body.ticket-only-print .info-table, body.print-hallticket .info-table,
+  body.ticket-only-print table.schedule, body.print-hallticket table.schedule {
+    display:table !important; width:100% !important; min-width:100% !important; max-width:100% !important;
+    table-layout:fixed !important; border-collapse:collapse !important; margin:0 !important;
+  }
+  body.ticket-only-print .info-table td, body.print-hallticket .info-table td,
+  body.ticket-only-print .schedule th, body.print-hallticket .schedule th,
+  body.ticket-only-print .schedule td, body.print-hallticket .schedule td {
+    padding:1.5mm !important; white-space:normal !important; overflow-wrap:anywhere !important;
+    line-height:1.25 !important; box-sizing:border-box !important;
+  }
+  body.ticket-only-print .photo, body.print-hallticket .photo {
+    display:flex !important; width:28mm !important; height:34mm !important; min-height:34mm !important;
+    max-height:34mm !important; overflow:hidden !important; justify-content:center !important; align-items:center !important;
+  }
+  body.ticket-only-print .photo img, body.print-hallticket .photo img {
+    display:block !important; max-width:27mm !important; max-height:33mm !important; object-fit:contain !important;
+  }
+  body.ticket-only-print .footer-block, body.print-hallticket .footer-block {
+    display:grid !important; grid-template-columns:minmax(0,1fr) 34mm !important; gap:3mm !important;
+    margin-top:auto !important; padding-top:2mm !important;
+  }
+}
+
+/* v1.5.2 — Fit the complete ticket on one A4 portrait page; QR stays removed. */
+@page { size: A4 portrait !important; margin: 5mm !important; }
+@media print {
+  html, body { width:100% !important; height:auto !important; margin:0 !important; padding:0 !important; overflow:visible !important; background:#fff !important; }
+  body.print-hallticket #page-ticket,
+  body.print-hallticket #page-ticket .ticket-area,
+  body.print-hallticket #page-ticket #ticketArea {
+    display:block !important; width:100% !important; max-width:none !important;
+    margin:0 !important; padding:0 !important; overflow:visible !important; background:#fff !important;
+  }
+  body.print-hallticket #page-ticket .ticket {
+    display:flex !important; flex-direction:column !important;
+    width:200mm !important; max-width:200mm !important;
+    height:287mm !important; min-height:287mm !important; max-height:287mm !important;
+    margin:0 auto !important; padding:6mm !important; box-sizing:border-box !important;
+    border:1px solid #1f4e78 !important; border-radius:0 !important; box-shadow:none !important;
+    overflow:hidden !important; font-size:9pt !important;
+    break-after:page !important; page-break-after:always !important;
+  }
+  body.print-hallticket #page-ticket .ticket:last-child { break-after:auto !important; page-break-after:auto !important; }
+  body.print-hallticket #page-ticket .ticket .ticket-head { width:100% !important; text-align:center !important; justify-content:center !important; margin:0 0 2mm !important; }
+  body.print-hallticket #page-ticket .ticket .school-name { font-size:14pt !important; line-height:1.15 !important; }
+  body.print-hallticket #page-ticket .ticket .school-address { font-size:7pt !important; line-height:1.15 !important; }
+  body.print-hallticket #page-ticket .ticket .exam-banner { width:100% !important; box-sizing:border-box !important; text-align:center !important; margin:1.5mm 0 2.5mm !important; padding:1.5mm !important; font-size:9pt !important; }
+  body.print-hallticket #page-ticket .ticket .student-block {
+    display:grid !important; grid-template-columns:minmax(0,1fr) 30mm !important;
+    gap:2mm !important; width:100% !important; margin:0 0 2mm !important; align-items:start !important;
+  }
+  body.print-hallticket #page-ticket .ticket .info-table,
+  body.print-hallticket #page-ticket .ticket .schedule {
+    display:table !important; width:100% !important; max-width:100% !important;
+    table-layout:fixed !important; border-collapse:collapse !important; margin:0 !important;
+  }
+  body.print-hallticket #page-ticket .ticket .info-table td,
+  body.print-hallticket #page-ticket .ticket .schedule th,
+  body.print-hallticket #page-ticket .ticket .schedule td {
+    padding:1.1mm 1.4mm !important; line-height:1.15 !important; font-size:8pt !important;
+    white-space:normal !important; overflow-wrap:anywhere !important; vertical-align:middle !important;
+  }
+  body.print-hallticket #page-ticket .ticket .photo { width:30mm !important; height:34mm !important; min-height:34mm !important; max-height:34mm !important; overflow:hidden !important; }
+  body.print-hallticket #page-ticket .ticket .photo img { width:100% !important; height:100% !important; max-width:100% !important; max-height:100% !important; object-fit:contain !important; }
+  body.print-hallticket #page-ticket .ticket .schedule-title { width:100% !important; text-align:center !important; margin:1mm 0 1.5mm !important; padding:1.2mm !important; box-sizing:border-box !important; font-size:9pt !important; }
+  body.print-hallticket #page-ticket .ticket .footer-block {
+    display:grid !important; grid-template-columns:minmax(0,1fr) 38mm !important; gap:2mm !important;
+    width:100% !important; margin-top:auto !important; padding-top:2mm !important;
+  }
+  body.print-hallticket #page-ticket .ticket .footer-note,
+  body.print-hallticket #page-ticket .ticket .principal { min-height:24mm !important; box-sizing:border-box !important; padding:2mm !important; font-size:8pt !important; }
+  body.print-hallticket #page-ticket .ticket .principal img { max-height:13mm !important; max-width:33mm !important; object-fit:contain !important; }
+  body.print-hallticket #page-ticket .ticket .qr-box { display:none !important; }
+}
+</style>
+
 </body>
 </html>
