@@ -26,3 +26,13 @@ Do NOT delete or recreate the Supabase project when updating the application. Ap
 
 ## Rollback
 Keep the previous release ZIP. If a new UI build has a problem, restore the previous application files while keeping the database unchanged. Database migrations should be backward-compatible whenever practical.
+
+
+## v1.4.3 QR Details and PDF Save
+1. Upload both `index.html` and `verify.html` from this ZIP to the same GitHub Pages repository and commit the changes.
+2. QR scanning opens `verify.html` and displays the six embedded student fields.
+3. To save a PDF, tap `Download Hall Ticket PDF`, then in the browser print dialog choose `Save as PDF` and Save.
+
+
+## v1.4.5 — Verification page layout
+Upload both `index.html` and `verify.html` from this version to GitHub Pages. The QR data format is unchanged. Scan a newly generated QR; use Download / Print Hall Ticket, then choose Save as PDF in the print dialog.

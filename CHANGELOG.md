@@ -254,3 +254,75 @@ Every future feature must:
 - Parent/Guardian, Parent Mobile, DOB, gender, school details and seat number are supported.
 - URL token decoding failures no longer stop direct-query student details from rendering.
 - QR URL excludes optional long address/footer fields to reduce QR density and improve scanning reliability.
+
+
+## v1.3.5 — Hall Ticket print layout
+- Set Hall Ticket printing to A4 landscape so the ticket uses the printable page area instead of occupying only the upper part of portrait paper.
+- Improved printed heading, tables, photo, QR size and footer placement.
+- Hall Ticket contact row now displays Parent Mobile from `parentMobile`, falling back to the legacy `mobile` field.
+
+
+## v1.3.6 — A4 portrait full-page print fit
+- Match the portrait print orientation shown in the provided PDF.
+- Increase ticket height to fill the printable A4 page and enlarge schedule/table spacing.
+- Keep QR visible and anchor footer/signature boxes near the bottom of the ticket.
+
+
+## v1.3.7 — Standalone student-details QR
+- QR now embeds student details directly as readable text instead of relying on a GitHub Pages verification URL.
+- Scanning the QR can show name, standard/division, roll, GR, CTS ID, seat number, parent/guardian, parent mobile, school and exam without depending on deployed verify.html.
+- Increased QR generation default size and error correction level.
+
+
+## v1.3.8 — Offline QR generator
+- Bundle a local QR matrix generator so Hall Ticket QR creation works when the external QRCode.js CDN is blocked or unavailable.
+- QR rendering now falls back to a local canvas-based generator and does not show the misleading CDN-load error when the offline engine is present.
+
+
+## v1.3.9 — Compact QR payload
+- QR now carries only school name, exam name, student name, standard, CTS ID and seat number.
+- Removed extra QR payload fields to reduce QR density and avoid QR generation capacity errors.
+
+
+## v1.4.0 — Duplicate QR display fix
+- Removed the CDN QR rendering path from Hall Ticket display; it could expose both the generated image and canvas.
+- Use the bundled offline QR engine only and render exactly one canvas per QR container.
+- Clear existing QR nodes before rendering and set a predictable 150px display size.
+
+
+## v1.4.1 — QR data direct fix
+- QR payload is now compact JSON with exactly six fields: School, Exam, Student Name, Standard, CTS ID and Seat Number.
+- Removed dependency on GitHub Pages / verify.html for reading student data; any QR scanner can display the embedded text directly.
+
+
+## v1.4.2 — QR print and A4 layout final fix
+- Fixed print CSS that hid the offline QR canvas (`display:none`) so the generated QR is visible in print/PDF.
+- Forced Hall Ticket student details and Exam Schedule tables to full printable width.
+- Standardized A4 portrait ticket height and positioned footer/signature near the page bottom.
+- Preserved compact six-field JSON QR payload from v1.4.1.
+
+
+## v1.4.3 — QR details + PDF option
+- QR now opens the hosted verify.html page with a compact encoded payload containing School Name, Exam Name, Student Name, Standard, CTS ID and Seat Number.
+- Verification page decodes the new `data` token and displays the six requested fields.
+- Added a Download Hall Ticket PDF action that opens the browser print dialog; choose “Save as PDF” to save a PDF copy. Added print-friendly styling that hides buttons in the saved PDF.
+- Existing legacy QR payload formats remain supported.
+
+
+## v1.4.4 — QR scan reliability
+- Replaced the base64 `data` token QR URL with short standard query parameters (`school`, `e`, `n`, `s`, `c`, `seat`) that the verification page already supports.
+- Increased on-screen QR generation size for easier phone scanning.
+- Render QR canvas at its native integer-module pixel size to avoid browser interpolation blur; print QR remains 35mm.
+- Verified a representative generated QR can be decoded back to the exact verification URL.
+
+
+## v1.4.5 — QR verification page polish
+- Preserved the working QR URL parameter format from v1.4.4.
+- Improved the mobile verification screen to match the provided screenshot, with a cleaner school heading, exam title, responsive detail cards, and empty fields hidden.
+- Added clear Download / Print Hall Ticket and Print Details Only actions. PDF saving uses the browser print dialog and its Save as PDF option.
+- Kept support for existing QR token formats.
+
+
+## v1.4.6 — QR verification Principal label cleanup
+- Removed the default Principal fallback from legacy QR query parsing.
+- QR verification result intentionally displays student details only; Principal/signature metadata is not rendered, avoiding duplicate “Principal Principal” text.

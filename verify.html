@@ -1,6 +1,29 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hall Ticket Verification - SVD School</title>
-<style>body{font-family:Arial,sans-serif;background:#eef4f8;color:#17365d;margin:0}.wrap{max-width:760px;margin:24px auto;padding:16px}.card{background:#fff;border:1px solid #d6e1e8;border-radius:16px;padding:22px;box-shadow:0 5px 20px #17365d12}.ok{display:inline-block;background:#e8f7ec;color:#167a25;border:1px solid #9ad5a5;padding:7px 12px;border-radius:999px;font-weight:800}.warn{background:#fff7e6;color:#8a5a00;border:1px solid #f0cf88;padding:10px;border-radius:10px}.head{text-align:center;border-bottom:1px solid #d6e1e8;padding-bottom:15px;margin-bottom:16px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:9px}.meta div{border:1px solid #ccd8e0;padding:10px;border-radius:8px}.schedule{width:100%;border-collapse:collapse;margin-top:16px}.schedule th,.schedule td{border:1px solid #9db6c9;padding:9px;text-align:center}.schedule th{background:#e6f0f6}@media(max-width:600px){.meta{grid-template-columns:1fr}.wrap{margin:8px auto;padding:8px}}@media print{body{background:#fff}.wrap{max-width:none;margin:0}.card{box-shadow:none;border:0}}</style></head>
+<style>
+:root{color-scheme:light;--navy:#214f78;--ink:#233b53;--line:#d7e1e8;--soft:#eef4f8}
+*{box-sizing:border-box}
+body{font-family:Arial,"Noto Sans Gujarati",sans-serif;background:var(--soft);color:var(--ink);margin:0;line-height:1.45}
+.wrap{width:min(760px,100%);margin:22px auto;padding:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 5px 20px #17365d12}
+.head{text-align:center;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:16px}
+.head h2{font-size:23px;margin:0 0 12px;color:#2c4258}
+#school{font-size:15px;font-weight:700;overflow-wrap:anywhere}
+.ok{display:inline-block;background:#e8f7ec;color:#167a25;border:1px solid #9ad5a5;padding:7px 12px;border-radius:999px;font-weight:800;font-size:14px}
+.warn{background:#fff7e6;color:#76520a;border:1px solid #f0cf88;padding:10px;border-radius:10px}
+.exam-title{text-align:center;font-size:20px;margin:18px 0 12px;color:#314b65}
+.meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.meta div{border:1px solid var(--line);padding:11px 12px;border-radius:9px;min-width:0;overflow-wrap:anywhere;background:#fff}
+.meta b{display:block;font-size:13px;color:#4b6175;margin-bottom:2px}
+.meta span{font-size:15px;white-space:pre-wrap;overflow-wrap:anywhere}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.actions button{min-height:44px;padding:11px 17px;cursor:pointer;background:var(--navy);color:white;border:0;border-radius:8px;font-weight:700;font-size:14px}
+.actions button.secondary{background:#e6f0f6;color:#17365d;border:1px solid #b6c9d7}
+.help{font-size:12px;color:#526777;text-align:center;margin:12px 0 0}
+@media(max-width:520px){.wrap{margin:0 auto;padding:12px}.card{padding:16px;border-radius:14px}.head h2{font-size:20px}.meta{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.meta div{padding:9px;font-size:14px}.meta b{font-size:12px}.meta span{font-size:14px}.exam-title{font-size:18px}}
+@media(max-width:360px){.meta{grid-template-columns:1fr}}
+@media print{body{background:#fff}.wrap{width:100%;max-width:none;margin:0;padding:0}.card{box-shadow:none;border:0;border-radius:0;padding:8mm}.actions,.help,.ok{display:none!important}.meta{grid-template-columns:1fr 1fr}.meta div{break-inside:avoid;border-color:#aab8c4}.head{margin-bottom:10px}.exam-title{margin:10px 0}.warn{display:none!important}}
+</style></head>
 <body><div class="wrap"><div class="card" id="app"><div class="head"><h2>🎫 Hall Ticket Verification</h2><div id="school"></div></div><div id="content"></div></div></div>
 <script>
 function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
@@ -16,7 +39,10 @@ function decodeToken(token){
 function decodeLegacy(){return decodeToken(new URLSearchParams(location.search).get('v'));}
 try{
   const p=new URLSearchParams(location.search);
-  let x=decodeToken(p.get('d')) || decodeLegacy();
+  let x=decodeToken(p.get('data')) || decodeToken(p.get('d')) || decodeLegacy();
+  if(x && x.school && x.name && (x.standard!==undefined || x.ctsId!==undefined)){
+    x={school:x.school,examName:x.exam||'',name:x.name,standard:x.standard??'',ctsId:x.ctsId||'',seatNo:x.seatNo||''};
+  }
   if(x && (x.v===3 || x.v===4 || x.v===5)){
     const ver=x.v;
     x={school:x.a,schoolAddress:x.b,schoolPhone:x.c,principal:x.d,footer:x.f,name:x.n,ctsId:x.i,gr:x.g,roll:x.r,standard:x.s,division:x.u,examName:x.e,roomNo:ver===3?x.o:'',seatNo:x.t,mobile:x.m,parent:ver>=4?x.p:'',dob:ver>=4?x.o:'',gender:ver>=4?x.h:'',exams:(x.q||[]).map(z=>({date:z[0]||'',time:z[1]||'',exam:z[2]||'',room:z[3]||'',seat:z[4]||''}))};
@@ -33,7 +59,7 @@ try{
       roomNo:p.get('room')||'', seatNo:p.get('seat')||'',
       mobile:p.get('mobile')||'', parent:p.get('parent')||'',
       dob:p.get('dob')||'', gender:p.get('gender')||'',
-      principal:p.get('principal')||'Principal', footer:p.get('footer')||'',
+      principal:'', footer:'',
       name:p.get('n')||'', ctsId:p.get('c')||'', gr:p.get('g')||'',
       roll:p.get('r')||'', standard:p.get('s')||'',
       division:p.get('div')||p.get('d')||'', examName:p.get('e')||'', exams
@@ -41,26 +67,29 @@ try{
   }
   if(!x.name && !x.ctsId && !x.gr && !x.roll) throw new Error('QR data not found.');
   document.title='Hall Ticket Verification - '+(x.school||'SVD School');
-  document.getElementById('school').innerHTML='<b>'+esc(x.school||'Shree S.V. Doshi Highschool, Kumbhan')+'</b>';
-  const rows=(x.exams||[]).map(e=>'<tr><td>'+esc(e.date)+'</td><td>'+esc(e.time)+'</td><td>'+esc(e.exam)+'</td><td>'+esc(e.room)+'</td><td>'+esc(e.seat)+'</td></tr>').join('');
-  const extra=(label,value)=>value?'<div><b>'+label+'</b><br>'+esc(value)+'</div>':'';
+  document.getElementById('school').textContent=x.school||'Shree S.V. Doshi Highschool, Kumbhan';
+  const extra=(label,value)=>value!==undefined&&value!==null&&String(value).trim()!==''?
+    '<div><b>'+esc(label)+'</b><span>'+esc(value)+'</span></div>':'';
+  const sixField=!!(x.school && x.name && (x.standard!==undefined || x.ctsId!==undefined) && !x.roll && !x.gr);
+  // Principal/signature fields are intentionally omitted from QR verification details.
+  const details=
+    extra('Student Name',x.name||'')+
+    extra('CTS ID',x.ctsId||'')+
+    (!sixField?extra('GR No.',x.gr||'')+extra('Roll No.',x.roll||''):'')+
+    extra('Standard',x.standard??x.std??'')+
+    (!sixField?extra('Division',x.division||''):'')+
+    extra('Seat Number',x.seatNo||'')+
+    (!sixField?extra('Room No.',x.roomNo||''):'');
   document.getElementById('content').innerHTML=
-    '<p><span class="ok">✓ QR DATA VERIFIED</span></p>'+ 
-    '<div class="warn"><b>Hall Ticket QR Verification:</b> Details shown below are embedded in this QR code.</div>'+ 
-    '<h3 style="text-align:center;margin-bottom:8px">'+esc(x.examName||'HALL TICKET')+'</h3>'+ 
-    '<div class="meta">'+
-    '<div><b>Student Name</b><br>'+esc(x.name)+'</div>'+ 
-    '<div><b>CTS ID</b><br>'+esc(x.ctsId)+'</div>'+ 
-    '<div><b>GR No.</b><br>'+esc(x.gr)+'</div>'+ 
-    '<div><b>Roll No.</b><br>'+esc(x.roll)+'</div>'+ 
-    '<div><b>Standard / Division</b><br>'+esc(x.standard)+' / '+esc(x.division)+'</div>'+ 
-    extra('Room No.',x.roomNo)+extra('Seat No.',x.seatNo)+extra('Parent / Guardian',x.parent)+extra('Date of Birth',x.dob)+extra('Gender',x.gender)+extra('Parent Mobile',x.mobile)+
-    extra('School Address',x.schoolAddress)+extra('School Phone',x.schoolPhone)+
-    '</div>'+ 
-    (rows?'<h3>Exam Schedule</h3><table class="schedule"><tr><th>Date</th><th>Time</th><th>Subject</th><th>Room</th><th>Seat</th></tr>'+rows+'</table>':'')+
-    (x.footer?'<div class="warn" style="margin-top:16px"><b>Instructions</b><br>'+esc(x.footer)+'</div>':'')+
-    '<p style="text-align:right;margin-top:22px"><b>'+esc(x.principal||'Principal')+'</b><br>Principal</p>'+ 
-    '<p style="text-align:center"><button onclick="window.print()" style="padding:10px 18px;cursor:pointer">Print Hall Ticket</button></p>';
+    '<div><span class="ok">✓ QR DATA VERIFIED</span></div>'+
+    (x.examName?'<div class="exam-title">'+esc(x.examName)+'</div>':'<div class="exam-title">Hall Ticket Details</div>')+
+    '<div class="meta">'+details+'</div>'+
+    '<div class="actions">'+
+    '<button onclick="downloadHallTicketPDF()">Download / Print Hall Ticket</button>'+
+    '<button class="secondary" onclick="window.print()">Print Details Only</button>'+
+    '</div>'+
+    '<p class="help">PDF માટે બટન દબાવો, પછી Print dialog માં “Save as PDF” પસંદ કરો. મોબાઇલમાં ઉપલબ્ધ હોય તો “Save to PDF” પસંદ કરો.</p>';
+  window.downloadHallTicketPDF=function(){window.print();};
 }catch(e){
   document.getElementById('content').innerHTML='<p style="color:#b42318;font-weight:700">Invalid or incomplete QR code.</p><p>'+esc(e.message)+'</p>';
 }

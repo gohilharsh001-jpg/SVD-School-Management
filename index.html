@@ -923,6 +923,7 @@ section[id^="page-"].hidden { display:none !important; }
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="./qrcode-offline.js"></script>
 <script>
 /* v1.3.1: normalize every application page into the main content container.
    Legacy page sections were split between <main> and <body>, which caused
@@ -1436,7 +1437,149 @@ function renderStudentReports(){
   document.getElementById('reportStats').innerHTML=`<div class="stat"><b>${list.length}</b><span>Students</span></div><div class="stat"><b>${male}</b><span>Male</span></div><div class="stat"><b>${female}</b><span>Female</span></div><div class="stat"><b>${other}</b><span>Other / Not Set</span></div>`;
 }
 function printStudentReports(){
-  renderStudentReports(); const title=document.getElementById('reportHeading').textContent; const summary=document.getElementById('studentReportTable').outerHTML; const detail=document.getElementById('studentReportDetail').outerHTML; const w=window.open('','_blank');if(!w)return;w.document.write(`<html><head><title>${esc(title)}</title><style>body{font-family:Arial,sans-serif;padding:20px}h2{text-align:center}table{width:100%;border-collapse:collapse;margin:12px 0 24px}th,td{border:1px solid #777;padding:6px;font-size:11px}th{background:#eee}</style></head><body><h2>${esc(db.school.name)}</h2><h3>${esc(title)}</h3>${summary}<h3>Detailed Student List</h3>${detail}</body></html>`);w.document.close();w.print();}
+  renderStudentReports(); const title=document.getElementById('reportHeading').textContent; const summary=document.getElementById('studentReportTable').outerHTML; const detail=document.getElementById('studentReportDetail').outerHTML; const w=window.open('','_blank');if(!w)return;w.document.write(`<html><head><title>${esc(title)}</title><style>body{font-family:Arial,sans-serif;padding:20px}h2{text-align:center}table{width:100%;border-collapse:collapse;margin:12px 0 24px}th,td{border:1px solid #777;padding:6px;font-size:11px}th{background:#eee}
+/* v1.3.5 print layout correction: landscape ticket fills the printable page */
+@page { size: A4 landscape; margin: 7mm; }
+@media print {
+  body.ticket-only-print { margin:0 !important; padding:0 !important; background:#fff !important; }
+  body.ticket-only-print #page-ticket { display:block !important; position:static !important; width:100% !important; margin:0 !important; padding:0 !important; }
+  body.ticket-only-print #page-ticket #ticketArea { display:block !important; width:100% !important; max-width:none !important; margin:0 !important; padding:0 !important; overflow:visible !important; }
+  body.ticket-only-print #page-ticket .ticket {
+    display:flex !important; flex-direction:column !important;
+    width:100% !important; max-width:none !important; height:190mm !important; min-height:190mm !important;
+    margin:0 !important; padding:7mm !important; box-sizing:border-box !important;
+    overflow:hidden !important; border:1px solid #1f4e78 !important; border-radius:0 !important;
+    box-shadow:none !important; break-after:page !important; page-break-after:always !important;
+    font-size:11pt !important;
+  }
+  body.ticket-only-print #page-ticket .ticket:last-child { break-after:auto !important; page-break-after:auto !important; }
+  body.ticket-only-print #page-ticket .ticket .ticket-head { flex:0 0 auto !important; margin-bottom:5mm !important; }
+  body.ticket-only-print #page-ticket .ticket .school-name { font-size:21pt !important; }
+  body.ticket-only-print #page-ticket .ticket .school-address { font-size:10pt !important; }
+  body.ticket-only-print #page-ticket .ticket .exam-banner { margin:2mm 0 5mm !important; padding:3mm !important; font-size:14pt !important; }
+  body.ticket-only-print #page-ticket .ticket .student-block { grid-template-columns:minmax(0,1fr) 38mm !important; gap:5mm !important; margin:0 0 4mm !important; }
+  body.ticket-only-print #page-ticket .ticket .info-table,
+  body.ticket-only-print #page-ticket .ticket .schedule { width:100% !important; font-size:11pt !important; }
+  body.ticket-only-print #page-ticket .ticket .info-table td,
+  body.ticket-only-print #page-ticket .ticket .schedule th,
+  body.ticket-only-print #page-ticket .ticket .schedule td { padding:2.5mm !important; }
+  body.ticket-only-print #page-ticket .ticket .photo { width:35mm !important; height:35mm !important; }
+  body.ticket-only-print #page-ticket .ticket .qr-box { display:flex !important; visibility:visible !important; justify-content:flex-start !important; align-items:center !important; margin-top:3mm !important; }
+  body.ticket-only-print #page-ticket .ticket [id^="qr-"] { display:block !important; visibility:visible !important; }
+  body.ticket-only-print #page-ticket .ticket .qr-box img { display:block !important; visibility:visible !important; width:32mm !important; height:32mm !important; }
+  body.ticket-only-print #page-ticket .ticket .footer-block { display:grid !important; grid-template-columns:minmax(0,1fr) 42mm !important; gap:5mm !important; margin-top:auto !important; padding-top:4mm !important; }
+  body.ticket-only-print #page-ticket .ticket .footer-note { min-height:18mm !important; }
+  body.ticket-only-print #page-ticket .ticket .principal { min-height:18mm !important; }
+}
+
+
+/* v1.4.2 FINAL: print the offline QR canvas and fit the whole ticket to A4 */
+@page { size: A4 portrait; margin: 5mm; }
+@media print {
+  html, body { width:100% !important; height:auto !important; margin:0 !important; padding:0 !important; overflow:visible !important; background:#fff !important; }
+  body.ticket-only-print #page-ticket, body.print-hallticket #page-ticket {
+    display:block !important; position:static !important; width:100% !important; max-width:none !important;
+    min-height:0 !important; margin:0 !important; padding:0 !important; overflow:visible !important;
+  }
+  body.ticket-only-print #ticketArea, body.print-hallticket #ticketArea,
+  body.ticket-only-print .ticket-area, body.print-hallticket .ticket-area {
+    display:block !important; position:static !important; width:100% !important; max-width:none !important;
+    margin:0 !important; padding:0 !important; overflow:visible !important;
+  }
+  body.ticket-only-print #page-ticket .ticket, body.print-hallticket #page-ticket .ticket {
+    display:flex !important; flex-direction:column !important; position:relative !important;
+    width:100% !important; max-width:none !important; height:280mm !important; min-height:280mm !important;
+    margin:0 !important; padding:6mm !important; box-sizing:border-box !important;
+    border:1px solid #1f4e78 !important; border-radius:0 !important; box-shadow:none !important;
+    overflow:hidden !important; break-after:page !important; page-break-after:always !important;
+    font-size:10pt !important;
+  }
+  body.ticket-only-print #page-ticket .ticket:last-child, body.print-hallticket #page-ticket .ticket:last-child {
+    break-after:auto !important; page-break-after:auto !important;
+  }
+  body.ticket-only-print #page-ticket .ticket .ticket-head, body.print-hallticket #page-ticket .ticket .ticket-head {
+    display:flex !important; width:100% !important; justify-content:center !important; align-items:center !important;
+    margin:0 0 3mm !important; text-align:center !important;
+  }
+  body.ticket-only-print #page-ticket .ticket .school-name, body.print-hallticket #page-ticket .ticket .school-name { font-size:18pt !important; line-height:1.2 !important; }
+  body.ticket-only-print #page-ticket .ticket .school-address, body.print-hallticket #page-ticket .ticket .school-address { font-size:9pt !important; }
+  body.ticket-only-print #page-ticket .ticket .exam-banner, body.print-hallticket #page-ticket .ticket .exam-banner {
+    display:block !important; width:100% !important; box-sizing:border-box !important; text-align:center !important;
+    margin:2mm 0 4mm !important; padding:2.5mm !important; font-size:13pt !important;
+  }
+  body.ticket-only-print #page-ticket .ticket .student-block, body.print-hallticket #page-ticket .ticket .student-block {
+    display:grid !important; grid-template-columns:minmax(0,1fr) 30mm !important; gap:4mm !important;
+    width:100% !important; margin:0 0 4mm !important; align-items:start !important;
+  }
+  body.ticket-only-print #page-ticket .ticket .info-table, body.print-hallticket #page-ticket .ticket .info-table,
+  body.ticket-only-print #page-ticket .ticket .schedule, body.print-hallticket #page-ticket .ticket .schedule {
+    display:table !important; width:100% !important; max-width:none !important; table-layout:auto !important;
+    border-collapse:collapse !important; font-size:10pt !important; margin:0 !important;
+  }
+  body.ticket-only-print #page-ticket .ticket .info-table td, body.print-hallticket #page-ticket .ticket .info-table td,
+  body.ticket-only-print #page-ticket .ticket .schedule th, body.print-hallticket #page-ticket .ticket .schedule th,
+  body.ticket-only-print #page-ticket .ticket .schedule td, body.print-hallticket #page-ticket .ticket .schedule td {
+    padding:2mm !important; line-height:1.25 !important; white-space:normal !important;
+  }
+  body.ticket-only-print #page-ticket .ticket .photo, body.print-hallticket #page-ticket .ticket .photo {
+    display:flex !important; width:28mm !important; height:34mm !important; min-height:34mm !important;
+    max-height:34mm !important; justify-content:center !important; align-items:center !important; overflow:hidden !important;
+  }
+  body.ticket-only-print #page-ticket .ticket .photo img, body.print-hallticket #page-ticket .ticket .photo img {
+    width:auto !important; height:auto !important; max-width:27mm !important; max-height:33mm !important; object-fit:contain !important;
+  }
+  body.ticket-only-print #page-ticket .ticket .schedule-title, body.print-hallticket #page-ticket .ticket .schedule-title {
+    display:block !important; width:100% !important; text-align:center !important; margin:1mm 0 2mm !important;
+    padding:2mm !important; font-size:11pt !important; box-sizing:border-box !important;
+  }
+  /* Crucial: QR is a canvas in the offline generator, so never hide it for printing. */
+  body.ticket-only-print #page-ticket .ticket .qr-box, body.print-hallticket #page-ticket .ticket .qr-box {
+    display:flex !important; visibility:visible !important; width:100% !important; min-height:34mm !important;
+    justify-content:center !important; align-items:center !important; margin:3mm 0 !important; overflow:visible !important;
+  }
+  body.ticket-only-print #page-ticket .ticket .qr-box > div, body.print-hallticket #page-ticket .ticket .qr-box > div {
+    display:block !important; visibility:visible !important; text-align:center !important;
+  }
+  body.ticket-only-print #page-ticket .ticket .qr-box [id^="qr-"], body.print-hallticket #page-ticket .ticket .qr-box [id^="qr-"] {
+    display:block !important; visibility:visible !important; width:30mm !important; height:30mm !important;
+    max-width:30mm !important; max-height:30mm !important; margin:0 auto !important;
+  }
+  body.ticket-only-print #page-ticket .ticket .qr-box [id^="qr-"] canvas,
+  body.print-hallticket #page-ticket .ticket .qr-box [id^="qr-"] canvas {
+    display:block !important; visibility:visible !important; width:30mm !important; height:30mm !important;
+    max-width:30mm !important; max-height:30mm !important; image-rendering:pixelated !important; background:#fff !important;
+  }
+  body.ticket-only-print #page-ticket .ticket .qr-box div[style*="font-size:9px"],
+  body.print-hallticket #page-ticket .ticket .qr-box div[style*="font-size:9px"] {
+    display:block !important; visibility:visible !important; font-size:8pt !important; margin-top:1mm !important;
+  }
+  body.ticket-only-print #page-ticket .ticket .footer-block, body.print-hallticket #page-ticket .ticket .footer-block {
+    display:grid !important; grid-template-columns:minmax(0,1fr) 38mm !important; gap:4mm !important;
+    width:100% !important; margin-top:auto !important; padding-top:3mm !important;
+  }
+  body.ticket-only-print #page-ticket .ticket .footer-note, body.print-hallticket #page-ticket .ticket .footer-note {
+    min-height:22mm !important; padding:2mm !important; font-size:9pt !important; box-sizing:border-box !important;
+  }
+  body.ticket-only-print #page-ticket .ticket .principal, body.print-hallticket #page-ticket .ticket .principal {
+    min-height:22mm !important; padding:5mm 2mm 2mm !important; font-size:9pt !important; box-sizing:border-box !important;
+  }
+}
+
+
+/* v1.4.4: make QR large enough for phone cameras and print reliably */
+#page-ticket .ticket .qr-box { display:flex !important; justify-content:center !important; align-items:center !important; width:100% !important; min-height:68mm !important; margin:4mm auto !important; overflow:visible !important; }
+#page-ticket .ticket .qr-box [id^="qr-"] { display:block !important; width:auto !important; height:auto !important; max-width:none !important; max-height:none !important; margin:0 auto !important; }
+#page-ticket .ticket .qr-box [id^="qr-"] canvas { display:block !important; width:auto !important; height:auto !important; max-width:none !important; max-height:none !important; image-rendering:pixelated !important; }
+@media print {
+  body.ticket-only-print #page-ticket .ticket .qr-box,
+  body.print-hallticket #page-ticket .ticket .qr-box { min-height:40mm !important; margin:2mm auto !important; }
+  body.ticket-only-print #page-ticket .ticket .qr-box [id^="qr-"],
+  body.print-hallticket #page-ticket .ticket .qr-box [id^="qr-"] { width:35mm !important; height:35mm !important; max-width:35mm !important; max-height:35mm !important; }
+  body.ticket-only-print #page-ticket .ticket .qr-box [id^="qr-"] canvas,
+  body.print-hallticket #page-ticket .ticket .qr-box [id^="qr-"] canvas { width:35mm !important; height:35mm !important; max-width:35mm !important; max-height:35mm !important; image-rendering:pixelated !important; }
+}
+
+</style></head><body><h2>${esc(db.school.name)}</h2><h3>${esc(title)}</h3>${summary}<h3>Detailed Student List</h3>${detail}</body></html>`);w.document.close();w.print();}
 function exportStudentReports(){
   const list=getReportStudents(), type=document.getElementById('reportType').value; const headers=['Student Name','Standard','Division','Roll No','GR No','CTS ID','Gender','Category','Religion','Village','Status']; const rows=list.map(s=>[s.name,s.std,s.div,s.roll,s.gr,s.ctsId,s.gender,s.category,s.religion,s.village,s.status||'Active']); const csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n'); const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`Student_Report_${type}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
@@ -1501,7 +1644,7 @@ function ticketHTML(s){
   const schedule=matchedExams.map(e=>`<tr><td>${esc(e.date)}</td><td>${esc(e.time)}</td><td>${esc(e.subject)}</td>${supervisorCell}</tr>`).join('');
   const divCell=c.showDiv?`<td>${esc(c.division)}</td><td>${esc(s.div)}</td>`:'';
   const grCell=c.showGR?`<td>${esc(c.grNo)}</td><td>${esc(s.gr)}</td>`:'';
-  const mobileRow=c.showMobile?`<tr><td>${esc(c.mobile)}</td><td colspan="5">${esc(s.mobile)}</td></tr>`:'';
+  const mobileRow=c.showMobile?`<tr><td>Parent Mobile</td><td colspan="5">${esc(s.parentMobile||s.mobile||'')}</td></tr>`:'';
   return `<div class="ticket" style="font-family:${esc(c.font)};--ticket-font:${Number(c.ticketFont)||12}px">
     <div class="ticket-head">${logo}<div><div class="school-name">${esc(school.name)}</div><div class="school-address">${esc(school.address)}${school.phone?` | ${esc(c.schoolPhone)}: ${esc(school.phone)}`:''}</div></div></div>
     <div class="exam-banner">${c.ticketTitle?esc(c.ticketTitle)+' - ':''}${esc(school.examName).toUpperCase()}</div>
@@ -1523,51 +1666,51 @@ function ticketHTML(s){
 }
 function renderQR(el,text,size){
   if(!el)return;
+  // Clear every prior QR node first; render exactly ONE QR canvas.
   el.replaceChildren();
-  const sz=size||180;
-  if(typeof QRCode==='undefined'){
-    el.innerHTML='<div style="font-size:10px;color:#b42318;text-align:center;width:'+sz+'px">QR library load ન થઈ. Internet તપાસી Ctrl+F5 કરો.</div>';
-    return;
-  }
+  const sz=size||150;
   try{
-    // Keep QRCode.js output intact. The old code captured canvas.toDataURL()
-    // immediately, before qrcodejs had necessarily finished drawing the QR.
-    new QRCode(el,{text:String(text||''),width:sz,height:sz,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
-    const styleQR=()=>{
-      const img=el.querySelector('img');
-      if(img){img.alt='Hall Ticket QR Code';img.style.cssText='display:block;width:'+sz+'px;height:'+sz+'px;max-width:none;background:#fff;image-rendering:auto;border:4px solid #fff;box-sizing:content-box';}
-      const canvas=el.querySelector('canvas');
-      if(canvas)canvas.style.display='none';
-    };
-    styleQR();
-    const observer=new MutationObserver(()=>{styleQR();if(el.querySelector('img'))observer.disconnect();});
-    observer.observe(el,{childList:true,subtree:true});
-    setTimeout(()=>{styleQR();observer.disconnect();},500);
+    if(!window.SVDQR || typeof window.SVDQR.make!=='function') {
+      throw new Error('Bundled offline QR engine missing');
+    }
+    const matrix=window.SVDQR.make(String(text||''));
+    const quiet=4, count=matrix.count, scale=Math.max(1,Math.floor(sz/(count+quiet*2)));
+    const actual=(count+quiet*2)*scale;
+    const canvas=document.createElement('canvas');
+    canvas.width=actual; canvas.height=actual;
+    canvas.style.cssText='display:block;width:'+actual+'px;height:'+actual+'px;max-width:none;max-height:none;background:#fff;border:0;margin:0 auto;image-rendering:pixelated';
+    const ctx=canvas.getContext('2d');
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,actual,actual);ctx.fillStyle='#000';
+    for(let r=0;r<count;r++){
+      for(let c=0;c<count;c++){
+        if(matrix.isDark(r,c))ctx.fillRect((c+quiet)*scale,(r+quiet)*scale,scale,scale);
+      }
+    }
+    canvas.setAttribute('role','img');
+    canvas.setAttribute('aria-label','Hall Ticket QR Code');
+    el.appendChild(canvas);
   }catch(err){
-    el.innerHTML='<div style="font-size:10px;color:#b42318;text-align:center;width:'+sz+'px">QR data લાંબો છે અથવા જનરેટ ન થયો. QR data લાંબો છે. QR size વધારવો અથવા QR library load તપાસો.</div>';
+    el.replaceChildren();
+    const msg=document.createElement('div');
+    msg.textContent='QR Code બનાવવામાં ભૂલ. પેજ Refresh કરીને ફરી પ્રયાસ કરો.';
+    msg.style.cssText='font-size:10px;color:#b42318;text-align:center;max-width:'+sz+'px';
+    el.appendChild(msg);
     console.error('Hall Ticket QR generation failed:',err);
   }
 }
 function hallTicketQRKey(s){return String(s.__qrKey||('roll-'+String(s.roll??'')+'-gr-'+String(s.gr??'')+'-cts-'+String(s.ctsId??'').replace(/[^a-zA-Z0-9_-]/g,'')));}
 function hallTicketQRData(s){
-  // QR FINAL FIX: use readable URL query fields instead of a version-specific opaque token.
-  // The verification page is updated to safely support both this URL and older ?d=token QR codes.
-  const params = new URLSearchParams({
-    n:String(s.name||''),
-    c:String(s.ctsId||''),
-    g:String(s.gr??''),
-    r:String(s.roll??''),
-    s:String(s.std??''),
-    div:String(s.div||''),
-    e:String(db.school?.examName||''),
-    seat:String(generatedSeatNo(s)||s.seatNo||''),
-    mobile:String(s.parentMobile||s.mobile||''),
-    parent:String(s.parent||''),
-    dob:String(s.dob||''),
-    gender:String(s.gender||''),
-    school:String(db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan')
-  });
-  return 'https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html?'+params.toString();
+  // Use short, scanner-friendly URL parameters supported by verify.html.
+  // This keeps the QR less dense and opens the details page directly.
+  const base='https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html';
+  const p=new URLSearchParams();
+  p.set('school',String(db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan'));
+  p.set('e',String(db.school?.examName||''));
+  p.set('n',String(s.name||''));
+  p.set('s',String(s.std??''));
+  p.set('c',String(s.ctsId||''));
+  p.set('seat',String(generatedSeatNo(s)||s.seatNo||''));
+  return base+'?'+p.toString();
 }
 function markGenerated(id){db.generated=db.generated||[];if(!db.generated.includes(id)){db.generated.push(id);localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}}
 function renderAllocations(){const sel=document.getElementById('allocExam');if(!sel)return;const cur=sel.value;sel.innerHTML=db.exams.map(e=>`<option value="${e.id}">${esc(e.subject)} - ${esc(e.date)}</option>`).join('');if(cur)sel.value=cur;const ex=db.exams.find(e=>String(e.id)===String(sel.value));const list=(db.rooms||[]).filter(x=>!ex||x.examId===ex.id);document.getElementById('allocationPreview').innerHTML=list.length?list.map(x=>`<div class="allocation-card"><b>Roll ${esc(x.roll)}</b><div>${esc(x.name)}</div><span class="pill">Room ${esc(x.room)} · Seat ${esc(x.seat)}</span></div>`).join(''):'<div class="muted">No allocations yet.</div>';}
@@ -1601,13 +1744,13 @@ function renderTicket(){
   const s=db.students.find(x=>String(x.id)===String(ticketRoll.value));
   if(!s){ticketArea.innerHTML='<div class="card no-print">Standard પસંદ કરો અને પછી Student Name પસંદ કરો.</div>';return;}
   ticketArea.innerHTML=ticketHTML(s); markGenerated(s.id);
-  if(db.customize.showQR!==false){const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),160);}
+  if(db.customize.showQR!==false){const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),260);}
 }
 function prepareTicketPrint(students){
   if(!students.length){alert('આ પસંદગીમાં કોઈ વિદ્યાર્થી મળ્યો નથી.');return;}
   ticketArea.innerHTML=students.map(ticketHTML).join('');
   students.forEach(s=>markGenerated(s.id));
-  if(db.customize.showQR!==false){students.forEach(s=>{const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),160);});}
+  if(db.customize.showQR!==false){students.forEach(s=>{const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),260);});}
   document.body.classList.add('ticket-only-print','print-hallticket');
   const cleanup=()=>{document.body.classList.remove('ticket-only-print','print-hallticket');renderTicket();};
   window.addEventListener('afterprint',cleanup,{once:true});
