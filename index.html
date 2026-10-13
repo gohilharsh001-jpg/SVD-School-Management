@@ -120,10 +120,9 @@ html, body { width:100%; max-width:100%; overflow-x:hidden; }
     break-after:page; page-break-after:always;
   }
   body.print-hallticket #page-ticket .ticket:last-child { break-after:auto !important; page-break-after:auto !important; }
-  body.print-hallticket #page-ticket .ticket .qr-box,
-  body.print-hallticket #page-ticket .ticket [id^="qr-"],
-  body.print-hallticket #page-ticket .ticket .qr-box img,
-  body.print-hallticket #page-ticket .ticket .qr-box canvas { display:none !important; visibility:hidden !important; }
+  body.print-hallticket #page-ticket .ticket .qr-box { display:flex !important; visibility:visible !important; }
+  body.print-hallticket #page-ticket .ticket [id^="qr-"] { display:block !important; visibility:visible !important; }
+  body.print-hallticket #page-ticket .ticket .qr-box img { display:block !important; visibility:visible !important; width:120px !important; height:120px !important; }
   body.print-hallticket #page-ticket .ticket .school-name { font-size:18pt !important; }
   body.print-hallticket #page-ticket .ticket .exam-banner { margin-top:2mm !important; padding:2mm !important; font-size:12pt !important; }
   body.print-hallticket #page-ticket .ticket .student-block { grid-template-columns:minmax(0,1fr) 34mm !important; gap:3mm !important; margin-top:3mm !important; }
@@ -193,12 +192,47 @@ html, body { width:100%; max-width:100%; overflow-x:hidden; }
   body.ticket-only-print .ticket .supervisor-sign-cell { min-width:65px !important; }
   body.ticket-only-print .ticket .supervisor-sign-line { width:55px !important; height:12px !important; }
   body.ticket-only-print .ticket .qr-box { display:flex !important; justify-content:flex-start !important; padding:3px 0 !important; }
-  body.ticket-only-print .ticket .qr-box canvas, body.ticket-only-print .ticket .qr-box img { width:92px !important; height:92px !important; }
+  body.ticket-only-print .ticket .qr-box canvas, body.ticket-only-print .ticket .qr-box img { width:120px !important; height:120px !important; }
   body.ticket-only-print .ticket .footer-block { grid-template-columns:minmax(0,1fr) 115px !important; gap:6px !important; margin-top:5px !important; }
   body.ticket-only-print .ticket .footer-note { min-height:35px !important; padding:5px !important; font-size:8pt !important; }
   body.ticket-only-print .ticket .principal { padding:18px 5px 5px !important; font-size:8pt !important; }
 }
 
+
+
+/* v1.2.8: strict menu/page isolation and responsive viewport layout */
+section[id^="page-"] { display:none !important; min-width:0; max-width:100%; }
+/* All application pages must be isolated, including sections that are outside <main> in legacy markup. */
+body > section[id^="page-"] { margin-left:254px; width:calc(100% - 254px); max-width:calc(100% - 254px); min-width:0; padding:22px; box-sizing:border-box; }
+@media (max-width:760px) { body > section[id^="page-"] { margin-left:0; width:100%; max-width:100%; padding:12px; } }
+section[id^="page-"].active-page { display:block !important; }
+section[id^="page-"].hidden { display:none !important; }
+.main { min-width:0; max-width:100%; }
+.main table { max-width:100%; }
+@media (max-width: 1100px) {
+  .sidebar { width:210px; }
+  .main { margin-left:210px; width:calc(100% - 210px); padding:14px; }
+}
+@media (max-width: 760px) {
+  .app { display:block; }
+  .sidebar { position:relative; width:100%; height:auto; max-height:34vh; overflow-y:auto; }
+  .main { margin-left:0; width:100%; padding:10px; }
+  .main table { display:block; overflow-x:auto; }
+}
+
+/* v1.3.1 full-page layout safeguards */
+.app{display:flex;align-items:stretch;min-height:100vh;width:100%;min-width:0}
+.app>.sidebar{flex:0 0 240px}
+.app>.main{flex:1 1 auto;min-width:0;width:auto;max-width:calc(100% - 240px);margin-left:0}
+.app>.main>section[id^="page-"]{width:100%;max-width:100%;min-width:0;margin:0;padding:0}
+.app>.main>section[id^="page-"].hidden{display:none!important}
+.app>.main>section[id^="page-"].active-page{display:block!important}
+.app>.main .table-wrap{max-width:100%;overflow-x:auto}
+@media(max-width:760px){
+  .app{display:block}
+  .app>.sidebar{width:100%;max-height:35vh;overflow-y:auto}
+  .app>.main{width:100%;max-width:100%;margin:0;padding:12px}
+}
 </style>
 <style>
 .searchbar{display:flex;gap:8px;flex-wrap:wrap}.searchbar input,.searchbar select{flex:1;min-width:160px}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--light);color:var(--blue2);font-size:11px;font-weight:700}.danger-text{color:#a00000;font-weight:800}.login-overlay{position:fixed;inset:0;background:rgba(10,30,50,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}.login-box{width:min(420px,100%);background:#fff;border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3)}.login-box h2{margin-top:0;color:var(--blue2)}.modal{position:fixed;inset:0;background:rgba(10,30,50,.6);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px}.modal-card{background:#fff;border-radius:14px;padding:20px;width:min(900px,100%);max-height:90vh;overflow:auto}.qr-box{display:flex;justify-content:center;align-items:center;padding:10px}.receipt-sign{min-width:150px;height:28px;border-bottom:1px solid #222;display:inline-block}.received-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#e8f5e9;color:#176b2c;font-weight:700;font-size:12px}.pending-badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#fff3cd;color:#856404;font-weight:700;font-size:12px}.receipt-print-title{display:none} @media print{.receipt-print-title{display:block;text-align:center;margin-bottom:12px}.hall-receipt-table{width:100%;border-collapse:collapse}.hall-receipt-table th,.hall-receipt-table td{border:1px solid #333;padding:6px;font-size:11px}.hall-receipt-table .no-print{display:none!important}
@@ -245,6 +279,7 @@ html, body { width:100%; max-width:100%; overflow-x:hidden; }
   body.print-hallticket #page-ticket .ticket .principal { padding:8mm 1mm 1mm !important; font-size:8pt !important; }
 }
 </style>
+
 
 </head>
 <body>
@@ -889,10 +924,21 @@ html, body { width:100%; max-width:100%; overflow-x:hidden; }
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>
+/* v1.3.1: normalize every application page into the main content container.
+   Legacy page sections were split between <main> and <body>, which caused
+   inconsistent layout, excessive whitespace, and stale pages showing together. */
+(function normalizeApplicationPages(){
+  const appMain = document.querySelector('.app > .main');
+  if (!appMain) return;
+  document.querySelectorAll('section[id^="page-"]').forEach(section => {
+    appMain.appendChild(section);
+  });
+})();
+
 const STORAGE_KEY='hall_ticket_free_db_v3';
 const SESSION_KEY='hall_ticket_admin_session_v1';
 
-const defaultCustomize={navDashboard:'🏠 Dashboard',navRooms:'🪑 Rooms / Seats',navPortal:'🌐 Student Portal',navStudents:'👨‍🎓 Student Entry',navDatabase:'🗂️ Student Database',navFees:'💰 Fee Collection',navResults:'📊 Result / Marks',navSchedule:'📅 Exam Schedule',navSchool:'🏫 School Settings',navTicket:'🎫 Hall Ticket',navHallReceipt:'✍️ Hall Ticket Receipt',navBackup:'💾 Backup / Import',navOnline:'☁️ Online Sync',navCustomize:'⚙️ Customize / Settings',btnSaveStudent:'Save Student',btnClear:'Clear',btnBulk:'Bulk Photos',btnPaste:'Paste from Excel',btnAddExam:'Add Exam',btnPrintCurrent:'Print Current',btnPrintAll:'Print All',studentName:'Student Name',standard:'Standard',division:'Division',rollNo:'Roll No.',grNo:'GR No.',mobile:'Student Mobile',ctsId:'CTS ID',studentPhoto:'Student Photo',examDate:'Exam Date',time:'Time',subject:'Subject',schoolName:'School Name',schoolPhone:'School Phone',address:'Address',examName:'Exam Name',principal:'Principal',footer:'Footer Instruction',ticketTitle:'',scheduleTitle:'EXAM SCHEDULE',photoPlaceholder:'STUDENT|PHOTO',supervisor:'Supervisor Sign',primaryColor:'#1f4e78',darkColor:'#17365d',greenColor:'#70ad47',lightColor:'#eaf3f8',font:'Nirmala UI,Segoe UI,Arial,sans-serif',ticketFont:12,logo:null,showDiv:true,showGR:true,showMobile:true,showPhoto:true,showQR:true,adminPassword:'1234',autoRoll:true,portal:true,studentFields:{name:true,std:true,div:true,roll:true,gr:true,mobile:true,ctsId:true,dob:true,gender:true,category:true,religion:true,village:true,parent:true,parentMobile:true,emergency:true,address:true,email:true,blood:true,admissionDate:true,status:true,photo:true},bulkFields:{name:true,std:true,div:true,roll:true,gr:true,mobile:true,ctsId:true,dob:true,gender:true,category:true,religion:true,village:true,parent:true,parentMobile:true,emergency:true,address:true,email:true,blood:true,admissionDate:true,status:true,photoFileName:true}};
+const defaultCustomize={navDashboard:'🏠 Dashboard',navRooms:'🪑 Rooms / Seats',navPortal:'🌐 Student Portal',navStudents:'👨‍🎓 Student Entry',navDatabase:'🗂️ Student Database',navFees:'💰 Fee Collection',navResults:'📊 Result / Marks',navSchedule:'📅 Exam Schedule',navSchool:'🏫 School Settings',navTicket:'🎫 Hall Ticket',navHallReceipt:'✍️ Hall Ticket Receipt',navBackup:'💾 Backup / Import',navOnline:'☁️ Online Sync',navCustomize:'⚙️ Customize / Settings',btnSaveStudent:'Save Student',btnClear:'Clear',btnBulk:'Bulk Photos',btnPaste:'Paste from Excel',btnAddExam:'Add Exam',btnPrintCurrent:'Print Current',btnPrintAll:'Print All',studentName:'Student Name',standard:'Standard',division:'Division',rollNo:'Roll No.',grNo:'GR No.',mobile:'Parent Mobile',ctsId:'CTS ID',studentPhoto:'Student Photo',examDate:'Exam Date',time:'Time',subject:'Subject',schoolName:'School Name',schoolPhone:'School Phone',address:'Address',examName:'Exam Name',principal:'Principal',footer:'Footer Instruction',ticketTitle:'',scheduleTitle:'EXAM SCHEDULE',photoPlaceholder:'STUDENT|PHOTO',supervisor:'Supervisor Sign',primaryColor:'#1f4e78',darkColor:'#17365d',greenColor:'#70ad47',lightColor:'#eaf3f8',font:'Nirmala UI,Segoe UI,Arial,sans-serif',ticketFont:12,logo:null,showDiv:true,showGR:true,showMobile:true,showPhoto:true,showQR:true,adminPassword:'1234',autoRoll:true,portal:true,studentFields:{name:true,std:true,div:true,roll:true,gr:true,mobile:true,ctsId:true,dob:true,gender:true,category:true,religion:true,village:true,parent:true,parentMobile:true,emergency:true,address:true,email:true,blood:true,admissionDate:true,status:true,photo:true},bulkFields:{name:true,std:true,div:true,roll:true,gr:true,mobile:true,ctsId:true,dob:true,gender:true,category:true,religion:true,village:true,parent:true,parentMobile:true,emergency:true,address:true,email:true,blood:true,admissionDate:true,status:true,photoFileName:true}};
 
 const initialData = {
   school:{
@@ -932,8 +978,20 @@ function nextId(arr){ return arr.length?Math.max(...arr.map(x=>Number(x.id)||0))
 function esc(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
 
 function showPage(page){
-  document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
-  document.getElementById('page-'+page).classList.remove('hidden');
+  const targetPage = document.getElementById('page-' + page);
+  if (!targetPage) {
+    console.warn('Unknown application page:', page);
+    return;
+  }
+  // Strict page isolation: normalize sections and show only the requested page.
+  const appMain = document.querySelector('.app > .main');
+  if (appMain && targetPage.parentElement !== appMain) appMain.appendChild(targetPage);
+  document.querySelectorAll('section[id^="page-"]').forEach(s=>{
+    const selected = s === targetPage;
+    s.classList.toggle('hidden', !selected);
+    s.classList.toggle('active-page', selected);
+    s.setAttribute('aria-hidden', selected ? 'false' : 'true');
+  });
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
   const titles={dashboard:'Dashboard',students:'Student Entry',schedule:'Exam Schedule',school:'School Settings',ticket:'Hall Ticket',backup:'Backup / Import',customize:'Customize / Settings',rooms:'Rooms / Seats',portal:'Student Portal',results:'Result / Marks',fees:'Fee Collection',busfees:'Bus Fee',database:'Student Database',studentreports:'Student Reports',hallreceipt:'Hall Ticket Receipt',online:'Online Sync'};
   document.getElementById('pageTitle').textContent=titles[page]||'Hall Ticket System';
@@ -1165,9 +1223,10 @@ function renderStudents(){
   const tb=document.getElementById('studentTable');
   const q=(document.getElementById('studentSearch')?.value||'').trim().toLowerCase(); const ss=document.getElementById('studentSearchStd')?.value||''; const sd=document.getElementById('studentSearchDiv')?.value||'';
   const list=db.students.filter(s=>(!q||[s.name,s.roll,s.gr,s.mobile,s.ctsId].some(v=>String(v??'').toLowerCase().includes(q)))&&(!ss||String(s.std)===ss)&&(!sd||String(s.div)===sd));
-  document.getElementById('studentCountLabel').textContent=list.length+' / '+db.students.length+' students';
+  const hasStudentFilter=!!(q||ss||sd);
+  document.getElementById('studentCountLabel').textContent=hasStudentFilter?(list.length+' / '+db.students.length+' students'):(db.students.length+' students saved · Search to view list');
   const stdSel=document.getElementById('studentSearchStd'),divSel=document.getElementById('studentSearchDiv'); if(stdSel){const cur=stdSel.value;stdSel.innerHTML='<option value="">All Standards</option>'+[...new Set(db.students.map(s=>s.std).filter(Boolean))].sort().map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');stdSel.value=cur;} if(divSel){const cur=divSel.value;divSel.innerHTML='<option value="">All Divisions</option>'+[...new Set(db.students.map(s=>s.div).filter(Boolean))].sort().map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');divSel.value=cur;}
-  tb.innerHTML=list.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(s=>`
+  tb.innerHTML=!hasStudentFilter?'<tr><td colspan="9" class="muted">વિદ્યાર્થીની યાદી જોવા માટે ઉપર નામ / Roll No. શોધો અથવા ધોરણ / વિભાગ પસંદ કરો.</td></tr>':(list.length?list.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(s=>`
     <tr>
       <td>${s.photo?`<img class="thumb" src="${s.photo}" alt="">`:'—'}</td>
       <td>${esc(s.roll)}</td><td>${esc(s.name)}</td><td>${esc(s.std)}</td><td>${esc(s.div)}</td>
@@ -1176,7 +1235,7 @@ function renderStudents(){
         <button class="btn btn-light" onclick="editStudent(${s.id})">Edit</button>
         <button class="btn btn-danger" onclick="deleteStudent(${s.id})">Delete</button>
       </td>
-    </tr>`).join('') || `<tr><td colspan="9" class="muted">No students yet.</td></tr>`;
+    </tr>`).join('') : `<tr><td colspan="9" class="muted">No matching students found.</td></tr>`);
 }
 function editStudent(id){
   const s=db.students.find(x=>x.id===id); if(!s)return;
@@ -1339,13 +1398,14 @@ function renderStudentDatabase(){
   const q=(document.getElementById('dbSearch')?.value||'').trim().toLowerCase();
   const std=(document.getElementById('dbStd')?.value||''); const div=(document.getElementById('dbDiv')?.value||''); const status=(document.getElementById('dbStatus')?.value||'');
   const list=db.students.filter(s=>(!q||[s.name,s.ctsId,s.gr,s.roll,s.parentMobile,s.parent].some(v=>String(v??'').toLowerCase().includes(q)))&&(!std||String(s.std)===std)&&(!div||String(s.div)===div)&&(!status||String(s.status||'Active')===status));
+  const hasDbFilter=!!(q||std||div||status);
   document.getElementById('dbTotal').textContent=db.students.length; document.getElementById('dbActive').textContent=db.students.filter(s=>(s.status||'Active')==='Active').length; document.getElementById('dbWithCTS').textContent=db.students.filter(s=>s.ctsId).length; document.getElementById('dbWithPhoto').textContent=db.students.filter(s=>s.photo).length;
   const ss=document.getElementById('dbStd'),ds=document.getElementById('dbDiv'); const sv=ss.value,dv=ds.value; ss.innerHTML='<option value="">All Standards</option>'+[...new Set(db.students.map(s=>s.std).filter(Boolean))].sort((a,b)=>Number(a)-Number(b)).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');ds.innerHTML='<option value="">All Divisions</option>'+[...new Set(db.students.map(s=>s.div).filter(Boolean))].sort().map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');ss.value=sv;ds.value=dv;
   const bulk=!!window.bulkEditStudents;
-  document.getElementById('dbTableBody').innerHTML=list.slice().sort((a,b)=>Number(a.std)-Number(b.std)||String(a.div).localeCompare(String(b.div))||Number(a.roll)-Number(b.roll)).map(s=>{
+  document.getElementById('dbTableBody').innerHTML=!hasDbFilter?'<tr><td colspan="12" class="muted">વિદ્યાર્થીની યાદી જોવા માટે નામ / CTS ID / GR / Roll શોધો અથવા ધોરણ / વિભાગ / Status પસંદ કરો.</td></tr>':(list.length?list.slice().sort((a,b)=>Number(a.std)-Number(b.std)||String(a.div).localeCompare(String(b.div))||Number(a.roll)-Number(b.roll)).map(s=>{
     const cell=(key,value,type='text')=>bulk?`<input data-bulk-edit="${key}" type="${type}" value="${esc(value??'')}" style="min-width:90px;width:100%;box-sizing:border-box">`:esc(value??'');
     return `<tr ${bulk?`data-student-id="${s.id}"`:''}><td>${cell('roll',s.roll,'number')}</td><td>${cell('name',s.name)}</td><td>${cell('std',s.std,'number')}</td><td>${cell('div',s.div)}</td><td>${cell('gr',s.gr,'number')}</td><td>${cell('ctsId',s.ctsId)}</td><td>${cell('dob',s.dob,'date')}</td><td>${bulk?`<select data-bulk-edit="gender"><option ${s.gender==='Male'?'selected':''}>Male</option><option ${s.gender==='Female'?'selected':''}>Female</option><option ${s.gender==='Other'?'selected':''}>Other</option><option value="" ${!s.gender?'selected':''}>—</option></select>`:esc(s.gender||'')}</td><td>${cell('parent',s.parent)}</td><td>${cell('parentMobile',s.parentMobile)}</td><td>${bulk?`<select data-bulk-edit="status">${['Active','Left School','Alumni','Inactive'].map(v=>`<option ${String(s.status||'Active')===v?'selected':''}>${v}</option>`).join('')}</select>`:`<span class="pill">${esc(s.status||'Active')}</span>`}</td><td>${bulk?`<span class="muted">Bulk Edit</span>`:`<button class="btn btn-light" onclick="editStudent(${s.id});showPage('students')">Edit</button> <button class="btn btn-danger" onclick="deleteStudent(${s.id})">Delete</button>`}</td></tr>`;
-  }).join('')||'<tr><td colspan="12" class="muted">No students found.</td></tr>';
+  }).join(''):'<tr><td colspan="12" class="muted">No matching students found.</td></tr>');
   renderSeatSeriesSettings();
 }
 function exportStudentCSV(){
@@ -1464,7 +1524,7 @@ function ticketHTML(s){
 function renderQR(el,text,size){
   if(!el)return;
   el.replaceChildren();
-  const sz=size||120;
+  const sz=size||180;
   if(typeof QRCode==='undefined'){
     el.innerHTML='<div style="font-size:10px;color:#b42318;text-align:center;width:'+sz+'px">QR library load ન થઈ. Internet તપાસી Ctrl+F5 કરો.</div>';
     return;
@@ -1484,19 +1544,30 @@ function renderQR(el,text,size){
     observer.observe(el,{childList:true,subtree:true});
     setTimeout(()=>{styleQR();observer.disconnect();},500);
   }catch(err){
-    el.innerHTML='<div style="font-size:10px;color:#b42318;text-align:center;width:'+sz+'px">QR data લાંબો છે અથવા જનરેટ ન થયો. Exam Schedule ટૂંકું કરો.</div>';
+    el.innerHTML='<div style="font-size:10px;color:#b42318;text-align:center;width:'+sz+'px">QR data લાંબો છે અથવા જનરેટ ન થયો. QR data લાંબો છે. QR size વધારવો અથવા QR library load તપાસો.</div>';
     console.error('Hall Ticket QR generation failed:',err);
   }
 }
 function hallTicketQRKey(s){return String(s.__qrKey||('roll-'+String(s.roll??'')+'-gr-'+String(s.gr??'')+'-cts-'+String(s.ctsId??'').replace(/[^a-zA-Z0-9_-]/g,'')));}
 function hallTicketQRData(s){
-  // QR intentionally contains student details only. Exam schedule is not embedded,
-  // keeping the QR payload short and easier for phone cameras to scan.
-  const payload={v:3,a:String(db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan'),n:String(s.name||''),i:String(s.ctsId||''),g:String(s.gr||''),r:String(s.roll||''),s:String(s.std||''),u:String(s.div||''),e:String(db.school?.examName||''),t:String(generatedSeatNo(s)||'')};
-  const bytes=new TextEncoder().encode(JSON.stringify(payload));
-  let binary=''; for(let i=0;i<bytes.length;i++) binary+=String.fromCharCode(bytes[i]);
-  const token=btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-  return 'https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html?d='+token;
+  // QR FINAL FIX: use readable URL query fields instead of a version-specific opaque token.
+  // The verification page is updated to safely support both this URL and older ?d=token QR codes.
+  const params = new URLSearchParams({
+    n:String(s.name||''),
+    c:String(s.ctsId||''),
+    g:String(s.gr??''),
+    r:String(s.roll??''),
+    s:String(s.std??''),
+    div:String(s.div||''),
+    e:String(db.school?.examName||''),
+    seat:String(generatedSeatNo(s)||s.seatNo||''),
+    mobile:String(s.parentMobile||s.mobile||''),
+    parent:String(s.parent||''),
+    dob:String(s.dob||''),
+    gender:String(s.gender||''),
+    school:String(db.school?.name||'Shree S.V. Doshi Highschool, Kumbhan')
+  });
+  return 'https://gohilharsh001-jpg.github.io/SVD-School-Management/verify.html?'+params.toString();
 }
 function markGenerated(id){db.generated=db.generated||[];if(!db.generated.includes(id)){db.generated.push(id);localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}}
 function renderAllocations(){const sel=document.getElementById('allocExam');if(!sel)return;const cur=sel.value;sel.innerHTML=db.exams.map(e=>`<option value="${e.id}">${esc(e.subject)} - ${esc(e.date)}</option>`).join('');if(cur)sel.value=cur;const ex=db.exams.find(e=>String(e.id)===String(sel.value));const list=(db.rooms||[]).filter(x=>!ex||x.examId===ex.id);document.getElementById('allocationPreview').innerHTML=list.length?list.map(x=>`<div class="allocation-card"><b>Roll ${esc(x.roll)}</b><div>${esc(x.name)}</div><span class="pill">Room ${esc(x.room)} · Seat ${esc(x.seat)}</span></div>`).join(''):'<div class="muted">No allocations yet.</div>';}
@@ -1530,13 +1601,13 @@ function renderTicket(){
   const s=db.students.find(x=>String(x.id)===String(ticketRoll.value));
   if(!s){ticketArea.innerHTML='<div class="card no-print">Standard પસંદ કરો અને પછી Student Name પસંદ કરો.</div>';return;}
   ticketArea.innerHTML=ticketHTML(s); markGenerated(s.id);
-  if(db.customize.showQR!==false){const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),115);}
+  if(db.customize.showQR!==false){const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),160);}
 }
 function prepareTicketPrint(students){
   if(!students.length){alert('આ પસંદગીમાં કોઈ વિદ્યાર્થી મળ્યો નથી.');return;}
   ticketArea.innerHTML=students.map(ticketHTML).join('');
   students.forEach(s=>markGenerated(s.id));
-  if(db.customize.showQR!==false){students.forEach(s=>{const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),115);});}
+  if(db.customize.showQR!==false){students.forEach(s=>{const q=document.getElementById('qr-'+hallTicketQRKey(s));renderQR(q,hallTicketQRData(s),160);});}
   document.body.classList.add('ticket-only-print','print-hallticket');
   const cleanup=()=>{document.body.classList.remove('ticket-only-print','print-hallticket');renderTicket();};
   window.addEventListener('afterprint',cleanup,{once:true});

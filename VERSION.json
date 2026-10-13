@@ -1,6 +1,6 @@
 {
-  "version": "1.3.18",
-  "name": "QR Data and Clarity Fix",
-  "release": "QR CODE DATA + PRINT FIX",
-  "date": "2026-10-09"
+  "version": "1.3.4",
+  "name": "SVD School Management",
+  "notes": "Fix page isolation and layout for all menu sections, including legacy sections outside main.",
+  "release": "Final QR compatibility fix: direct query payload + safe legacy token decoding"
 }

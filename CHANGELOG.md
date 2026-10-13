@@ -1,3 +1,8 @@
+# v1.3.0 — Menu isolation and page layout fix
+- All `section[id^="page-"]` pages are now controlled by navigation, including sections outside `<main>`.
+- Responsive layout applied to top-level legacy page sections.
+- No database reset or schema change.
+
 # v1.3.18
 - QR now encodes a compact base64url JSON payload to reduce QR pattern density without changing the displayed QR size.
 - Verification page decodes the compact payload and retains support for existing QR URL formats.
@@ -221,3 +226,31 @@ Every future feature must:
 - Main content uses the reduced sidebar width while collapsed.
 - Menu navigation hides all page sections globally and reveals only the selected page, preventing Hall Ticket or other prior-page content from remaining visible.
 - Resets page scroll when switching menus.
+
+
+## v1.3.1 — Full audit layout fix
+- Normalize all `page-*` sections into the main content container.
+- Strengthen page isolation and active menu state handling.
+- Add responsive width and horizontal table overflow safeguards.
+
+
+## v1.3.2 — Hall Ticket QR details
+- QR payload v4 now includes student identity, standard/division, parent/guardian, DOB, gender and parent mobile.
+- Verification page supports both legacy v3 and new v4 QR payloads.
+- QR rendering default size increased and error correction upgraded to M.
+- Verification page labels contact number as Parent Mobile.
+
+
+## v1.3.3 — QR and student list view fixes
+- Keep QR payload v3-compatible with the currently deployed GitHub Pages verifier; embed Parent Mobile in the verifier's existing mobile field.
+- Increase QR render size and keep QR visible in Hall Ticket print output.
+- Student Entry list now waits for a search or standard/division filter before showing records.
+- Student Database list now waits for search/filter input while retaining dashboard totals.
+
+
+## v1.3.4 — Final QR compatibility fix
+- QR now encodes student basics as URL query parameters instead of relying only on a version-specific base64 token.
+- Verification page safely supports direct-query QR data and legacy v3/v4 token QR codes.
+- Parent/Guardian, Parent Mobile, DOB, gender, school details and seat number are supported.
+- URL token decoding failures no longer stop direct-query student details from rendering.
+- QR URL excludes optional long address/footer fields to reduce QR density and improve scanning reliability.
