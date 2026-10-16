@@ -36,3 +36,24 @@ Keep the previous release ZIP. If a new UI build has a problem, restore the prev
 
 ## v1.4.5 — Verification page layout
 Upload both `index.html` and `verify.html` from this version to GitHub Pages. The QR data format is unchanged. Scan a newly generated QR; use Download / Print Hall Ticket, then choose Save as PDF in the print dialog.
+
+
+## v1.5.4 Result / Marks A4 Print Update
+1. Replace the project files with this complete version in your test copy first.
+2. Open Result / Marks and select a student to preview the result.
+3. Confirm the student photo appears if a photo is saved in that student's record.
+4. Print using paper size A4, Portrait, Scale 100% (or Default), and browser headers/footers disabled.
+5. Check one result and then Print All on a small test group before using it for all students.
+
+
+## v1.5.5 Result A4 / Gujarati Layout
+- Result table is forced to full printable width.
+- Result sheet uses the Hind Vadodara font from Google Fonts; an internet connection is needed for first font load.
+- Result labels and table headings are in Gujarati.
+- Test in Chrome print preview with A4, Portrait, scale Default/100%, and headers/footers disabled.
+
+
+## v1.5.6 A4 Print Fit
+- Test in Chrome Print Preview with A4 / Portrait / Scale 100% or Default.
+- Turn off browser Headers and footers.
+- If the preview still differs, send the newly generated PDF for exact diagnosis.

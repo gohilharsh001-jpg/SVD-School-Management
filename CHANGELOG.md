@@ -1,3 +1,26 @@
+## v1.6.4 — Bulk WhatsApp Result to Parent Mobile
+- Added a bulk WhatsApp panel to Result View / Print.
+- Filter students by Standard and (for Std 11/12) Arts/Commerce Stream.
+- Select individual students or all students; validates Parent Mobile numbers before queue creation.
+- Each WhatsApp message contains that student’s result details as text and opens one chat at a time. Final Send remains a manual action in WhatsApp.
+- Single-student WhatsApp Result now uses Parent Mobile only.
+- No database reset or schema change.
+
+## v1.6.3
+- Result View / Print now filters students by selected standard.
+- Added student search by CTS ID, seat number, roll number, GR number, or name.
+
+## v1.6.2 — Separate Marks Entry and Result Print menus
+- Added separate sidebar menus for Marks Entry and Result View / Print.
+- Marks Entry menu shows only marks entry and subject management panels.
+- Result View / Print menu shows only student result selection, preview and print panels.
+- Passing marks set to 18 for Standards 9 and 11; Standards 10 and 12 remain 33.
+
+# v1.6.1 — Stream-wise Economics Subjects (2026-10-16)
+- Added અર્થશાસ્ત્ર to Std 11 Arts, Std 11 Commerce, Std 12 Arts and Std 12 Commerce subject lists.
+- Updated the Commerce subject label to the wording supplied by the user: નામાનાં મુળતત્વો.
+- No database reset or schema change. Existing saved subjects and marks are preserved.
+
 # v1.3.0 — Menu isolation and page layout fix
 - All `section[id^="page-"]` pages are now controlled by navigation, including sections outside `<main>`.
 - Responsive layout applied to top-level legacy page sections.
@@ -361,3 +384,45 @@ Every future feature must:
 - Changed Hall Ticket print from landscape to portrait A4.
 - Reduced print spacing and adjusted photo, student table, schedule and footer blocks to fit the portrait page.
 - Kept QR hidden from Hall Ticket output.
+
+
+## v1.5.3 — Standard-wise Result / Marks Update (2026-10-14)
+- Result / Marks subject list filters to the selected standard; only matching standard subjects appear.
+- Standards 9 and 11 use a 50-mark maximum per subject; Standards 10 and 12 use a 100-mark maximum.
+- Marks inputs are limited to the applicable maximum and pass marks default to 17/50 or 33/100.
+- Subject name can be edited from Result / Marks for Standards 11 and 12 and is saved with the existing exam record.
+- Result Preview / Print omits subject exam dates and shows Subject, Out Of, Marks Obtained, and Remarks.
+- No database reset, schema migration, or student-record deletion performed.
+
+
+## v1.5.4 — 2026-10-14
+- Improved Result / Marks print layout for A4 Portrait paper.
+- Added student photo to result preview and print, using the photo saved in the student record.
+- Moved teacher/principal signature area toward the bottom of the marksheet.
+- Kept existing modules and data storage behavior unchanged.
+
+
+## v1.5.5 — 2026-10-14
+- Fixed Result / Marks table width so it fills the A4 printable area rather than leaving unused space on the right.
+- Applied Hind Vadodara font to the Result sheet for Gujarati text.
+- Translated result table headers and student detail labels into Gujarati.
+- Improved student details grid and print spacing.
+
+
+## v1.5.6 — 2026-10-14
+- Applied stronger print-only width rules to make the result marks table fill the full printable A4 content width.
+- Prevented parent layout sizing or transforms from shrinking the result during print.
+
+
+## v1.5.9 — 2026-10-16
+- Added standard-wise Add / Edit / Remove Subject controls for Standards 9, 10, 11 and 12.
+- Marks Entry now filters students strictly to the selected Standard and the selected subject's Standard, preventing Std 9 and Std 10 lists from mixing.
+- Standard 11 and 12 can have subjects added directly even if no matching Exam Schedule subject existed before.
+- No student records or existing marks were intentionally deleted.
+
+## v1.6.5
+- Fixed Hall Ticket timetable showing unrelated/blank subjects from other standards: only matching-standard entries with date and time are shown, with division and stream filtering retained.
+
+
+## v1.6.6
+- Fixed Result Print isolation: print only the selected result sheet; hide dashboard, student list, menus, and other app content so they do not appear on page 2+.

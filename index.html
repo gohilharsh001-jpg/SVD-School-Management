@@ -294,7 +294,8 @@ section[id^="page-"].hidden { display:none !important; }
       <button data-page="dashboard" class="active" id="navDashboard">🏠 Dashboard</button>
       <button data-page="rooms" id="navRooms">🪑 Rooms / Seats</button>
       <button data-page="portal" id="navPortal">🌐 Student Portal</button>
-      <button data-page="results" id="navResults">📊 Result / Marks</button>
+      <button data-page="marksentry" id="navMarksEntry">📝 Marks Entry</button>
+      <button data-page="resultprint" id="navResultPrint">🖨️ Result View / Print</button>
       <button data-page="students" id="navStudents">👨‍🎓 Student Entry</button>
       <button data-page="database" id="navDatabase">🗂️ Student Database</button>
       <button data-page="studentreports" id="navStudentReports">📈 Student Reports</button>
@@ -387,6 +388,7 @@ section[id^="page-"].hidden { display:none !important; }
           <div><label id="lblStudentName">Student Name</label><input id="sName"></div>
           <div><label id="lblStandard">Standard</label><input id="sStd" type="number" value="9"></div>
           <div><label id="lblDivision">Division</label><input id="sDiv" value="A"></div>
+          <div id="studentStreamWrap" class="hidden"><label>Stream (Std 11/12)</label><select id="sStream"><option value="">Select Stream</option><option value="Arts">Arts</option><option value="Commerce">Commerce</option></select></div>
           <div><label id="lblRollNo">Roll No.</label><input id="sRoll" type="number"></div>
           <div><label id="lblGRNo">GR No.</label><input id="sGR" type="number"></div>
           <div><label id="lblMobile">Student Mobile</label><input id="sMobile" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" placeholder="10 digit mobile"></div>
@@ -415,6 +417,12 @@ section[id^="page-"].hidden { display:none !important; }
             <img id="photoPreview" class="hidden">
             <span id="photoEmpty">No photo selected</span>
           </div>
+        </div>
+        <div class="card" style="margin-top:14px;background:#f7fafc" id="bulkStreamPanel">
+          <h4>👥 Std 11/12 — Bulk Stream Allocation</h4>
+          <div class="grid"><div><label>Standard</label><select id="bulkStreamStd"><option value="11">Std 11</option><option value="12">Std 12</option></select></div><div><label>આ વિદ્યાર્થીઓને Stream આપો</label><select id="bulkStreamValue"><option value="Arts">Arts</option><option value="Commerce">Commerce</option></select></div></div>
+          <div class="btn-row" style="margin:10px 0"><button class="btn btn-light" id="btnLoadStreamStudents">Load Students</button><button class="btn btn-green" id="btnAssignBulkStream">✓ Selected Studentsને Stream આપો</button></div>
+          <div class="table-wrap"><table><thead><tr><th><input type="checkbox" id="bulkStreamSelectAll"></th><th>Roll</th><th>Student Name</th><th>Std/Div</th><th>Current Stream</th></tr></thead><tbody id="bulkStreamStudents"></tbody></table></div>
         </div>
         <div class="btn-row">
           <button class="btn btn-primary" id="btnSaveStudent">Save Student</button>
@@ -638,23 +646,42 @@ section[id^="page-"].hidden { display:none !important; }
     </section>
 
     <section id="page-results" class="hidden">
-      <div class="card">
-        <h3 class="section-title">📊 Result / Test Marks / Marksheet</h3>
+      <div class="card" id="marksEntryPanel">
+        <h3 class="section-title">📝 Marks Entry / Subject Management</h3>
         <div class="grid">
           <div><label>Exam / Subject</label><select id="resultExam"></select></div>
-          <div><label>Standard</label><select id="resultStd"><option value="">All</option></select></div>
+          <div><label>Standard</label><select id="resultStd"><option value="">Select Standard</option></select></div>
+          <div id="resultStreamWrap" class="hidden"><label>Stream</label><select id="resultStream"><option value="">Select Stream</option><option value="Arts">Arts</option><option value="Commerce">Commerce</option></select></div>
           <div><label>Division</label><select id="resultDiv"><option value="">All</option></select></div>
           <div><label>Max Marks</label><input id="resultMaxMarks" type="number" min="1" value="100"></div>
-          <div><label>Pass Marks</label><input id="resultPassMarks" type="number" min="0" value="33"></div>
+          <div><label>Pass Marks</label><input id="resultPassMarks" type="number" min="0" value="33"></div><div><label>Subject Name (Std 11/12 માટે edit કરી શકો)</label><input id="resultSubjectName" type="text" placeholder="Subject name"></div>
         </div>
         <div class="result-actions" style="margin-top:12px"><button class="btn btn-primary" id="btnLoadMarks">Load Students</button><button class="btn btn-green" id="btnSaveMarks">💾 Save Marks</button><button class="btn btn-light" id="btnResultPrintAll">🖨️ Print All Results</button><button class="btn btn-light" id="btnPrintTestReport">🧾 Print Test Report</button></div>
+        <div class="card" style="margin-top:12px;background:#f7fafc">
+          <h4>📚 Standard-wise Subject Management</h4>
+          <div class="grid"><div><label>Subject માટે Standard પસંદ કરો</label><select id="subjectManageStd"><option value="">Select Standard</option><option value="9">Std 9</option><option value="10">Std 10</option><option value="11">Std 11</option><option value="12">Std 12</option></select></div><div id="subjectStreamWrap" class="hidden"><label>Stream</label><select id="subjectManageStream"><option value="Arts">Arts</option><option value="Commerce">Commerce</option></select></div><div><label>Subject Name</label><input id="subjectManageName" placeholder="Enter subject name"></div></div>
+          <div class="result-actions" style="margin-top:10px"><button class="btn btn-green" id="btnAddResultSubject">＋ Add Subject</button><button class="btn btn-primary" id="btnEditResultSubject">✏️ Edit Selected Subject</button><button class="btn btn-danger" id="btnRemoveResultSubject">🗑️ Remove Selected Subject</button></div>
+          <div class="muted">દરેક ધોરણના વિષયો અલગ રહેશે. Subject ઉમેર્યા પછી ઉપરનું Standard પસંદ કરીને Load Students કરો.</div>
+        </div>
         <div class="muted">Admin અહીંથી marks ઉમેરવા/સુધારવા શકે છે. Marks save થયા પછી Result Printમાં બધા subjectsનું કુલ, percentage, grade અને Pass/Fail દેખાશે.</div>
       </div>
-      <div class="card"><div class="table-wrap"><table><thead><tr><th>Roll</th><th>CTS ID</th><th>Student Name</th><th>Marks</th><th>Remarks</th></tr></thead><tbody id="marksTable"></tbody></table></div></div>
-      <div class="card">
+      <div class="card" id="marksTablePanel"><div class="table-wrap"><table><thead><tr><th>Roll</th><th>CTS ID</th><th>Student Name</th><th>Marks</th><th>Remarks</th></tr></thead><tbody id="marksTable"></tbody></table></div></div>
+      <div class="card" id="resultPrintPanel">
         <h3 class="section-title">🖨️ Student Result Print</h3>
-        <div class="searchbar"><select id="resultStudent"></select><button class="btn btn-primary" id="btnPreviewResult">Preview Result</button><button class="btn btn-light" id="btnPrintResult">Print Result</button><button class="btn btn-green" id="btnWhatsAppResult">📱 WhatsApp Result</button></div>
-        <div class="muted" style="margin-top:8px">Mobile પર direct WhatsApp માટે student/parent mobile number જરૂરી છે. Button WhatsApp chat link ખોલશે; message મોકલવા માટે final Send તમે confirm કરશો.</div>
+        <div class="grid result-print-filters" style="grid-template-columns: minmax(180px,1fr) minmax(220px,1.5fr);margin-bottom:10px"><div><label for="resultPrintStd">Result Print માટે Standard પસંદ કરો</label><select id="resultPrintStd"><option value="">All Standards</option><option value="9">Std 9</option><option value="10">Std 10</option><option value="11">Std 11</option><option value="12">Std 12</option></select></div><div><label for="resultStudentSearch">CTS ID / Seat No. / Student Nameથી શોધો</label><input id="resultStudentSearch" type="search" placeholder="CTS ID, Seat No. અથવા વિદ્યાર્થીનું નામ લખો"></div></div><div class="searchbar"><select id="resultStudent" aria-label="Select student for result"></select><button class="btn btn-primary" id="btnPreviewResult">Preview Result</button><button class="btn btn-light" id="btnPrintResult">Print Result</button><button class="btn btn-green" id="btnWhatsAppResult">📱 WhatsApp Result</button></div>
+        <div class="muted" style="margin-top:8px">એક વિદ્યાર્થીનું Result Parent Mobile પર WhatsApp દ્વારા મોકલવા માટે ઉપરનું બટન વાપરો.</div>
+        <div class="card" id="bulkWhatsAppPanel" style="margin-top:14px;background:#f7fafc">
+          <h4>📲 Bulk WhatsApp Result — Parent Mobile</h4>
+          <div class="grid" style="grid-template-columns:minmax(160px,1fr) minmax(160px,1fr)">
+            <div><label for="bulkWaStd">Standard</label><select id="bulkWaStd"><option value="">Select Standard</option><option value="9">Std 9</option><option value="10">Std 10</option><option value="11">Std 11</option><option value="12">Std 12</option></select></div>
+            <div id="bulkWaStreamWrap" class="hidden"><label for="bulkWaStream">Stream</label><select id="bulkWaStream"><option value="Arts">Arts</option><option value="Commerce">Commerce</option></select></div>
+          </div>
+          <div class="result-actions" style="margin:10px 0"><button class="btn btn-light" id="btnLoadBulkWaStudents">Load Students</button><button class="btn btn-light" id="btnSelectAllBulkWa">Select All / None</button><button class="btn btn-green" id="btnStartBulkWa">Start WhatsApp Queue</button></div>
+          <div class="muted" id="bulkWaStatus">Standard પસંદ કરીને Load Students દબાવો. દરેક Result તેના Parent Mobile પર અલગથી તૈયાર થશે.</div>
+          <div class="table-wrap" style="margin-top:8px"><table><thead><tr><th>Select</th><th>Student</th><th>Seat No.</th><th>Parent Mobile</th><th>Status</th></tr></thead><tbody id="bulkWaStudents"></tbody></table></div>
+          <div class="result-actions" style="margin-top:10px"><button class="btn btn-primary" id="btnOpenNextBulkWa">Open Next WhatsApp</button><button class="btn btn-light" id="btnResetBulkWa">Reset Queue</button></div>
+          <div class="muted">નોંધ: WhatsAppમાં મેસેજ આપમેળે Send થતો નથી. દરેક Chat ખોલ્યા પછી મેસેજ ચકાસીને Send દબાવો, પછી આગળનો વિદ્યાર્થી ખોલો.</div>
+        </div>
       </div>
       <div id="resultPreview" style="margin-top:12px"></div>
     </section>
@@ -939,7 +966,7 @@ section[id^="page-"].hidden { display:none !important; }
 const STORAGE_KEY='hall_ticket_free_db_v3';
 const SESSION_KEY='hall_ticket_admin_session_v1';
 
-const defaultCustomize={navDashboard:'🏠 Dashboard',navRooms:'🪑 Rooms / Seats',navPortal:'🌐 Student Portal',navStudents:'👨‍🎓 Student Entry',navDatabase:'🗂️ Student Database',navFees:'💰 Fee Collection',navResults:'📊 Result / Marks',navSchedule:'📅 Exam Schedule',navSchool:'🏫 School Settings',navTicket:'🎫 Hall Ticket',navHallReceipt:'✍️ Hall Ticket Receipt',navBackup:'💾 Backup / Import',navOnline:'☁️ Online Sync',navCustomize:'⚙️ Customize / Settings',btnSaveStudent:'Save Student',btnClear:'Clear',btnBulk:'Bulk Photos',btnPaste:'Paste from Excel',btnAddExam:'Add Exam',btnPrintCurrent:'Print Current',btnPrintAll:'Print All',studentName:'Student Name',standard:'Standard',division:'Division',rollNo:'Roll No.',grNo:'GR No.',mobile:'Parent Mobile',ctsId:'CTS ID',studentPhoto:'Student Photo',examDate:'Exam Date',time:'Time',subject:'Subject',schoolName:'School Name',schoolPhone:'School Phone',address:'Address',examName:'Exam Name',principal:'Principal',footer:'Footer Instruction',ticketTitle:'',scheduleTitle:'EXAM SCHEDULE',photoPlaceholder:'STUDENT|PHOTO',supervisor:'Supervisor Sign',primaryColor:'#1f4e78',darkColor:'#17365d',greenColor:'#70ad47',lightColor:'#eaf3f8',font:'Nirmala UI,Segoe UI,Arial,sans-serif',ticketFont:12,logo:null,showDiv:true,showGR:true,showMobile:true,showPhoto:true,showQR:true,adminPassword:'1234',autoRoll:true,portal:true,studentFields:{name:true,std:true,div:true,roll:true,gr:true,mobile:true,ctsId:true,dob:true,gender:true,category:true,religion:true,village:true,parent:true,parentMobile:true,emergency:true,address:true,email:true,blood:true,admissionDate:true,status:true,photo:true},bulkFields:{name:true,std:true,div:true,roll:true,gr:true,mobile:true,ctsId:true,dob:true,gender:true,category:true,religion:true,village:true,parent:true,parentMobile:true,emergency:true,address:true,email:true,blood:true,admissionDate:true,status:true,photoFileName:true}};
+const defaultCustomize={navDashboard:'🏠 Dashboard',navRooms:'🪑 Rooms / Seats',navPortal:'🌐 Student Portal',navStudents:'👨‍🎓 Student Entry',navDatabase:'🗂️ Student Database',navFees:'💰 Fee Collection',navResults:'🖨️ Result View / Print',navMarksEntry:'📝 Marks Entry',navResultPrint:'🖨️ Result View / Print',navSchedule:'📅 Exam Schedule',navSchool:'🏫 School Settings',navTicket:'🎫 Hall Ticket',navHallReceipt:'✍️ Hall Ticket Receipt',navBackup:'💾 Backup / Import',navOnline:'☁️ Online Sync',navCustomize:'⚙️ Customize / Settings',btnSaveStudent:'Save Student',btnClear:'Clear',btnBulk:'Bulk Photos',btnPaste:'Paste from Excel',btnAddExam:'Add Exam',btnPrintCurrent:'Print Current',btnPrintAll:'Print All',studentName:'Student Name',standard:'Standard',division:'Division',rollNo:'Roll No.',grNo:'GR No.',mobile:'Parent Mobile',ctsId:'CTS ID',studentPhoto:'Student Photo',examDate:'Exam Date',time:'Time',subject:'Subject',schoolName:'School Name',schoolPhone:'School Phone',address:'Address',examName:'Exam Name',principal:'Principal',footer:'Footer Instruction',ticketTitle:'',scheduleTitle:'EXAM SCHEDULE',photoPlaceholder:'STUDENT|PHOTO',supervisor:'Supervisor Sign',primaryColor:'#1f4e78',darkColor:'#17365d',greenColor:'#70ad47',lightColor:'#eaf3f8',font:'Nirmala UI,Segoe UI,Arial,sans-serif',ticketFont:12,logo:null,showDiv:true,showGR:true,showMobile:true,showPhoto:true,showQR:true,adminPassword:'1234',autoRoll:true,portal:true,studentFields:{name:true,std:true,div:true,roll:true,gr:true,mobile:true,ctsId:true,dob:true,gender:true,category:true,religion:true,village:true,parent:true,parentMobile:true,emergency:true,address:true,email:true,blood:true,admissionDate:true,status:true,photo:true},bulkFields:{name:true,std:true,div:true,roll:true,gr:true,mobile:true,ctsId:true,dob:true,gender:true,category:true,religion:true,village:true,parent:true,parentMobile:true,emergency:true,address:true,email:true,blood:true,admissionDate:true,status:true,photoFileName:true}};
 
 const initialData = {
   school:{
@@ -979,7 +1006,9 @@ function nextId(arr){ return arr.length?Math.max(...arr.map(x=>Number(x.id)||0))
 function esc(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
 
 function showPage(page){
-  const targetPage = document.getElementById('page-' + page);
+  const resultMode = ['marksentry','resultprint'].includes(page) ? page : '';
+  const actualPage = resultMode ? 'results' : page;
+  const targetPage = document.getElementById('page-' + actualPage);
   if (!targetPage) {
     console.warn('Unknown application page:', page);
     return;
@@ -994,17 +1023,20 @@ function showPage(page){
     s.setAttribute('aria-hidden', selected ? 'false' : 'true');
   });
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
-  const titles={dashboard:'Dashboard',students:'Student Entry',schedule:'Exam Schedule',school:'School Settings',ticket:'Hall Ticket',backup:'Backup / Import',customize:'Customize / Settings',rooms:'Rooms / Seats',portal:'Student Portal',results:'Result / Marks',fees:'Fee Collection',busfees:'Bus Fee',database:'Student Database',studentreports:'Student Reports',hallreceipt:'Hall Ticket Receipt',online:'Online Sync'};
+  const marksPanel=document.getElementById('marksEntryPanel'), marksTablePanel=document.getElementById('marksTablePanel'), printPanel=document.getElementById('resultPrintPanel'), previewPanel=document.getElementById('resultPreview');
+  if(resultMode){if(marksPanel)marksPanel.classList.toggle('hidden',resultMode!=='marksentry');if(marksTablePanel)marksTablePanel.classList.toggle('hidden',resultMode!=='marksentry');if(printPanel)printPanel.classList.toggle('hidden',resultMode!=='resultprint');if(previewPanel)previewPanel.classList.toggle('hidden',resultMode!=='resultprint');}
+  else {if(marksPanel)marksPanel.classList.remove('hidden');if(marksTablePanel)marksTablePanel.classList.remove('hidden');if(printPanel)printPanel.classList.remove('hidden');if(previewPanel)previewPanel.classList.remove('hidden');}
+  const titles={dashboard:'Dashboard',students:'Student Entry',schedule:'Exam Schedule',school:'School Settings',ticket:'Hall Ticket',backup:'Backup / Import',customize:'Customize / Settings',rooms:'Rooms / Seats',portal:'Student Portal',results:'Result / Marks',marksentry:'Marks Entry',resultprint:'Result View / Print',fees:'Fee Collection',busfees:'Bus Fee',database:'Student Database',studentreports:'Student Reports',hallreceipt:'Hall Ticket Receipt',online:'Online Sync'};
   document.getElementById('pageTitle').textContent=titles[page]||'Hall Ticket System';
   if(page==='ticket') renderTicket(); if(page==='hallreceipt') renderHallReceiptPage();
-  if(page==='customize') loadCustomizeForm(); if(page==='online') loadCloudForm(); if(page==='results') renderResultPage(); if(page==='fees') renderFeesPage(); if(page==='busfees') renderBusFeesPage();
+  if(page==='customize') loadCustomizeForm(); if(page==='online') loadCloudForm(); if(['results','marksentry','resultprint'].includes(page)) renderResultPage(); if(page==='fees') renderFeesPage(); if(page==='busfees') renderBusFeesPage();
 }
 document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 
 function setVal(id,v){const el=document.getElementById(id);if(el)el.value=v??'';}
 function applyCustomize(){
   const c=db.customize||defaultCustomize;
-  const nav={navDashboard:'navDashboard',navRooms:'navRooms',navPortal:'navPortal',navResults:'navResults',navStudents:'navStudents',navDatabase:'navDatabase',navSchedule:'navSchedule',navSchool:'navSchool',navTicket:'navTicket',navHallReceipt:'navHallReceipt',navBackup:'navBackup',navOnline:'navOnline',navCustomize:'navCustomize'};
+  const nav={navDashboard:'navDashboard',navRooms:'navRooms',navPortal:'navPortal',navResults:'navResultPrint',navMarksEntry:'navMarksEntry',navResultPrint:'navResultPrint',navStudents:'navStudents',navDatabase:'navDatabase',navSchedule:'navSchedule',navSchool:'navSchool',navTicket:'navTicket',navHallReceipt:'navHallReceipt',navBackup:'navBackup',navOnline:'navOnline',navCustomize:'navCustomize'};
   Object.entries(nav).forEach(([k,id])=>{const e=document.getElementById(id);if(e)e.textContent=c[k]||'';});
   const labels={lblStudentName:c.studentName,lblStandard:c.standard,lblDivision:c.division,lblRollNo:c.rollNo,lblGRNo:c.grNo,lblMobile:c.mobile,lblCTSId:c.ctsId,lblStudentPhoto:c.studentPhoto,lblExamDate:c.examDate,lblTime:c.time,lblSubject:c.subject,lblSchoolName:c.schoolName,lblSchoolPhone:c.schoolPhone,lblAddress:c.address,lblExamName:c.examName,lblPrincipal:c.principal,lblFooterInstruction:c.footer};
   Object.entries(labels).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.textContent=v||'';});
@@ -1241,7 +1273,7 @@ function renderStudents(){
 function editStudent(id){
   const s=db.students.find(x=>x.id===id); if(!s)return;
   editingStudentId=id;
-  sName.value=s.name;sStd.value=s.std;sDiv.value=s.div;sRoll.value=s.roll;sGR.value=s.gr;sMobile.value=s.mobile;sCTSId.value=s.ctsId||'';sDOB.value=s.dob||'';sGender.value=s.gender||'';sCategory.value=s.category||'';sReligion.value=s.religion||'';sVillage.value=s.village||'';sParent.value=s.parent||'';sParentMobile.value=s.parentMobile||'';sEmergency.value=s.emergency||'';sAddress.value=s.address||'';sEmail.value=s.email||'';sBlood.value=s.blood||'';sAdmissionDate.value=s.admissionDate||'';sStatus.value=s.status||'Active';
+  sName.value=s.name;sStd.value=s.std;sDiv.value=s.div;if(document.getElementById('sStream'))document.getElementById('sStream').value=s.stream||'';syncStudentStreamField();sRoll.value=s.roll;sGR.value=s.gr;sMobile.value=s.mobile;sCTSId.value=s.ctsId||'';sDOB.value=s.dob||'';sGender.value=s.gender||'';sCategory.value=s.category||'';sReligion.value=s.religion||'';sVillage.value=s.village||'';sParent.value=s.parent||'';sParentMobile.value=s.parentMobile||'';sEmergency.value=s.emergency||'';sAddress.value=s.address||'';sEmail.value=s.email||'';sBlood.value=s.blood||'';sAdmissionDate.value=s.admissionDate||'';sStatus.value=s.status||'Active';
   selectedPhotoData=s.photo||null;
   photoPreview.src=selectedPhotoData||'';photoPreview.classList.toggle('hidden',!selectedPhotoData);photoEmpty.classList.toggle('hidden',!!selectedPhotoData);
   window.scrollTo({top:0,behavior:'smooth'});
@@ -1252,7 +1284,7 @@ function deleteStudent(id){
 function clearStudentForm(){
   editingStudentId=null; selectedPhotoData=null;
   ['sName','sRoll','sGR','sMobile','sCTSId','sDOB','sVillage','sParent','sParentMobile','sEmergency','sAddress','sEmail','sAdmissionDate'].forEach(id=>document.getElementById(id).value='');
-  sStd.value=9;sDiv.value='A';sGender.value='';sCategory.value='';sReligion.value='';sBlood.value='';sStatus.value='Active';sPhoto.value='';
+  sStd.value=9;sDiv.value='A';if(document.getElementById('sStream'))document.getElementById('sStream').value='';syncStudentStreamField();sGender.value='';sCategory.value='';sReligion.value='';sBlood.value='';sStatus.value='Active';sPhoto.value='';
   photoPreview.src='';photoPreview.classList.add('hidden');photoEmpty.classList.remove('hidden');
 }
 function resizePhoto(file, cb){
@@ -1280,7 +1312,7 @@ btnSaveStudent.addEventListener('click',()=>{
   if(ctsId && db.students.some(s=>String(s.ctsId||'').toLowerCase()===ctsId.toLowerCase() && s.id!==editingStudentId)){alert('Duplicate CTS ID already exists.');return;}
   const duplicate=db.students.find(s=>Number(s.roll)===roll && String(s.std??'')===String(Number(sStd.value)||'') && String(s.div??'').trim().toLowerCase()===String(sDiv.value||'').trim().toLowerCase() && s.id!==editingStudentId);
   if(duplicate){alert('આ Roll No. પહેલેથી છે.');return;}
-  const payload={name,std:Number(sStd.value)||'',div:sDiv.value.trim(),roll,gr:Number(sGR.value)||'',mobile,ctsId,dob:sDOB.value,gender:sGender.value,category:sCategory.value,religion:sReligion.value,village:sVillage.value.trim(),parent:sParent.value.trim(),parentMobile,emergency:sEmergency.value.trim(),address:sAddress.value.trim(),email:sEmail.value.trim(),blood:sBlood.value,admissionDate:sAdmissionDate.value,status:sStatus.value||'Active',photo:selectedPhotoData,photoFileName:sPhoto.files[0]?.name||''};
+  const payload={name,std:Number(sStd.value)||'',stream:['11','12'].includes(String(Number(sStd.value)))?(document.getElementById('sStream')?.value||''): '',div:sDiv.value.trim(),roll,gr:Number(sGR.value)||'',mobile,ctsId,dob:sDOB.value,gender:sGender.value,category:sCategory.value,religion:sReligion.value,village:sVillage.value.trim(),parent:sParent.value.trim(),parentMobile,emergency:sEmergency.value.trim(),address:sAddress.value.trim(),email:sEmail.value.trim(),blood:sBlood.value,admissionDate:sAdmissionDate.value,status:sStatus.value||'Active',photo:selectedPhotoData,photoFileName:sPhoto.files[0]?.name||''};
   if(editingStudentId){const s=db.students.find(x=>x.id===editingStudentId);Object.assign(s,payload);}
   else {db.students.push({id:nextId(db.students),...payload});}
   saveDB();clearStudentForm();alert('Student saved.');
@@ -1300,7 +1332,7 @@ bulkPhotos.addEventListener('change',async e=>{
 });
 
 const bulkFieldDefs=[
-  ['name','Student Name'],['std','Standard'],['div','Division'],['roll','Roll No.'],['gr','GR No.'],['mobile','Student Mobile'],['ctsId','CTS ID'],['dob','Date of Birth'],['gender','Gender'],['category','Category'],['religion','Religion'],['village','Village'],['parent','Parent / Guardian'],['parentMobile','Parent Mobile'],['emergency','Emergency Contact'],['address','Address'],['email','Email'],['blood','Blood Group'],['admissionDate','Admission Date'],['status','Status'],['photoFileName','Photo File Name']
+  ['name','Student Name'],['std','Standard'],['stream','Stream (Arts/Commerce for Std 11/12)'],['div','Division'],['roll','Roll No.'],['gr','GR No.'],['mobile','Student Mobile'],['ctsId','CTS ID'],['dob','Date of Birth'],['gender','Gender'],['category','Category'],['religion','Religion'],['village','Village'],['parent','Parent / Guardian'],['parentMobile','Parent Mobile'],['emergency','Emergency Contact'],['address','Address'],['email','Email'],['blood','Blood Group'],['admissionDate','Admission Date'],['status','Status'],['photoFileName','Photo File Name']
 ];
 function selectedBulkFields(){const box=document.getElementById('bulkFieldVisibilityBox');if(box){const els=[...box.querySelectorAll('[data-bulk-field]')];return bulkFieldDefs.filter(([k])=>els.find(el=>el.dataset.bulkField===k)?.checked);}return bulkFieldDefs.filter(([k])=>db.customize?.bulkFields?.[k]!==false);}
 function updateBulkTemplate(){const fields=selectedBulkFields();const names=fields.map(x=>x[1]);const ph=names.join('\t');const ta=document.getElementById('studentPaste');if(ta)ta.placeholder=ph;const info=document.getElementById('bulkTemplateInfo');if(info)info.textContent=names.length?`Selected: ${names.join(' → ')}`:'Select at least one field.';}
@@ -1333,7 +1365,7 @@ btnPasteImport.addEventListener('click',()=>{
     if(cc && !/^\d{18}$/.test(cc)){skipped++;issues.push(`Row ${index+1}: CTS ID 18 digitsનો નથી`);return;}
     if(db.students.some(s=>sameKey(s,{roll,std,div}))){skipped++;issues.push(`Row ${index+1}: આ Standard/Divisionમાં Roll No. પહેલેથી છે`);return;}
     if(cc && db.students.some(s=>String(s.ctsId||'').trim().toLowerCase()===cc.toLowerCase())){skipped++;issues.push(`Row ${index+1}: CTS ID duplicate છે`);return;}
-    db.students.push({id:nextId(db.students),name,std,div,roll,gr:obj.gr||'',mobile:mm,ctsId:cc,dob:obj.dob||'',gender:obj.gender||'',category:obj.category||'',religion:obj.religion||'',village:obj.village||'',parent:obj.parent||'',parentMobile:pp,emergency:obj.emergency||'',address:obj.address||'',email:obj.email||'',blood:obj.blood||'',admissionDate:obj.admissionDate||'',status:obj.status||'Active',photo:null,photoFileName:obj.photoFileName||''});
+    db.students.push({id:nextId(db.students),name,std,stream:['11','12'].includes(String(std))?(obj.stream||''): '',div,roll,gr:obj.gr||'',mobile:mm,ctsId:cc,dob:obj.dob||'',gender:obj.gender||'',category:obj.category||'',religion:obj.religion||'',village:obj.village||'',parent:obj.parent||'',parentMobile:pp,emergency:obj.emergency||'',address:obj.address||'',email:obj.email||'',blood:obj.blood||'',admissionDate:obj.admissionDate||'',status:obj.status||'Active',photo:null,photoFileName:obj.photoFileName||''});
     added++;
   });
   saveDB();
@@ -1476,6 +1508,26 @@ function printStudentDatabase(){ const rows=[...document.querySelectorAll('#dbTa
     display:grid !important; grid-template-columns:minmax(0,1fr) 34mm !important; gap:3mm !important;
     margin-top:auto !important; padding-top:2mm !important;
   }
+}
+</style>
+
+
+<style id="result-print-isolation-v1-6-6">
+/* v1.6.6: Result Print must contain only the selected student's result, never the app/dashboard on later pages. */
+@page { size: A4 portrait; margin: 5mm; }
+@media print {
+  body.print-result { margin:0 !important; padding:0 !important; background:#fff !important; }
+  body.print-result * { visibility:hidden !important; }
+  body.print-result #resultPreview,
+  body.print-result #resultPreview * { visibility:visible !important; }
+  body.print-result .sidebar, body.print-result .topbar,
+  body.print-result #loginOverlay, body.print-result .no-print,
+  body.print-result main.main > *:not(#page-results),
+  body.print-result #page-results > *:not(#resultPreview),
+  body.print-result #resultPrintPanel { display:none !important; }
+  body.print-result .app, body.print-result main.main, body.print-result #page-results,
+  body.print-result #resultPreview { display:block !important; position:static !important; width:100% !important; max-width:none !important; min-width:0 !important; height:auto !important; min-height:0 !important; margin:0 !important; padding:0 !important; overflow:visible !important; transform:none !important; }
+  body.print-result .result-sheet { display:flex !important; width:100% !important; max-width:100% !important; min-width:0 !important; height:280mm !important; min-height:280mm !important; max-height:280mm !important; margin:0 !important; padding:7mm !important; box-sizing:border-box !important; overflow:hidden !important; break-after:auto !important; page-break-after:auto !important; break-inside:avoid !important; page-break-inside:avoid !important; }
 }
 </style>
 
@@ -1812,6 +1864,26 @@ function printStudentReports(){
 }
 </style>
 
+
+<style id="result-print-isolation-v1-6-6">
+/* v1.6.6: Result Print must contain only the selected student's result, never the app/dashboard on later pages. */
+@page { size: A4 portrait; margin: 5mm; }
+@media print {
+  body.print-result { margin:0 !important; padding:0 !important; background:#fff !important; }
+  body.print-result * { visibility:hidden !important; }
+  body.print-result #resultPreview,
+  body.print-result #resultPreview * { visibility:visible !important; }
+  body.print-result .sidebar, body.print-result .topbar,
+  body.print-result #loginOverlay, body.print-result .no-print,
+  body.print-result main.main > *:not(#page-results),
+  body.print-result #page-results > *:not(#resultPreview),
+  body.print-result #resultPrintPanel { display:none !important; }
+  body.print-result .app, body.print-result main.main, body.print-result #page-results,
+  body.print-result #resultPreview { display:block !important; position:static !important; width:100% !important; max-width:none !important; min-width:0 !important; height:auto !important; min-height:0 !important; margin:0 !important; padding:0 !important; overflow:visible !important; transform:none !important; }
+  body.print-result .result-sheet { display:flex !important; width:100% !important; max-width:100% !important; min-width:0 !important; height:280mm !important; min-height:280mm !important; max-height:280mm !important; margin:0 !important; padding:7mm !important; box-sizing:border-box !important; overflow:hidden !important; break-after:auto !important; page-break-after:auto !important; break-inside:avoid !important; page-break-inside:avoid !important; }
+}
+</style>
+
 </body></html>`);w.document.close();w.print();}
 function exportStudentReports(){
   const list=getReportStudents(), type=document.getElementById('reportType').value; const headers=['Student Name','Standard','Division','Roll No','GR No','CTS ID','Gender','Category','Religion','Village','Status']; const rows=list.map(s=>[s.name,s.std,s.div,s.roll,s.gr,s.ctsId,s.gender,s.category,s.religion,s.village,s.status||'Active']); const csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n'); const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`Student_Report_${type}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
@@ -1870,7 +1942,7 @@ function ticketHTML(s){
   const school=db.school, c=db.customize;
   const logo=c.logo?`<img class="ticket-logo" src="${c.logo}" alt="Logo">`:'';
   const photo=s.photo?`<img src="${s.photo}" alt="">`:`<span>${esc(c.photoPlaceholder).replace(/\|/g,'<br>')}</span>`;
-  const matchedExams=db.exams.filter(e=>(!e.std||String(e.std)===String(s.std))&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase()));
+  const matchedExams=db.exams.filter(e=>String(e.std||'')===String(s.std||'')&&String(e.date||'').trim()!==''&&String(e.time||'').trim()!==''&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase())&&(!e.stream||!s.stream||String(e.stream)===String(s.stream)));
   const allocations=matchedExams.map(e=>(db.rooms||[]).find(x=>x.examId===e.id&&x.studentId===s.id)).filter(Boolean);
   const seatNo=generatedSeatNo(s)||(allocations.length?allocations[0].seat:'');
   const supervisorCell=`<td class="supervisor-sign-cell"><span class="supervisor-sign-line"></span></td>`;
@@ -2021,7 +2093,7 @@ btnReset.addEventListener('click',()=>{
 });
 
 document.getElementById('studentSearch')?.addEventListener('input',renderStudents);document.getElementById('studentSearchStd')?.addEventListener('change',renderStudents);document.getElementById('studentSearchDiv')?.addEventListener('change',renderStudents);document.getElementById('btnClearSearch')?.addEventListener('click',()=>{studentSearch.value='';studentSearchStd.value='';studentSearchDiv.value='';renderStudents();});
-document.getElementById('btnLoadMarks')?.addEventListener('click',loadMarksTable);document.getElementById('btnSaveMarks')?.addEventListener('click',saveMarks);document.getElementById('resultExam')?.addEventListener('change',loadMarksTable);document.getElementById('resultStd')?.addEventListener('change',loadMarksTable);document.getElementById('resultDiv')?.addEventListener('change',loadMarksTable);document.getElementById('btnPreviewResult')?.addEventListener('click',previewResult);document.getElementById('btnPrintResult')?.addEventListener('click',printResult);document.getElementById('btnWhatsAppResult')?.addEventListener('click',whatsappResult);document.getElementById('btnPrintTestReport')?.addEventListener('click',printTestReport);document.getElementById('btnResultPrintAll')?.addEventListener('click',printAllResults);
+document.getElementById('btnAddResultSubject')?.addEventListener('click',addResultSubject);document.getElementById('btnEditResultSubject')?.addEventListener('click',editResultSubject);document.getElementById('btnRemoveResultSubject')?.addEventListener('click',removeResultSubject);document.getElementById('subjectManageStd')?.addEventListener('change',e=>{document.getElementById('resultStd').value=e.target.value;renderResultPage();});document.getElementById('btnLoadMarks')?.addEventListener('click',loadMarksTable);document.getElementById('btnSaveMarks')?.addEventListener('click',saveMarks);document.getElementById('resultExam')?.addEventListener('change',loadMarksTable);document.getElementById('resultStd')?.addEventListener('change',()=>{const cur=document.getElementById('resultExam')?.value;refreshResultExamOptions(cur);loadMarksTable();});document.getElementById('resultDiv')?.addEventListener('change',loadMarksTable);document.getElementById('resultStream')?.addEventListener('change',()=>{refreshResultExamOptions();loadMarksTable();renderResultStudents();});document.getElementById('sStd')?.addEventListener('change',syncStudentStreamField);document.getElementById('subjectManageStd')?.addEventListener('change',e=>{document.getElementById('subjectStreamWrap')?.classList.toggle('hidden',!['11','12'].includes(String(Number(e.target.value))));});document.getElementById('subjectManageStream')?.addEventListener('change',()=>{const st=document.getElementById('subjectManageStd').value;if(['11','12'].includes(String(Number(st))))ensureStreamSubjects(st,document.getElementById('subjectManageStream').value);renderResultPage();});document.getElementById('resultPrintStd')?.addEventListener('change',()=>{document.getElementById('resultStudentSearch').value='';renderResultStudents();document.getElementById('resultPreview').innerHTML='';});document.getElementById('resultStudentSearch')?.addEventListener('input',renderResultStudents);document.getElementById('btnPreviewResult')?.addEventListener('click',previewResult);document.getElementById('btnPrintResult')?.addEventListener('click',printResult);document.getElementById('btnWhatsAppResult')?.addEventListener('click',whatsappResult);document.getElementById('btnPrintTestReport')?.addEventListener('click',printTestReport);document.getElementById('bulkWaStd')?.addEventListener('change',renderBulkWaStudents);document.getElementById('bulkWaStream')?.addEventListener('change',renderBulkWaStudents);document.getElementById('btnLoadBulkWaStudents')?.addEventListener('click',renderBulkWaStudents);document.getElementById('btnSelectAllBulkWa')?.addEventListener('click',()=>{const xs=[...document.querySelectorAll('#bulkWaStudents input[data-bulk-wa-id]')],all=xs.some(x=>!x.checked);xs.forEach(x=>x.checked=all);});document.getElementById('btnStartBulkWa')?.addEventListener('click',startBulkWhatsAppQueue);document.getElementById('btnOpenNextBulkWa')?.addEventListener('click',openNextBulkWhatsApp);document.getElementById('btnResetBulkWa')?.addEventListener('click',()=>{bulkWaQueue=[];bulkWaIndex=0;document.getElementById('bulkWaStatus').textContent='Queue reset થઈ.';});document.getElementById('btnResultPrintAll')?.addEventListener('click',printAllResults);
 document.getElementById('btnStudentFeeReport')?.addEventListener('click',printStudentFeeReport);
 document.getElementById('btnSaveBusFee')?.addEventListener('click',saveBusFee);document.getElementById('btnClearBusFee')?.addEventListener('click',clearBusFeeForm);document.getElementById('btnBusReceipt')?.addEventListener('click',()=>{const id=window.editingBusFeeId||window.lastSavedBusFeeId||((db.busFees||[]).length?db.busFees[db.busFees.length-1].id:null);if(id)printBusFeeReceipt(id);else alert('Save a bus fee entry first.');});document.getElementById('busSearch')?.addEventListener('input',renderBusFeesTable);document.getElementById('busFilterMode')?.addEventListener('change',renderBusFeesTable);document.getElementById('busFilterStatus')?.addEventListener('change',renderBusFeesTable);document.getElementById('btnBusPrintList')?.addEventListener('click',printBusFeeList);
 document.getElementById('btnSaveFee')?.addEventListener('click',saveFee);document.getElementById('btnClearFee')?.addEventListener('click',clearFeeForm);document.getElementById('btnFeeReceipt')?.addEventListener('click',()=>{const id=window.editingFeeId||window.lastSavedFeeId||((db.fees||[]).length?db.fees[db.fees.length-1].id:null);if(id)printFeeReceipt(id);else alert('Save a fee entry first.');});document.getElementById('feeSearch')?.addEventListener('input',renderFeesTable);document.getElementById('feeFilterMode')?.addEventListener('change',renderFeesTable);document.getElementById('feeFilterStatus')?.addEventListener('change',renderFeesTable);document.getElementById('btnFeePrintList')?.addEventListener('click',printFeeList);document.getElementById('feeStudent')?.addEventListener('change',()=>{});
@@ -2059,45 +2131,165 @@ function feeReceiptHTML(f){const s=db.students.find(x=>String(x.id)===String(f.s
 function printOnly(mode){document.body.classList.remove('print-fee','print-busfee','print-result');document.body.classList.add(mode);const cleanup=()=>{document.body.classList.remove(mode);window.removeEventListener('afterprint',cleanup);};window.addEventListener('afterprint',cleanup,{once:true});setTimeout(()=>window.print(),150);}
 function printFeeReceipt(id){const f=(db.fees||[]).find(x=>String(x.id)===String(id));if(!f)return;document.getElementById('feeReceiptPreview').innerHTML=feeReceiptHTML(f);printOnly('print-fee');}
 function printFeeList(){const fees=(db.fees||[]).slice();const rows=fees.map(f=>{const s=db.students.find(x=>String(x.id)===String(f.studentId))||{},net=Math.max(0,Number(f.due)-Number(f.discount)),bal=Math.max(0,net-Number(f.paid));return `<tr><td>${esc(f.date)}</td><td>${esc(f.receiptNo)}</td><td>${esc(s.name)}</td><td>${esc(s.ctsId||'')}</td><td>${esc(f.feeType)}</td><td>${money(net)}</td><td>${money(f.paid)}</td><td>${money(bal)}</td><td>${esc(f.mode)}</td></tr>`}).join('');document.getElementById('feeReceiptPreview').innerHTML=`<div class="fee-receipt"><div class="fee-receipt-head"><h2>${esc(db.school.name)}</h2><h3>FEE COLLECTION REPORT</h3></div><table class="fee-table"><thead><tr><th>Date</th><th>Receipt</th><th>Student</th><th>CTS ID</th><th>Fee Type</th><th>Net Due</th><th>Paid</th><th>Balance</th><th>Mode</th></tr></thead><tbody>${rows}</tbody></table></div>`;printOnly('print-fee');}
+function renderBulkStreamStudents(){const std=document.getElementById('bulkStreamStd')?.value||'11',tb=document.getElementById('bulkStreamStudents');if(!tb)return;const list=(db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))).sort((a,b)=>Number(a.roll)-Number(b.roll));tb.innerHTML=list.map(s=>`<tr><td><input type="checkbox" class="bulk-stream-check" value="${s.id}"></td><td>${esc(s.roll)}</td><td>${esc(s.name)}</td><td>${esc(s.std)}-${esc(s.div)}</td><td>${esc(s.stream||'Not assigned')}</td></tr>`).join('')||'<tr><td colspan="5">આ ધોરણમાં વિદ્યાર્થીઓ મળ્યા નથી.</td></tr>';document.getElementById('bulkStreamSelectAll').checked=false;}
+document.getElementById('btnLoadStreamStudents')?.addEventListener('click',renderBulkStreamStudents);document.getElementById('bulkStreamStd')?.addEventListener('change',renderBulkStreamStudents);document.getElementById('bulkStreamSelectAll')?.addEventListener('change',e=>document.querySelectorAll('.bulk-stream-check').forEach(c=>c.checked=e.target.checked));document.getElementById('btnAssignBulkStream')?.addEventListener('click',()=>{const ids=[...document.querySelectorAll('.bulk-stream-check:checked')].map(c=>String(c.value));if(!ids.length){alert('પહેલાં વિદ્યાર્થીઓને tick કરો.');return;}const stream=document.getElementById('bulkStreamValue').value;db.students.forEach(s=>{if(ids.includes(String(s.id)))s.stream=stream;});ensureStreamSubjects(document.getElementById('bulkStreamStd').value,stream);saveDB();renderBulkStreamStudents();alert(`${ids.length} વિદ્યાર્થીઓને ${stream} Stream આપવામાં આવી.`);});
+function resultStandardCap(std){return ['9','11'].includes(String(Number(std)))?50:100;}
+function resultExamsForStandard(std){const stream=document.getElementById('resultStream')?.value||'';return (db.exams||[]).filter(e=>std?String(Number(e.std))===String(Number(std))&&(!['11','12'].includes(String(Number(std)))||!stream||String(e.stream||'')===stream):false);}
+const streamSubjects={'11':{'Arts':['ગુજરાતી','હિન્દી','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા','સમાજશાસ્ત્ર','ભૂગોળ','કમ્પ્યુટર'],'Commerce':['ગુજરાતી','નામાનાં મુળતત્વો','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા','S.P & C.C','આંકડાશાસ્ત્ર','કમ્પ્યુટર']},'12':{'Arts':['ગુજરાતી','હિન્દી','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા','સમાજશાસ્ત્ર','ભૂગોળ'],'Commerce':['ગુજરાતી','નામાનાં મુળતત્વો','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા','S.P & C.C','આંકડાશાસ્ત્ર']}};
+function syncStudentStreamField(){const std=String(Number(document.getElementById('sStd')?.value||0));document.getElementById('studentStreamWrap')?.classList.toggle('hidden',!['11','12'].includes(std));}
+function ensureStreamSubjects(std,stream){if(!stream||!streamSubjects[String(std)]?.[stream])return;db.exams=db.exams||[];const names=streamSubjects[String(std)][stream];names.forEach(name=>{if(!db.exams.some(e=>String(Number(e.std))===String(Number(std))&&String(e.stream||'')===stream&&String(e.subject||'').trim()===name)){db.exams.push({id:nextId(db.exams),date:'',time:'',subject:name,std:String(std),stream,div:'All',type:'Result'});}});saveDB();}
+function resultExamsForStudent(s){return (db.exams||[]).filter(e=>String(Number(e.std))===String(Number(s.std))&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase()));}
 function renderResultPage(){
-  const examSel=document.getElementById('resultExam'); if(!examSel)return;
-  const cur=examSel.value; examSel.innerHTML=db.exams.map(e=>`<option value="${e.id}">${esc(e.subject)} - ${esc(e.date)}</option>`).join(''); if(cur)examSel.value=cur;
-  const stdSel=document.getElementById('resultStd'),divSel=document.getElementById('resultDiv');
-  const cs=stdSel.value,cd=divSel.value;
-  stdSel.innerHTML='<option value="">All</option>'+[...new Set(db.students.map(s=>s.std).filter(v=>v!==''&&v!=null))].sort((a,b)=>Number(a)-Number(b)).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');stdSel.value=cs;
-  divSel.innerHTML='<option value="">All</option>'+[...new Set(db.students.map(s=>s.div).filter(Boolean))].sort().map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');divSel.value=cd;
-  loadMarksTable(); renderResultStudents();
+  const stdSel=document.getElementById('resultStd'),divSel=document.getElementById('resultDiv'),examSel=document.getElementById('resultExam');
+  if(!stdSel||!divSel||!examSel)return;
+  const cs=stdSel.value,cd=divSel.value,ce=examSel.value;
+  stdSel.innerHTML='<option value="">Select Standard</option>'+[...new Set((db.students||[]).map(s=>String(s.std||'').trim()).filter(v=>['9','10','11','12'].includes(v)))].sort((a,b)=>Number(a)-Number(b)).map(v=>`<option value="${esc(v)}">Std ${esc(v)}</option>`).join('');
+  stdSel.value=cs;
+  document.getElementById('resultStreamWrap')?.classList.toggle('hidden',!['11','12'].includes(String(Number(stdSel.value))));
+  divSel.innerHTML='<option value="">All</option>'+[...new Set((db.students||[]).map(s=>s.div).filter(Boolean))].sort().map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  divSel.value=cd;
+  refreshResultExamOptions(ce);
+  renderResultStudents();loadMarksTable();
 }
-function currentResultExam(){return db.exams.find(e=>String(e.id)===String(document.getElementById('resultExam')?.value))||db.exams[0];}
-function loadMarksTable(){const ex=currentResultExam();if(!ex)return;document.getElementById('resultMaxMarks').value=ex.maxMarks??100;document.getElementById('resultPassMarks').value=ex.passMarks??33;const std=document.getElementById('resultStd').value,div=document.getElementById('resultDiv').value;const list=db.students.filter(s=>(!std||String(s.std)===String(std))&&(!div||String(s.div)===String(div))).sort((a,b)=>Number(a.roll)-Number(b.roll));const rec=db.results?.[String(ex.id)]||{};document.getElementById('marksTable').innerHTML=list.map(s=>{const r=rec[String(s.id)]||{};return `<tr data-student-id="${s.id}"><td>${esc(s.roll)}</td><td>${esc(s.ctsId||'')}</td><td style="text-align:left">${esc(s.name)}</td><td><input class="marks-input result-mark" type="number" min="0" max="${Number(ex.maxMarks)||100}" value="${r.marks??''}"></td><td><input class="result-remark" value="${esc(r.remarks||'')}"></td></tr>`}).join('')||'<tr><td colspan="5" class="muted">No students found.</td></tr>';}
-function saveMarks(){const ex=currentResultExam();if(!ex)return;ex.maxMarks=Math.max(1,Number(document.getElementById('resultMaxMarks').value)||100);ex.passMarks=Math.max(0,Number(document.getElementById('resultPassMarks').value)||0);db.results=db.results||{};db.results[String(ex.id)]=db.results[String(ex.id)]||{};document.querySelectorAll('#marksTable tr[data-student-id]').forEach(tr=>{const id=tr.dataset.studentId,m=tr.querySelector('.result-mark').value,remarks=tr.querySelector('.result-remark').value.trim();db.results[String(ex.id)][String(id)]={marks:m===''?'':Number(m),remarks};});saveDB();alert('Marks saved successfully.');}
-function renderResultStudents(){const sel=document.getElementById('resultStudent');if(!sel)return;const cur=sel.value;sel.innerHTML=db.students.slice().sort((a,b)=>Number(a.roll)-Number(b.roll)).map(s=>`<option value="${s.id}">${esc(s.roll)} - ${esc(s.name)}${s.ctsId?' | CTS: '+esc(s.ctsId):''}</option>`).join('');if(cur)sel.value=cur;}
+function refreshResultExamOptions(preferred){
+  const stdNow=document.getElementById('resultStd')?.value||'', streamNow=document.getElementById('resultStream')?.value||'';
+  if(['11','12'].includes(String(Number(stdNow)))&&streamNow)ensureStreamSubjects(stdNow,streamNow);
+  const examSel=document.getElementById('resultExam');if(!examSel)return;
+  const std=document.getElementById('resultStd')?.value||'';
+  const exams=resultExamsForStandard(std);
+  examSel.innerHTML=exams.map(e=>`<option value="${e.id}">${esc(e.subject)}${e.std?' (Std '+esc(e.std)+')':''}</option>`).join('');
+  if(preferred&&exams.some(e=>String(e.id)===String(preferred)))examSel.value=preferred;
+  else if(exams.length)examSel.value=String(exams[0].id);
+  if(!exams.length)examSel.innerHTML='<option value="">No subjects for selected standard</option>';
+}
+function currentResultExam(){return (db.exams||[]).find(e=>String(e.id)===String(document.getElementById('resultExam')?.value))||null;}
+function loadMarksTable(){
+  const stdSel=document.getElementById('resultStd'),examSel=document.getElementById('resultExam');
+  if(!stdSel||!examSel)return;
+  const ex=currentResultExam();
+  const std=stdSel.value,div=document.getElementById('resultDiv').value;
+  if(!ex){document.getElementById('marksTable').innerHTML='<tr><td colspan="5" class="muted">આ Standard માટે Exam Schedule માં Subjects ઉમેરો.</td></tr>';return;}
+  const cap=std?resultStandardCap(std):resultStandardCap(ex.std||9);
+  document.getElementById('resultMaxMarks').value=cap;
+  document.getElementById('resultMaxMarks').readOnly=true;
+  document.getElementById('resultMaxMarks').max=cap;
+  document.getElementById('resultPassMarks').value=['9','11'].includes(String(Number(std||ex.std)))?18:33;
+  const subjectInput=document.getElementById('resultSubjectName');
+  if(subjectInput){subjectInput.value=ex.subject||'';subjectInput.disabled=!(std==='11'||std==='12'||(!std&&['11','12'].includes(String(Number(ex.std)))));}
+  const stream=document.getElementById('resultStream')?.value||'';const list=(db.students||[]).filter(s=>String(Number(s.std))===String(Number(std||ex.std))&&(!['11','12'].includes(String(Number(std||ex.std)))||!stream||String(s.stream||'')===stream)&&(!div||String(s.div)===String(div))&&String(Number(s.std))===String(Number(ex.std))&&(!ex.div||String(ex.div).toLowerCase()==='all'||String(ex.div).toLowerCase()===String(s.div||'').toLowerCase())).sort((a,b)=>Number(a.roll)-Number(b.roll));
+  const rec=db.results?.[String(ex.id)]||{};
+  document.getElementById('marksTable').innerHTML=list.map(s=>{const r=rec[String(s.id)]||{};return `<tr data-student-id="${s.id}"><td>${esc(s.roll)}</td><td>${esc(s.ctsId||'')}</td><td style="text-align:left">${esc(s.name)}</td><td><input class="marks-input result-mark" type="number" min="0" max="${cap}" step="0.01" value="${r.marks??''}" oninput="if(Number(this.value)>${cap})this.value='${cap}';if(Number(this.value)<0)this.value=0"></td><td><input class="result-remark" value="${esc(r.remarks||'')}"></td></tr>`}).join('')||'<tr><td colspan="5" class="muted">આ Subject / Standard માટે વિદ્યાર્થીઓ મળ્યા નથી.</td></tr>';
+}
+function renderManagedSubjects(){const std=document.getElementById('subjectManageStd')?.value;const sel=document.getElementById('resultExam');if(!sel)return;const current=sel.value;refreshResultExamOptions(current);}
+function addResultSubject(){const std=document.getElementById('subjectManageStd').value,stream=['11','12'].includes(String(Number(document.getElementById('subjectManageStd').value)))?(document.getElementById('subjectManageStream')?.value||''): '',name=document.getElementById('subjectManageName').value.trim();if(!std){alert('પહેલાં Standard પસંદ કરો.');return;}if(!name){alert('Subject Name લખો.');return;}if((db.exams||[]).some(e=>String(Number(e.std))===String(Number(std))&&String(e.stream||'')===stream&&String(e.subject||'').trim().toLowerCase()===name.toLowerCase())){alert('આ Standardમાં આ Subject પહેલેથી છે.');return;}db.exams=db.exams||[];db.exams.push({id:nextId(db.exams),date:'',time:'',subject:name,std:String(std),stream,div:'All',type:'Result'});saveDB();document.getElementById('resultStd').value=String(std);document.getElementById('subjectManageName').value='';renderResultPage();document.getElementById('subjectManageStd').value=String(std);alert('Std '+std+' માટે Subject ઉમેરાયો.');}
+function editResultSubject(){const ex=currentResultExam();if(!ex){alert('Edit કરવા Subject પસંદ કરો.');return;}const std=document.getElementById('resultStd').value;if(!std||String(Number(ex.std))!==String(Number(std))){alert('પહેલાં યોગ્ય Standard પસંદ કરો.');return;}const name=document.getElementById('subjectManageName').value.trim()||prompt('નવું Subject Name લખો:',ex.subject);if(!name||!name.trim())return;ex.subject=name.trim();saveDB();renderResultPage();document.getElementById('subjectManageStd').value=String(std);document.getElementById('subjectManageName').value=ex.subject;alert('Subject Name update થયું.');}
+function removeResultSubject(){const ex=currentResultExam();if(!ex){alert('Remove કરવા Subject પસંદ કરો.');return;}if(!confirm('શું '+ex.subject+' subject અને તેની marks entries delete કરવી છે?'))return;db.exams=(db.exams||[]).filter(e=>String(e.id)!==String(ex.id));if(db.results)delete db.results[String(ex.id)];saveDB();renderResultPage();alert('Subject remove થયો.');}
+function saveMarks(){
+  const ex=currentResultExam();if(!ex){alert('Subject select કરો.');return;}
+  const std=document.getElementById('resultStd').value||ex.std||'9';
+  const cap=resultStandardCap(std);
+  if(['11','12'].includes(String(Number(std)))){
+    const name=document.getElementById('resultSubjectName')?.value.trim();
+    if(name){ex.subject=name;}
+  }
+  ex.maxMarks=cap;ex.passMarks=['9','11'].includes(String(Number(std)))?18:33;
+  db.results=db.results||{};db.results[String(ex.id)]=db.results[String(ex.id)]||{};
+  let invalid=false;
+  document.querySelectorAll('#marksTable tr[data-student-id]').forEach(tr=>{
+    const id=tr.dataset.studentId,input=tr.querySelector('.result-mark'),m=input.value,remarks=tr.querySelector('.result-remark').value.trim();
+    if(m!==''&&(Number(m)<0||Number(m)>cap)){invalid=true;input.focus();return;}
+    db.results[String(ex.id)][String(id)]={marks:m===''?'':Number(m),remarks};
+  });
+  if(invalid){alert('Marks 0 થી '+cap+' વચ્ચે જ દાખલ કરો.');return;}
+  saveDB();renderResultPage();alert('Marks saved successfully. Subject: '+ex.subject+' (Out of '+cap+').');
+}
+function renderResultStudents(){
+  const sel=document.getElementById('resultStudent');if(!sel)return;
+  const printStd=document.getElementById('resultPrintStd')?.value||'';
+  const search=(document.getElementById('resultStudentSearch')?.value||'').trim().toLocaleLowerCase();
+  const std=printStd || document.getElementById('resultStd')?.value||'',stream=(['11','12'].includes(String(Number(std)))?document.getElementById('resultStream')?.value||'':'');
+  const cur=sel.value;
+  const list=(db.students||[]).filter(s=>
+    (!std||String(Number(s.std))===String(Number(std))) &&
+    (!['11','12'].includes(String(Number(std)))||!stream||String(s.stream||'').toLowerCase()===stream.toLowerCase()) &&
+    (!search||[s.name,s.ctsId,s.seatNo,generatedSeatNo(s),s.roll,s.gr,s.grNo].some(v=>String(v??'').toLocaleLowerCase().includes(search)))
+  ).slice().sort((a,b)=>Number(a.std)-Number(b.std)||Number(a.roll)-Number(b.roll)||String(a.name).localeCompare(String(b.name)));
+  sel.innerHTML='<option value="">Select Student</option>'+list.map(s=>`<option value="${s.id}">Std ${esc(s.std)}${s.stream?' '+esc(s.stream):''} | Seat: ${esc(generatedSeatNo(s)||s.seatNo||'-')} | ${esc(s.name)}${s.ctsId?' | CTS: '+esc(s.ctsId):''}</option>`).join('');
+  if(cur&&list.some(s=>String(s.id)===String(cur)))sel.value=cur;
+}
 function gradeFor(p){if(p>=90)return'A+';if(p>=80)return'A';if(p>=70)return'B+';if(p>=60)return'B';if(p>=50)return'C';if(p>=33)return'D';return'F';}
-function resultHTML(s){const rows=db.exams.map(e=>{const rec=(db.results?.[String(e.id)]||{})[String(s.id)]||{};const marks=rec.marks===''||rec.marks==null?'':Number(rec.marks);return {e,marks,remarks:rec.remarks||''};});const valid=rows.filter(x=>x.marks!=='');const total=valid.reduce((a,x)=>a+x.marks,0),max=valid.reduce((a,x)=>a+(Number(x.e.maxMarks)||100),0),pct=max?total/max*100:0,failed=valid.some(x=>x.marks<(Number(x.e.passMarks)||33)),status=valid.length===rows.length&&!failed?'PASS':(failed?'FAIL':'INCOMPLETE');return `<div class="result-sheet"><div class="result-head">${db.customize.logo?`<img src="${db.customize.logo}" style="max-height:65px;max-width:120px"><br>`:''}<div>${esc(db.school.name)}</div><h2>${esc(db.school.examName)} — RESULT</h2><div>${esc(db.school.address)}</div></div><div class="result-meta"><div><b>Name</b><br>${esc(s.name)}</div><div><b>Roll No.</b><br>${esc(s.roll)}</div><div><b>CTS ID</b><br>${esc(s.ctsId||'-')}</div><div><b>Standard / Div.</b><br>${esc(s.std)} / ${esc(s.div)}</div></div><table class="result-table"><thead><tr><th>Subject</th><th>Type</th><th>Date</th><th>Max</th><th>Pass</th><th>Marks</th><th>Remarks</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.e.subject)}</td><td>${esc(x.e.type||'Exam')}</td><td>${esc(x.e.date)}</td><td>${Number(x.e.maxMarks)||100}</td><td>${Number(x.e.passMarks)||33}</td><td>${x.marks===''?'-':x.marks}</td><td>${esc(x.remarks)}</td></tr>`).join('')}</tbody></table><div class="result-total"><div><b>Total:</b> ${total} / ${max || '-'} &nbsp; | &nbsp; <b>Percentage:</b> ${max?pct.toFixed(2):'-'}% &nbsp; | &nbsp; <span class="result-grade">${status}</span> ${max?' | Grade: '+gradeFor(pct):''}</div></div><div style="display:flex;justify-content:space-between;margin-top:45px"><div>Class Teacher</div><div>${db.school.principalSignature?`<img src="${db.school.principalSignature}" style="max-height:55px;max-width:150px;object-fit:contain"><br>`:''}${esc(db.school.principal||'Principal')}<br><span>${db.school.principalSignature?'Principal Signature':''}</span></div></div></div>`;}
+function resultRankForStudent(student){
+  const calc=(st)=>{const exs=resultExamsForStudent(st);let total=0,max=0;for(const e of exs){const rec=(db.results?.[String(e.id)]||{})[String(st.id)]||{};if(rec.marks!==''&&rec.marks!=null&&Number.isFinite(Number(rec.marks))){total+=Number(rec.marks);max+=resultStandardCap(st.std);}}return {total,max,pct:max?total/max*100:-1};};
+  const ranked=(db.students||[]).filter(x=>String(x.std)===String(student.std)&&(!['11','12'].includes(String(Number(student.std)))||String(x.stream||'')===String(student.stream||''))).map(x=>({id:String(x.id),...calc(x)})).filter(x=>x.max>0).sort((a,b)=>b.pct-a.pct||b.total-a.total);
+  const idx=ranked.findIndex(x=>x.id===String(student.id));return idx>=0&&idx<10?idx+1:null;
+}
+function resultHTML(s){
+  const exams=resultExamsForStudent(s);
+  const rows=exams.map(e=>{const rec=(db.results?.[String(e.id)]||{})[String(s.id)]||{};const marks=rec.marks===''||rec.marks==null?'':Number(rec.marks);return {e,marks,remarks:rec.remarks||'',cap:resultStandardCap(s.std)};});
+  const valid=rows.filter(x=>x.marks!==''),total=valid.reduce((a,x)=>a+x.marks,0),max=valid.reduce((a,x)=>a+x.cap,0),pct=max?total/max*100:0;
+  const failed=valid.some(x=>x.marks<(x.cap===50?17:33)),status=valid.length===rows.length&&rows.length>0&&!failed?'PASS':(failed?'FAIL':'INCOMPLETE');
+  const seat=generatedSeatNo(s)||s.seatNo||'-',rank=resultRankForStudent(s);
+  return `<div class="result-sheet"><div class="result-head">${db.customize.logo?`<img src="${db.customize.logo}" style="max-height:65px;max-width:120px"><br>`:''}<div class="result-school-name">${esc(db.school.name)}</div><h2>${esc(db.school.examName)} — RESULT</h2><div>${esc(db.school.address)}</div></div><div class="result-meta"><div class="result-student-info"><div><b>Name</b><br>${esc(s.name)}</div><div><b>Seat No.</b><br>${esc(seat)}</div><div><b>G.R. No.</b><br>${esc(s.gr||s.grNo||'-')}</div><div><b>CTS ID</b><br>${esc(s.ctsId||'-')}</div><div><b>Standard / Div.</b><br>${esc(s.std)} / ${esc(s.div)}</div>${rank?`<div class="result-rank"><b>Class Rank</b><br>${rank}</div>`:''}</div><div class="result-student-photo">${s.photo?`<img src="${s.photo}" alt="Student Photo">`:`<span>Student<br>Photo</span>`}</div></div><table class="result-table"><thead><tr><th>Subject</th><th>Out Of</th><th>Marks Obtained</th><th>Remarks</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.e.subject)}</td><td>${x.cap}</td><td>${x.marks===''?'-':x.marks}</td><td>${esc(x.remarks)}</td></tr>`).join('')||'<tr><td colspan="4">No subjects scheduled for this standard.</td></tr>'}<tr class="result-sum-row"><th>Total</th><th>${max||'-'}</th><th>${total}</th><th></th></tr></tbody></table><div class="result-total"><div><b>Percentage:</b> ${max?pct.toFixed(2):'-'}% &nbsp; | &nbsp; <span class="result-grade">${status}</span> ${max?' | Grade: '+gradeFor(pct):''}</div></div><div class="result-signatures"><div>Class Teacher</div><div class="result-principal-sign">${db.school.principalSignature?`<img src="${db.school.principalSignature}" alt="Principal Signature"><br>`:''}${esc(db.school.principal||'Principal')}<br><span>${db.school.principalSignature?'Principal Signature':''}</span></div></div></div>`;
+}
 function studentResultHTML(s){return resultHTML(s);}
 function previewResult(){const s=db.students.find(x=>String(x.id)===String(document.getElementById('resultStudent').value));if(s)document.getElementById('resultPreview').innerHTML=resultHTML(s);}
 function printResult(){previewResult();printOnly('print-result');}
 function whatsappResult(){
   const s=db.students.find(x=>String(x.id)===String(document.getElementById('resultStudent').value));if(!s){alert('Student select કરો.');return;}
-  const phone=String(s.mobile||s.parentMobile||'').replace(/\D/g,'');if(phone.length!==10){alert('Student/Parent mobile must be exactly 10 digits for WhatsApp.');return;}
-  const rows=db.exams.map(e=>{const r=(db.results?.[String(e.id)]||{})[String(s.id)]||{};return `${e.subject}: ${r.marks===''||r.marks==null?'-':r.marks}/${Number(e.maxMarks)||100}`;}).join('\n');
-  const text=`${db.school.name}\nResult / Marksheet\nStudent: ${s.name}\nStd: ${s.std}-${s.div}\nRoll: ${s.roll}\n${rows}\n\nPlease contact school for the printed/original result.`;
+  const phone=String(s.parentMobile||'').replace(/\D/g,'');if(phone.length!==10){alert('Parent Mobile must be exactly 10 digits for WhatsApp.');return;}
+  const text=makeWhatsAppResultText(s);
   window.open('https://wa.me/91'+phone+'?text='+encodeURIComponent(text),'_blank');
 }
-
+let bulkWaQueue=[],bulkWaIndex=0;
+function bulkWaSelectedIds(){return [...document.querySelectorAll('#bulkWaStudents input[data-bulk-wa-id]:checked')].map(x=>String(x.dataset.bulkWaId));}
+function renderBulkWaStudents(){
+  const std=document.getElementById('bulkWaStd')?.value||'',stream=document.getElementById('bulkWaStream')?.value||'';
+  document.getElementById('bulkWaStreamWrap')?.classList.toggle('hidden',!['11','12'].includes(String(Number(std))));
+  const body=document.getElementById('bulkWaStudents');if(!body)return;
+  if(!std){body.innerHTML='<tr><td colspan="5">પહેલાં Standard પસંદ કરો.</td></tr>';return;}
+  const list=(db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!['11','12'].includes(String(Number(std)))||String(s.stream||'').toLowerCase()===stream.toLowerCase())).sort((a,b)=>Number(a.roll)-Number(b.roll)||String(a.name).localeCompare(String(b.name)));
+  body.innerHTML=list.map(s=>{const phone=String(s.parentMobile||'').replace(/\D/g,'');return `<tr><td><input type="checkbox" data-bulk-wa-id="${esc(s.id)}" aria-label="Select ${esc(s.name)}"></td><td>${esc(s.name)}</td><td>${esc(generatedSeatNo(s)||s.seatNo||'-')}</td><td>${esc(s.parentMobile||'—')}</td><td>${phone.length===10?'Ready':'Parent mobile missing/invalid'}</td></tr>`}).join('')||'<tr><td colspan="5">આ Standard / Streamમાં વિદ્યાર્થીઓ મળ્યા નથી.</td></tr>';
+  document.getElementById('bulkWaStatus').textContent=`${list.length} વિદ્યાર્થી મળ્યા. મોકલવાના વિદ્યાર્થીઓને ટિક કરો.`;
+}
+function makeWhatsAppResultText(s){
+  const exams=resultExamsForStudent(s);
+  const rows=exams.map(e=>{const r=(db.results?.[String(e.id)]||{})[String(s.id)]||{};return `${e.subject}: ${r.marks===''||r.marks==null?'Not entered':r.marks+'/'+resultStandardCap(s.std)}`;});
+  const entered=exams.map(e=>{const r=(db.results?.[String(e.id)]||{})[String(s.id)]||{};return r.marks!==''&&r.marks!=null?{marks:Number(r.marks),cap:resultStandardCap(s.std)}:null;}).filter(Boolean);
+  const total=entered.reduce((a,x)=>a+x.marks,0),max=entered.reduce((a,x)=>a+x.cap,0),pct=max?total/max*100:0;
+  const failed=entered.some(x=>x.marks<(x.cap===50?18:33));
+  const status=entered.length===exams.length&&exams.length>0&&!failed?'PASS':failed?'FAIL':'INCOMPLETE';
+  return `${db.school.name||'School'}\nપરિણામ / RESULT\nવિદ્યાર્થીનું નામ: ${s.name}\nધોરણ: ${s.std}${s.stream?' - '+s.stream:''} / વિભાગ: ${s.div||'-'}\nસીટ નંબર: ${generatedSeatNo(s)||s.seatNo||'-'}\nG.R. No.: ${s.gr||s.grNo||'-'}\n${rows.join('\n')}\nકુલ ગુણ: ${total} / ${max||'-'}\nટકાવારી: ${max?pct.toFixed(2)+'%':'-'}\nપરિણામ: ${status}\n\nવધુ માહિતી માટે શાળાનો સંપર્ક કરો.`;
+}
+function startBulkWhatsAppQueue(){
+  const ids=bulkWaSelectedIds();if(!ids.length){alert('WhatsApp માટે ઓછામાં ઓછો એક વિદ્યાર્થી પસંદ કરો.');return;}
+  const selected=ids.map(id=>db.students.find(s=>String(s.id)===id)).filter(Boolean);
+  const invalid=selected.filter(s=>String(s.parentMobile||'').replace(/\D/g,'').length!==10);
+  if(invalid.length){alert('આ વિદ્યાર્થીઓના Parent Mobile નંબર ખોટા અથવા ખાલી છે. પહેલાં સુધારો:\n'+invalid.map(s=>s.name).join('\n'));return;}
+  bulkWaQueue=selected.map(s=>({id:String(s.id),name:s.name,phone:String(s.parentMobile).replace(/\D/g,'')}));bulkWaIndex=0;
+  document.getElementById('bulkWaStatus').textContent=`Queue તૈયાર છે: ${bulkWaQueue.length} વિદ્યાર્થીઓ. “Open Next WhatsApp” દબાવો.`;
+}
+function openNextBulkWhatsApp(){
+  if(!bulkWaQueue.length){alert('પહેલાં વિદ્યાર્થીઓ પસંદ કરીને Start WhatsApp Queue દબાવો.');return;}
+  if(bulkWaIndex>=bulkWaQueue.length){document.getElementById('bulkWaStatus').textContent='Queue પૂર્ણ થઈ. WhatsAppમાં દરેક મેસેજ Send થયો છે તેની જાતે ખાતરી કરો.';alert('બધા પસંદ કરેલા WhatsApp chats ખોલી લીધા.');return;}
+  const item=bulkWaQueue[bulkWaIndex],s=db.students.find(x=>String(x.id)===item.id);if(!s){bulkWaIndex++;return openNextBulkWhatsApp();}
+  const phone=String(s.parentMobile||'').replace(/\D/g,'');const url='https://wa.me/91'+phone+'?text='+encodeURIComponent(makeWhatsAppResultText(s));
+  window.open(url,'_blank','noopener');bulkWaIndex++;
+  document.getElementById('bulkWaStatus').textContent=`${bulkWaIndex} / ${bulkWaQueue.length} chats ખોલ્યા. WhatsAppમાં Send કર્યા પછી આગળનો chat ખોલો.`;
+}
 function printAllResults(){
   const std=document.getElementById('resultStd')?.value||'',div=document.getElementById('resultDiv')?.value||'';
-  const list=db.students.filter(s=>(!std||String(s.std)===String(std))&&(!div||String(s.div)===String(div)));
+  const stream=document.getElementById('resultStream')?.value||'';const list=db.students.filter(s=>(!std||String(Number(s.std))===String(Number(std)))&&(!['11','12'].includes(String(Number(std)))||!stream||String(s.stream||'')===stream)&&(!div||String(s.div)===String(div)));
   if(!list.length){alert('Selected Standard / Divisionમાં students નથી.');return;}
   document.getElementById('resultPreview').innerHTML=list.map(resultHTML).join('');printOnly('print-result');
 }
 function printTestReport(){
   const ex=currentResultExam();if(!ex){alert('Exam / Subject select કરો.');return;}
   const std=document.getElementById('resultStd')?.value||'',div=document.getElementById('resultDiv')?.value||'';
-  const list=db.students.filter(s=>(!std||String(s.std)===String(std))&&(!div||String(s.div)===String(div))).sort((a,b)=>Number(a.roll)-Number(b.roll));
+  const cap=std?resultStandardCap(std):resultStandardCap(ex.std||9);
+  const stream=document.getElementById('resultStream')?.value||'';const list=db.students.filter(s=>(!std||String(Number(s.std))===String(Number(std)))&&(!['11','12'].includes(String(Number(std||ex.std)))||!stream||String(s.stream||'')===stream)&&(!div||String(s.div)===String(div))&&String(Number(s.std))===String(Number(ex.std))&&(!ex.stream||String(s.stream||'')===String(ex.stream))).sort((a,b)=>Number(a.roll)-Number(b.roll));
   const rec=db.results?.[String(ex.id)]||{};
-  const rows=list.map((s,i)=>{const r=rec[String(s.id)]||{};const m=r.marks===''||r.marks==null?'-':r.marks;const pass=Number(r.marks)>=Number(ex.passMarks||33);return `<tr><td>${i+1}</td><td>${esc(s.roll)}</td><td>${esc(s.name)}</td><td>${esc(s.std)}-${esc(s.div)}</td><td>${m}</td><td>${esc(ex.maxMarks||100)}</td><td>${m==='-'?'':(pass?'PASS':'FAIL')}</td><td>${esc(r.remarks||'')}</td></tr>`}).join('');
-  document.getElementById('resultPreview').innerHTML=`<div class="result-sheet"><div class="result-head">${db.customize.logo?`<img src="${db.customize.logo}" style="max-height:65px;max-width:120px"><br>`:''}<div>${esc(db.school.name)}</div><h2>${esc(ex.type||'Test')} Report — ${esc(ex.subject)}</h2><div>${esc(ex.date)} | ${esc(ex.time)} | Standard ${esc(std||'All')} ${div?'Division '+esc(div):''}</div></div><table class="result-table"><thead><tr><th>#</th><th>Roll</th><th>Student</th><th>Std/Div</th><th>Marks</th><th>Max</th><th>Status</th><th>Remarks</th></tr></thead><tbody>${rows}</tbody></table><div style="display:flex;justify-content:flex-end;margin-top:35px">${db.school.principalSignature?`<img src="${db.school.principalSignature}" style="max-height:55px;max-width:150px"><br>`:''}</div></div>`;
+  const rows=list.map((s,i)=>{const r=rec[String(s.id)]||{};const m=r.marks===''||r.marks==null?'-':r.marks;const pass=Number(r.marks)>=(cap===50?17:33);return `<tr><td>${i+1}</td><td>${esc(s.roll)}</td><td>${esc(s.name)}</td><td>${esc(s.std)}-${esc(s.div)}</td><td>${m}</td><td>${cap}</td><td>${m==='-'?'':(pass?'PASS':'FAIL')}</td><td>${esc(r.remarks||'')}</td></tr>`}).join('');
+  document.getElementById('resultPreview').innerHTML=`<div class="result-sheet"><div class="result-head">${db.customize.logo?`<img src="${db.customize.logo}" style="max-height:65px;max-width:120px"><br>`:''}<div>${esc(db.school.name)}</div><h2>${esc(ex.type||'Test')} Report — ${esc(ex.subject)}</h2><div>Standard ${esc(std||ex.std||'All')} ${div?'Division '+esc(div):''}</div></div><table class="result-table"><thead><tr><th>#</th><th>Roll</th><th>Student</th><th>Std/Div</th><th>Marks</th><th>Out Of</th><th>Status</th><th>Remarks</th></tr></thead><tbody>${rows}</tbody></table><div style="display:flex;justify-content:flex-end;margin-top:35px">${db.school.principalSignature?`<img src="${db.school.principalSignature}" style="max-height:55px;max-width:150px"><br>`:''}</div></div>`;
   printOnly('print-result');
 }
 function showStudentPortalResult(id){const s=db.students.find(x=>x.id===id);if(s)document.getElementById('portalStudentOutput').innerHTML=resultHTML(s);}
@@ -2106,7 +2298,7 @@ document.getElementById('btnPortalSearch')?.addEventListener('click',()=>{const 
 document.getElementById('btnLogout')?.addEventListener('click',()=>{sessionStorage.removeItem(SESSION_KEY);location.reload();});
 function requireLogin(){if(new URLSearchParams(location.search).get('portal')==='1'){document.body.classList.add('portal-mode');showPage('portal');return;}if(window.__passwordRecoveryActive || isPasswordRecoveryLink())return;const pw=db.customize?.adminPassword||'1234';if(sessionStorage.getItem(SESSION_KEY)==='1')return;loginOverlay.classList.remove('hidden');adminPassword.focus();}const closeAdminLogin=()=>{loginOverlay.classList.add('hidden');loginError.textContent='';};btnCloseLogin?.addEventListener('click',closeAdminLogin);btnCloseLogin2?.addEventListener('click',closeAdminLogin);btnLogin.addEventListener('click',()=>{if(adminPassword.value===(db.customize?.adminPassword||'1234')){sessionStorage.setItem(SESSION_KEY,'1');loginOverlay.classList.add('hidden');loginError.textContent='';}else loginError.textContent='Incorrect password.';});adminPassword.addEventListener('keydown',e=>{if(e.key==='Enter')btnLogin.click();});
 
-renderAll();showPage('dashboard');renderAllocations();renderResultPage();refreshCloudSessionStatus();handlePasswordRecovery();requireLogin();
+renderAll();renderBulkStreamStudents();syncStudentStreamField();document.getElementById('subjectStreamWrap')?.classList.toggle('hidden',!['11','12'].includes(String(Number(document.getElementById('subjectManageStd')?.value))));showPage('dashboard');renderAllocations();renderResultPage();refreshCloudSessionStatus();handlePasswordRecovery();requireLogin();
 </script>
 
 <style id="final-print-fit-v150">
@@ -2225,5 +2417,120 @@ renderAll();showPage('dashboard');renderAllocations();renderResultPage();refresh
 }
 </style>
 
+
+<style id="result-print-isolation-v1-6-6">
+/* v1.6.6: Result Print must contain only the selected student's result, never the app/dashboard on later pages. */
+@page { size: A4 portrait; margin: 5mm; }
+@media print {
+  body.print-result { margin:0 !important; padding:0 !important; background:#fff !important; }
+  body.print-result * { visibility:hidden !important; }
+  body.print-result #resultPreview,
+  body.print-result #resultPreview * { visibility:visible !important; }
+  body.print-result .sidebar, body.print-result .topbar,
+  body.print-result #loginOverlay, body.print-result .no-print,
+  body.print-result main.main > *:not(#page-results),
+  body.print-result #page-results > *:not(#resultPreview),
+  body.print-result #resultPrintPanel { display:none !important; }
+  body.print-result .app, body.print-result main.main, body.print-result #page-results,
+  body.print-result #resultPreview { display:block !important; position:static !important; width:100% !important; max-width:none !important; min-width:0 !important; height:auto !important; min-height:0 !important; margin:0 !important; padding:0 !important; overflow:visible !important; transform:none !important; }
+  body.print-result .result-sheet { display:flex !important; width:100% !important; max-width:100% !important; min-width:0 !important; height:280mm !important; min-height:280mm !important; max-height:280mm !important; margin:0 !important; padding:7mm !important; box-sizing:border-box !important; overflow:hidden !important; break-after:auto !important; page-break-after:auto !important; break-inside:avoid !important; page-break-inside:avoid !important; }
+}
+</style>
+
 </body>
 </html>
+
+
+<style id="result-a4-photo-v154">
+/* Result marksheet: A4 portrait, database student photo, print-safe layout */
+.result-sheet {
+  width: 100%;
+  max-width: 900px;
+  min-height: 260mm;
+  margin: 0 auto;
+  padding: 10mm;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #c7d5df;
+  color: #17212b;
+}
+.result-head { flex: 0 0 auto; text-align:center; border-bottom:2px solid #1f4e78; padding-bottom:5mm; margin-bottom:6mm; }
+.result-head h2 { margin:2mm 0; color:#17365d; font-size:18pt; }
+.result-school-name{font-family:Georgia,"Nirmala UI",serif!important;font-size:22pt!important;font-weight:900!important;letter-spacing:.3px!important;line-height:1.25!important;color:#17365d!important;}
+.result-meta { display:grid; grid-template-columns:minmax(0,1fr) 28mm; gap:6mm; align-items:start; margin-bottom:7mm; }
+.result-student-info { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:5mm 8mm; min-width:0; }
+.result-student-info > div { overflow-wrap:anywhere; }
+.result-student-info b { display:inline-block; margin-bottom:1mm; }
+.result-student-photo { width:25mm; height:32mm; border:1px solid #8da6b7; display:flex; align-items:center; justify-content:center; text-align:center; color:#647887; font-size:9pt; background:#fff; overflow:hidden; box-sizing:border-box; }
+.result-student-photo img { display:block; width:100%; height:100%; object-fit:cover; }
+.result-table { width:100%; border-collapse:collapse; table-layout:fixed; flex:0 0 auto; }
+.result-table th,.result-table td { border:1px solid #8da6b7; padding:3.2mm 2mm; text-align:center; overflow-wrap:anywhere; }
+.result-table th { background:#e6f0f6 !important; color:#17365d; font-weight:700; }
+.result-table th:first-child,.result-table td:first-child { width:36%; }
+.result-table th:nth-child(2),.result-table td:nth-child(2) { width:14%; }
+.result-table th:nth-child(3),.result-table td:nth-child(3) { width:25%; }
+.result-table th:nth-child(4),.result-table td:nth-child(4) { width:25%; }
+.result-total { display:flex; justify-content:flex-end; margin-top:6mm; padding:4mm 0; border-top:1px solid #d3dee5; font-size:11pt; }
+.result-grade { font-size:14pt; font-weight:900; }
+.result-signatures { display:flex; justify-content:space-between; align-items:flex-end; margin-top:auto; padding-top:20mm; min-height:32mm; }
+.result-principal-sign { text-align:center; min-width:42mm; }
+.result-principal-sign img { max-width:38mm; max-height:18mm; object-fit:contain; }
+@page { size: A4 portrait; margin: 7mm; }
+@media print {
+  html, body { width:auto !important; min-height:0 !important; margin:0 !important; padding:0 !important; background:#fff !important; overflow:visible !important; }
+  body.print-result .sidebar,
+  body.print-result .topbar,
+  body.print-result .no-print,
+  body.print-result #loginOverlay,
+  body.print-result #page-results > :not(#resultPreview) { display:none !important; }
+  body.print-result .app,
+  body.print-result main.main,
+  body.print-result #page-results,
+  body.print-result #resultPreview { display:block !important; position:static !important; width:100% !important; max-width:none !important; min-height:0 !important; margin:0 !important; padding:0 !important; overflow:visible !important; }
+  body.print-result #resultPreview { visibility:visible !important; }
+  body.print-result .result-sheet {
+    width:100% !important; max-width:none !important; min-height:280mm !important;
+    height:280mm !important; margin:0 !important; padding:8mm !important;
+    border:1px solid #9db6c9 !important; box-shadow:none !important; box-sizing:border-box !important;
+    break-after:page; page-break-after:always; overflow:hidden !important;
+    -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important;
+  }
+  body.print-result .result-sheet:last-child { break-after:auto !important; page-break-after:auto !important; }
+  body.print-result .result-head { margin-bottom:5mm !important; padding-bottom:4mm !important; }
+  body.print-result .result-head h2 { font-size:17pt !important; }
+ body.print-result .result-school-name{font-size:22pt!important;font-family:Georgia,"Nirmala UI",serif!important;font-weight:900!important;}
+ body.print-result .result-sum-row th{background:#e6f0f6!important;font-weight:900!important;}
+  body.print-result .result-meta { grid-template-columns:minmax(0,1fr) 27mm !important; margin-bottom:5mm !important; }
+  body.print-result .result-student-photo { width:25mm !important; height:32mm !important; }
+  body.print-result .result-table th,
+  body.print-result .result-table td { padding:3mm 1.5mm !important; font-size:10pt !important; }
+  body.print-result .result-total { margin-top:5mm !important; padding:3mm 0 !important; }
+  body.print-result .result-signatures { padding-top:12mm !important; }
+}
+</style>
+
+
+
+<style id="result-a4-hard-fit-v156">
+@page { size: A4 portrait; margin: 8mm; }
+body.print-result #resultPreview, body.print-result #resultPreview * { box-sizing:border-box !important; }
+body.print-result #resultPreview { display:block !important; width:100% !important; max-width:none !important; margin:0 !important; padding:0 !important; overflow:visible !important; }
+body.print-result .result-sheet { display:flex !important; flex-direction:column !important; align-items:stretch !important; position:relative !important; width:100% !important; max-width:none !important; min-width:0 !important; height:280mm !important; min-height:280mm !important; margin:0 !important; padding:7mm !important; border:1px solid #9aaebb !important; overflow:hidden !important; box-sizing:border-box !important; }
+body.print-result .result-meta { width:100% !important; min-width:0 !important; }
+body.print-result table.result-table { display:table !important; table-layout:fixed !important; width:100% !important; min-width:100% !important; max-width:100% !important; margin:0 !important; padding:0 !important; border-collapse:collapse !important; border-spacing:0 !important; align-self:stretch !important; }
+body.print-result table.result-table thead, body.print-result table.result-table tbody, body.print-result table.result-table tr { width:100% !important; }
+body.print-result table.result-table th, body.print-result table.result-table td { box-sizing:border-box !important; min-width:0 !important; white-space:normal !important; overflow-wrap:anywhere !important; padding:2.5mm 1.5mm !important; font-size:10pt !important; line-height:1.25 !important; text-align:center !important; }
+body.print-result table.result-table th:nth-child(1), body.print-result table.result-table td:nth-child(1) { width:40% !important; }
+body.print-result table.result-table th:nth-child(2), body.print-result table.result-table td:nth-child(2) { width:15% !important; }
+body.print-result table.result-table th:nth-child(3), body.print-result table.result-table td:nth-child(3) { width:25% !important; }
+body.print-result table.result-table th:nth-child(4), body.print-result table.result-table td:nth-child(4) { width:20% !important; }
+body.print-result .result-head, body.print-result .result-total, body.print-result .result-signatures { width:100% !important; max-width:none !important; }
+@media print {
+ body.print-result .app, body.print-result main.main, body.print-result #page-results, body.print-result #resultPreview { display:block !important; position:static !important; width:100% !important; max-width:none !important; min-width:0 !important; margin:0 !important; padding:0 !important; transform:none !important; overflow:visible !important; }
+ body.print-result .result-sheet { width:100% !important; max-width:none !important; min-width:0 !important; height:280mm !important; min-height:280mm !important; margin:0 !important; padding:7mm !important; break-after:page !important; page-break-after:always !important; }
+ body.print-result .result-sheet:last-child { break-after:auto !important; page-break-after:auto !important; }
+}
+</style>
+
