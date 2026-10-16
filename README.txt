@@ -1,35 +1,18 @@
-HALL TICKET FREE DATABASE SYSTEM - MASTER VERSION
+SVD SCHOOL MANAGEMENT SYSTEM — v1.7.1
+Shree S.V. Doshi Highschool, Kumbhan
 
-Current modules:
-- Admin Login / Password
-- Student Database with CTS ID
-- Advanced Student Reports: Category, Gender, Standard, Village, Religion
-- Hall Ticket / Exam Schedule / Room & Seat Allocation
-- Result / Marks Entry and Result Printing
-- Student Fee Collection + Student Fee Report
-- Bus Fee Collection + Bus Fee Report
-- Backup / Restore
-- Customizable school, hall-ticket and interface settings
-- Student Portal UI
+Main website: index.html
+Student portal: student_portal.html
 
-Student Report fields:
-- Category: General, OBC, SEBC, SC, ST, EWS, Other
-- Gender
-- Standard
-- Village
-- Religion
+Modules include student entry/database/reports, hall tickets, exam schedule, rooms/seats, marks entry, result print and analysis, attendance, student documents, fee collection, bus fee, backup/import, online sync, and customization/settings.
 
-Advanced Student Reports support:
-- Group-wise student counts
-- Male/Female/Other counts
-- Percentage of selected population
-- Detailed student list
-- Filters by category, gender, standard, village, religion and status
-- Search by student name, CTS ID, GR No. or Roll No.
-- Print report
-- CSV export
+Data safety:
+- The working database is stored in this browser's local storage unless Online Sync is configured and used.
+- JSON Backup/Restore is local to the browser. Restoring a local backup does not automatically change Supabase.
+- Always export a backup before restoring or publishing an update.
+- No production database reset or Supabase schema migration is included in this release.
 
-Data is stored locally in the browser in this free standalone version. For true multi-device online access, connect the system to an online backend/database in a future deployment.
+See AUDIT_REPORT_v1.7.1.md for the audit scope, fixes, checks, and remaining live-test requirements.
+Android application development is pending.
 
-
-Current version: v1.3.8
+Version 1.7.2 adds a professional navy/teal/gold theme for Result View / Print. For color printing in Chrome/Edge, enable More settings > Background graphics.

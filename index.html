@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="gu">
 <head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@400;500;600;700&display=swap" rel="stylesheet">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Hall Ticket Database System - Free</title>
@@ -299,6 +302,9 @@ section[id^="page-"].hidden { display:none !important; }
       <button data-page="students" id="navStudents">👨‍🎓 Student Entry</button>
       <button data-page="database" id="navDatabase">🗂️ Student Database</button>
       <button data-page="studentreports" id="navStudentReports">📈 Student Reports</button>
+      <button data-page="resultanalytics" id="navResultAnalytics">📊 Result Analysis</button>
+      <button data-page="attendance" id="navAttendance">📋 Student Attendance</button>
+      <button data-page="documents" id="navDocuments">📁 Student Documents</button>
       <button data-page="fees" id="navFees">💰 Fee Collection</button><button data-page="busfees" id="navBusFees">🚌 Bus Fee</button>
       <button data-page="schedule" id="navSchedule">📅 Exam Schedule</button>
       <button data-page="school" id="navSchool">🏫 School Settings</button>
@@ -669,6 +675,17 @@ section[id^="page-"].hidden { display:none !important; }
       <div class="card" id="resultPrintPanel">
         <h3 class="section-title">🖨️ Student Result Print</h3>
         <div class="grid result-print-filters" style="grid-template-columns: minmax(180px,1fr) minmax(220px,1.5fr);margin-bottom:10px"><div><label for="resultPrintStd">Result Print માટે Standard પસંદ કરો</label><select id="resultPrintStd"><option value="">All Standards</option><option value="9">Std 9</option><option value="10">Std 10</option><option value="11">Std 11</option><option value="12">Std 12</option></select></div><div><label for="resultStudentSearch">CTS ID / Seat No. / Student Nameથી શોધો</label><input id="resultStudentSearch" type="search" placeholder="CTS ID, Seat No. અથવા વિદ્યાર્થીનું નામ લખો"></div></div><div class="searchbar"><select id="resultStudent" aria-label="Select student for result"></select><button class="btn btn-primary" id="btnPreviewResult">Preview Result</button><button class="btn btn-light" id="btnPrintResult">Print Result</button><button class="btn btn-green" id="btnWhatsAppResult">📱 WhatsApp Result</button></div>
+        <div class="card" id="bulkResultPrintPanel" style="margin-top:14px;background:#f4f8fc;border:1px solid #c8d9e8">
+          <h4>🖨️ Standard-wise Bulk Result Print</h4>
+          <p class="muted">એક સાથે પસંદ કરેલા ધોરણના બધા વિદ્યાર્થીઓના Result અલગ-અલગ પેજ પર પ્રિન્ટ કરો. ધોરણ 11/12 માટે Stream પસંદ કરવું જરૂરી છે.</p>
+          <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px">
+            <div><label for="bulkResultPrintStd">Standard *</label><select id="bulkResultPrintStd"><option value="">Select Standard</option><option value="9">Std 9</option><option value="10">Std 10</option><option value="11">Std 11</option><option value="12">Std 12</option></select></div>
+            <div id="bulkResultPrintStreamWrap" class="hidden"><label for="bulkResultPrintStream">Stream *</label><select id="bulkResultPrintStream"><option value="">Select Stream</option><option value="Arts">Arts</option><option value="Commerce">Commerce</option></select></div>
+            <div><label for="bulkResultPrintDiv">Division</label><select id="bulkResultPrintDiv"><option value="">All Divisions</option></select></div>
+          </div>
+          <div class="result-actions" style="margin-top:10px"><button class="btn btn-primary" id="btnBulkResultPrint">🖨️ Print All Results for Selected Standard</button></div>
+          <div class="muted" id="bulkResultPrintStatus" style="margin-top:8px">પહેલાં Standard પસંદ કરો.</div>
+        </div>
         <div class="muted" style="margin-top:8px">એક વિદ્યાર્થીનું Result Parent Mobile પર WhatsApp દ્વારા મોકલવા માટે ઉપરનું બટન વાપરો.</div>
         <div class="card" id="bulkWhatsAppPanel" style="margin-top:14px;background:#f7fafc">
           <h4>📲 Bulk WhatsApp Result — Parent Mobile</h4>
@@ -695,7 +712,7 @@ section[id^="page-"].hidden { display:none !important; }
         <h3 class="section-title">1. Navigation / Button Text</h3>
         <div class="grid">
           <div><label>Dashboard Button</label><input id="cNavDashboard"></div>
-          <div><label>Student Entry Button</label><input id="cNavStudents"></div><div><label>Student Database Button</label><input id="cNavDatabase"></div>
+          <div><label>Student Entry Button</label><input id="cNavStudents"></div><div><label>Student Database Button</label><input id="cNavDatabase"></div><div><label>Student Reports Button</label><input id="cNavStudentReports"></div><div><label>Rooms / Seats Button</label><input id="cNavRooms"></div><div><label>Student Portal Button</label><input id="cNavPortal"></div><div><label>Marks Entry Button</label><input id="cNavMarksEntry"></div><div><label>Result View / Print Button</label><input id="cNavResultPrint"></div><div><label>Fee Collection Button</label><input id="cNavFees"></div><div><label>Bus Fee Button</label><input id="cNavBusFees"></div><div><label>Hall Ticket Receipt Button</label><input id="cNavHallReceipt"></div><div><label>Online Sync Button</label><input id="cNavOnline"></div><div><label>Result Analysis Button</label><input id="cNavResultAnalytics"></div><div><label>Attendance Button</label><input id="cNavAttendance"></div><div><label>Documents Button</label><input id="cNavDocuments"></div>
           <div><label>Result / Marks Button</label><input id="cNavResults"></div>
           <div><label>Exam Schedule Button</label><input id="cNavSchedule"></div>
           <div><label>School Settings Button</label><input id="cNavSchool"></div>
@@ -832,6 +849,36 @@ section[id^="page-"].hidden { display:none !important; }
       </div>
     </section>
 
+    <section id="page-resultanalytics" class="hidden">
+      <div class="card"><h3 class="section-title">📊 Advanced Result Analysis</h3><p class="muted">Saved marks પરથી standard/stream પ્રમાણે વિદ્યાર્થીવાર કુલ ગુણ, ટકાવારી, Pass/Fail અને વિષયવાર ગુણનો રિપોર્ટ બને છે. કોઈ marks record ન હોય તો વિદ્યાર્થીને Incomplete તરીકે બતાવવામાં આવશે.</p><div class="grid"><div><label>Standard</label><select id="raStd"><option value="">Select Standard</option><option value="9">Std 9</option><option value="10">Std 10</option><option value="11">Std 11</option><option value="12">Std 12</option></select></div><div id="raStreamWrap" class="hidden"><label>Stream</label><select id="raStream"><option value="">All Streams</option><option>Arts</option><option>Commerce</option></select></div><div><label>Division</label><select id="raDiv"><option value="">All Divisions</option></select></div><div><label>Search Name / Seat No. / GR / CTS ID</label><input id="raSearch" placeholder="Search student"></div></div><div class="btn-row" style="margin-top:12px"><button class="btn btn-primary" id="btnGenerateResultAnalysis">Generate Analysis</button><button class="btn btn-light" id="btnPrintResultAnalysis">🖨️ Print</button><button class="btn btn-light" id="btnExportResultAnalysis">📥 Export CSV</button></div></div>
+      <div class="grid-4" id="raStats"></div><div class="card"><div class="table-wrap"><table class="fee-table"><thead><tr><th>Rank</th><th>Student</th><th>Std/Div</th><th>Seat/Roll</th><th>GR No.</th><th>Subjects Entered</th><th>Total Marks</th><th>Out Of</th><th>Percentage</th><th>Result</th><th>Subject-wise Marks</th></tr></thead><tbody id="raTableBody"></tbody></table></div></div>
+    </section>
+
+    <section id="page-attendance" class="hidden">
+      <div class="card">
+        <h3 class="section-title">📋 Student Attendance</h3>
+        <p class="muted">તારીખ અને ધોરણ પસંદ કરીને હાજરી નોંધો. આ રેકોર્ડ હાલના database સાથે જ save થશે અને Backup/Supabase syncમાં સામેલ રહેશે.</p>
+        <div class="grid">
+          <div><label>Attendance Date</label><input id="attDate" type="date"></div>
+          <div><label>Standard</label><select id="attStd"><option value="">Select Standard</option></select></div>
+          <div><label>Division</label><select id="attDiv"><option value="">All Divisions</option></select></div>
+          <div><label>Search Student</label><input id="attSearch" placeholder="Name / Roll / GR / CTS ID"></div>
+        </div>
+        <div class="btn-row" style="margin-top:12px"><button class="btn btn-primary" id="btnLoadAttendance">Load Students</button><button class="btn btn-green" id="btnMarkAllPresent">Mark All Present</button><button class="btn btn-light" id="btnMarkAllAbsent">Mark All Absent</button><button class="btn btn-light" id="btnSaveAttendance">💾 Save Attendance</button><button class="btn btn-light" id="btnPrintAttendance">🖨️ Print Register</button></div>
+      </div>
+      <div class="grid-4" id="attendanceStats"></div>
+      <div class="card"><div class="table-wrap"><table class="fee-table"><thead><tr><th>Roll</th><th>Student</th><th>GR No.</th><th>Status</th><th>Remarks</th></tr></thead><tbody id="attendanceTableBody"></tbody></table></div></div>
+      <div class="card"><h3 class="section-title">Attendance Summary</h3><div class="searchbar"><select id="attReportStd"><option value="">All Standards</option></select><input id="attReportFrom" type="date"><input id="attReportTo" type="date"><button class="btn btn-primary" id="btnAttendanceReport">Generate Summary</button></div><div class="table-wrap"><table class="fee-table"><thead><tr><th>Student</th><th>Std</th><th>Present</th><th>Absent</th><th>Late</th><th>Attendance %</th></tr></thead><tbody id="attendanceSummaryBody"></tbody></table></div></div>
+    </section>
+
+    <section id="page-documents" class="hidden">
+      <div class="card"><h3 class="section-title">📁 Student Documents</h3><p class="muted">વિદ્યાર્થીના પ્રમાણપત્રો/દસ્તાવેજો સાથે જોડો. બ્રાઉઝર/Supabase JSON ડેટા મર્યાદાને ધ્યાનમાં રાખીને દરેક ફાઇલ 800 KB સુધી જ રાખો. સંવેદનશીલ દસ્તાવેજો ઉમેરતાં પહેલાં યોગ્ય ઍક્સેસ અને બેકઅપ જાળવો.</p>
+        <div class="grid"><div><label>Student</label><select id="docStudent"><option value="">Select Student</option></select></div><div><label>Document Type</label><select id="docType"><option>Aadhaar / ID</option><option>Birth Certificate</option><option>Leaving Certificate</option><option>Caste Certificate</option><option>Income Certificate</option><option>Photo</option><option>Other</option></select></div><div><label>Document Title</label><input id="docTitle" placeholder="e.g. Birth certificate"></div><div><label>Document Date</label><input id="docDate" type="date"></div><div><label>Choose File (max 800 KB)</label><input id="docFile" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp"></div></div>
+        <div class="btn-row" style="margin-top:12px"><button class="btn btn-primary" id="btnSaveDocument">Save Document</button><button class="btn btn-light" id="btnClearDocument">Clear</button></div>
+      </div>
+      <div class="card"><div class="searchbar"><input id="docSearch" placeholder="Search student / CTS ID / document"><select id="docFilterStd"><option value="">All Standards</option></select><button class="btn btn-light" id="btnExportDocuments">Export Document List CSV</button></div><div class="table-wrap"><table class="fee-table"><thead><tr><th>Student</th><th>Std/Div</th><th>Document</th><th>Date</th><th>File</th><th>Actions</th></tr></thead><tbody id="documentsTableBody"></tbody></table></div></div>
+    </section>
+
     <section id="page-studentreports" class="hidden">
       <div class="card">
         <h3 class="section-title">📈 Advanced Student Reports</h3>
@@ -966,7 +1013,7 @@ section[id^="page-"].hidden { display:none !important; }
 const STORAGE_KEY='hall_ticket_free_db_v3';
 const SESSION_KEY='hall_ticket_admin_session_v1';
 
-const defaultCustomize={navDashboard:'🏠 Dashboard',navRooms:'🪑 Rooms / Seats',navPortal:'🌐 Student Portal',navStudents:'👨‍🎓 Student Entry',navDatabase:'🗂️ Student Database',navFees:'💰 Fee Collection',navResults:'🖨️ Result View / Print',navMarksEntry:'📝 Marks Entry',navResultPrint:'🖨️ Result View / Print',navSchedule:'📅 Exam Schedule',navSchool:'🏫 School Settings',navTicket:'🎫 Hall Ticket',navHallReceipt:'✍️ Hall Ticket Receipt',navBackup:'💾 Backup / Import',navOnline:'☁️ Online Sync',navCustomize:'⚙️ Customize / Settings',btnSaveStudent:'Save Student',btnClear:'Clear',btnBulk:'Bulk Photos',btnPaste:'Paste from Excel',btnAddExam:'Add Exam',btnPrintCurrent:'Print Current',btnPrintAll:'Print All',studentName:'Student Name',standard:'Standard',division:'Division',rollNo:'Roll No.',grNo:'GR No.',mobile:'Parent Mobile',ctsId:'CTS ID',studentPhoto:'Student Photo',examDate:'Exam Date',time:'Time',subject:'Subject',schoolName:'School Name',schoolPhone:'School Phone',address:'Address',examName:'Exam Name',principal:'Principal',footer:'Footer Instruction',ticketTitle:'',scheduleTitle:'EXAM SCHEDULE',photoPlaceholder:'STUDENT|PHOTO',supervisor:'Supervisor Sign',primaryColor:'#1f4e78',darkColor:'#17365d',greenColor:'#70ad47',lightColor:'#eaf3f8',font:'Nirmala UI,Segoe UI,Arial,sans-serif',ticketFont:12,logo:null,showDiv:true,showGR:true,showMobile:true,showPhoto:true,showQR:true,adminPassword:'1234',autoRoll:true,portal:true,studentFields:{name:true,std:true,div:true,roll:true,gr:true,mobile:true,ctsId:true,dob:true,gender:true,category:true,religion:true,village:true,parent:true,parentMobile:true,emergency:true,address:true,email:true,blood:true,admissionDate:true,status:true,photo:true},bulkFields:{name:true,std:true,div:true,roll:true,gr:true,mobile:true,ctsId:true,dob:true,gender:true,category:true,religion:true,village:true,parent:true,parentMobile:true,emergency:true,address:true,email:true,blood:true,admissionDate:true,status:true,photoFileName:true}};
+const defaultCustomize={navDashboard:'🏠 Dashboard',navRooms:'🪑 Rooms / Seats',navPortal:'🌐 Student Portal',navStudents:'👨‍🎓 Student Entry',navDatabase:'🗂️ Student Database',navStudentReports:'📈 Student Reports',navResultAnalytics:'📊 Result Analysis',navAttendance:'📋 Student Attendance',navDocuments:'📁 Student Documents',navFees:'💰 Fee Collection',navBusFees:'🚌 Bus Fee',navResults:'🖨️ Result View / Print',navMarksEntry:'📝 Marks Entry',navResultPrint:'🖨️ Result View / Print',navSchedule:'📅 Exam Schedule',navSchool:'🏫 School Settings',navTicket:'🎫 Hall Ticket',navHallReceipt:'✍️ Hall Ticket Receipt',navBackup:'💾 Backup / Import',navOnline:'☁️ Online Sync',navCustomize:'⚙️ Customize / Settings',btnSaveStudent:'Save Student',btnClear:'Clear',btnBulk:'Bulk Photos',btnPaste:'Paste from Excel',btnAddExam:'Add Exam',btnPrintCurrent:'Print Current',btnPrintAll:'Print All',studentName:'Student Name',standard:'Standard',division:'Division',rollNo:'Roll No.',grNo:'GR No.',mobile:'Parent Mobile',ctsId:'CTS ID',studentPhoto:'Student Photo',examDate:'Exam Date',time:'Time',subject:'Subject',schoolName:'School Name',schoolPhone:'School Phone',address:'Address',examName:'Exam Name',principal:'Principal',footer:'Footer Instruction',ticketTitle:'',scheduleTitle:'EXAM SCHEDULE',photoPlaceholder:'STUDENT|PHOTO',supervisor:'Supervisor Sign',primaryColor:'#1f4e78',darkColor:'#17365d',greenColor:'#70ad47',lightColor:'#eaf3f8',font:'Nirmala UI,Segoe UI,Arial,sans-serif',ticketFont:12,logo:null,showDiv:true,showGR:true,showMobile:true,showPhoto:true,showQR:true,adminPassword:'1234',autoRoll:true,portal:true,studentFields:{name:true,std:true,div:true,roll:true,gr:true,mobile:true,ctsId:true,dob:true,gender:true,category:true,religion:true,village:true,parent:true,parentMobile:true,emergency:true,address:true,email:true,blood:true,admissionDate:true,status:true,photo:true},bulkFields:{name:true,std:true,div:true,roll:true,gr:true,mobile:true,ctsId:true,dob:true,gender:true,category:true,religion:true,village:true,parent:true,parentMobile:true,emergency:true,address:true,email:true,blood:true,admissionDate:true,status:true,photoFileName:true}};
 
 const initialData = {
   school:{
@@ -983,7 +1030,9 @@ const initialData = {
   generated:[],
   busFees:[],
   results:{},
-  fees:[]
+  fees:[],
+  attendance:[],
+  studentDocuments:[]
 };
 
 let db = loadDB();
@@ -997,12 +1046,13 @@ function loadDB(){
     old.customize={...structuredClone(defaultCustomize),...(old.customize||{})}; old.customize.studentFields={...structuredClone(defaultCustomize.studentFields),...(old.customize.studentFields||{})}; old.customize.bulkFields={...structuredClone(defaultCustomize.bulkFields),...(old.customize.bulkFields||{})};
     old.students=Array.isArray(old.students)?old.students:[]; old.exams=Array.isArray(old.exams)?old.exams:[];
     old.rooms=Array.isArray(old.rooms)?old.rooms:[];
-    old.generated=Array.isArray(old.generated)?old.generated:[]; old.busFees=Array.isArray(old.busFees)?old.busFees:[]; old.results=(old.results&&typeof old.results==='object')?old.results:{}; old.fees=Array.isArray(old.fees)?old.fees:[]; old.students.forEach(st=>{delete st.admissionNo;if(st.ctsId===undefined)st.ctsId='';delete st.admissionNo;if(st.dob===undefined)st.dob='';if(st.gender===undefined)st.gender='';if(st.parent===undefined)st.parent='';if(st.parentMobile===undefined)st.parentMobile='';if(st.emergency===undefined)st.emergency='';if(st.address===undefined)st.address='';if(st.email===undefined)st.email='';if(st.blood===undefined)st.blood='';if(st.admissionDate===undefined)st.admissionDate='';if(st.status===undefined)st.status='Active';if(st.category===undefined)st.category='';if(st.religion===undefined)st.religion='';if(st.village===undefined)st.village='';}); old.exams.forEach(ex=>{if(ex.maxMarks===undefined)ex.maxMarks=100;if(ex.passMarks===undefined)ex.passMarks=33;if(ex.type===undefined)ex.type='Exam';});
+    old.generated=Array.isArray(old.generated)?old.generated:[]; old.busFees=Array.isArray(old.busFees)?old.busFees:[]; old.results=(old.results&&typeof old.results==='object')?old.results:{}; old.fees=Array.isArray(old.fees)?old.fees:[]; old.attendance=Array.isArray(old.attendance)?old.attendance:[]; old.studentDocuments=Array.isArray(old.studentDocuments)?old.studentDocuments:[]; old.students.forEach(st=>{delete st.admissionNo;if(st.ctsId===undefined)st.ctsId='';delete st.admissionNo;if(st.dob===undefined)st.dob='';if(st.gender===undefined)st.gender='';if(st.parent===undefined)st.parent='';if(st.parentMobile===undefined)st.parentMobile='';if(st.emergency===undefined)st.emergency='';if(st.address===undefined)st.address='';if(st.email===undefined)st.email='';if(st.blood===undefined)st.blood='';if(st.admissionDate===undefined)st.admissionDate='';if(st.status===undefined)st.status='Active';if(st.category===undefined)st.category='';if(st.religion===undefined)st.religion='';if(st.village===undefined)st.village='';}); old.exams.forEach(ex=>{if(ex.maxMarks===undefined)ex.maxMarks=100;if(ex.passMarks===undefined)ex.passMarks=33;if(ex.type===undefined)ex.type='Exam';});
     return old;
   }catch(e){ const d=structuredClone(initialData); d.customize=structuredClone(defaultCustomize); return d; }
 }
 function saveDB(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); renderAll(); if(localStorage.getItem('hall_ticket_cloud_autosync')==='1' && typeof cloudPush==='function'){clearTimeout(window._cloudPushTimer);window._cloudPushTimer=setTimeout(()=>cloudPush({silent:true}),500);} }
 function nextId(arr){ return arr.length?Math.max(...arr.map(x=>Number(x.id)||0))+1:1; }
+function localISODate(date=new Date()){const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,'0'),d=String(date.getDate()).padStart(2,'0');return `${y}-${m}-${d}`;}
 function esc(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
 
 function showPage(page){
@@ -1036,7 +1086,7 @@ document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',(
 function setVal(id,v){const el=document.getElementById(id);if(el)el.value=v??'';}
 function applyCustomize(){
   const c=db.customize||defaultCustomize;
-  const nav={navDashboard:'navDashboard',navRooms:'navRooms',navPortal:'navPortal',navResults:'navResultPrint',navMarksEntry:'navMarksEntry',navResultPrint:'navResultPrint',navStudents:'navStudents',navDatabase:'navDatabase',navSchedule:'navSchedule',navSchool:'navSchool',navTicket:'navTicket',navHallReceipt:'navHallReceipt',navBackup:'navBackup',navOnline:'navOnline',navCustomize:'navCustomize'};
+  const nav={navDashboard:'navDashboard',navRooms:'navRooms',navPortal:'navPortal',navMarksEntry:'navMarksEntry',navResultPrint:'navResultPrint',navStudents:'navStudents',navDatabase:'navDatabase',navStudentReports:'navStudentReports',navResultAnalytics:'navResultAnalytics',navAttendance:'navAttendance',navDocuments:'navDocuments',navFees:'navFees',navBusFees:'navBusFees',navSchedule:'navSchedule',navSchool:'navSchool',navTicket:'navTicket',navHallReceipt:'navHallReceipt',navBackup:'navBackup',navOnline:'navOnline',navCustomize:'navCustomize'};
   Object.entries(nav).forEach(([k,id])=>{const e=document.getElementById(id);if(e)e.textContent=c[k]||'';});
   const labels={lblStudentName:c.studentName,lblStandard:c.standard,lblDivision:c.division,lblRollNo:c.rollNo,lblGRNo:c.grNo,lblMobile:c.mobile,lblCTSId:c.ctsId,lblStudentPhoto:c.studentPhoto,lblExamDate:c.examDate,lblTime:c.time,lblSubject:c.subject,lblSchoolName:c.schoolName,lblSchoolPhone:c.schoolPhone,lblAddress:c.address,lblExamName:c.examName,lblPrincipal:c.principal,lblFooterInstruction:c.footer};
   Object.entries(labels).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.textContent=v||'';});
@@ -1052,7 +1102,7 @@ function applyCustomize(){
 }
 function loadCustomizeForm(){
   const c=db.customize||defaultCustomize;
-  const map={cNavDashboard:'navDashboard',cNavStudents:'navStudents',cNavDatabase:'navDatabase',cNavResults:'navResults',cNavSchedule:'navSchedule',cNavSchool:'navSchool',cNavTicket:'navTicket',cNavBackup:'navBackup',cNavCustomize:'navCustomize',cBtnSaveStudent:'btnSaveStudent',cBtnClear:'btnClear',cBtnBulk:'btnBulk',cBtnPaste:'btnPaste',cBtnAddExam:'btnAddExam',cBtnPrintCurrent:'btnPrintCurrent',cBtnPrintAll:'btnPrintAll',cStudentName:'studentName',cStandard:'standard',cDivision:'division',cRollNo:'rollNo',cGRNo:'grNo',cMobile:'mobile',cCTSId:'ctsId',cStudentPhoto:'studentPhoto',cExamDate:'examDate',cTime:'time',cSubject:'subject',cSchoolName:'schoolName',cSchoolPhone:'schoolPhone',cAddress:'address',cExamName:'examName',cPrincipal:'principal',cFooter:'footer',cTicketTitle:'ticketTitle',cScheduleTitle:'scheduleTitle',cPhotoPlaceholder:'photoPlaceholder',cSupervisor:'supervisor',cPrimaryColor:'primaryColor',cDarkColor:'darkColor',cGreenColor:'greenColor',cLightColor:'lightColor',cFont:'font',cTicketFont:'ticketFont'};
+  const map={cNavDashboard:'navDashboard',cNavRooms:'navRooms',cNavPortal:'navPortal',cNavMarksEntry:'navMarksEntry',cNavResultPrint:'navResultPrint',cNavStudents:'navStudents',cNavDatabase:'navDatabase',cNavStudentReports:'navStudentReports',cNavFees:'navFees',cNavBusFees:'navBusFees',cNavHallReceipt:'navHallReceipt',cNavOnline:'navOnline',cNavResultAnalytics:'navResultAnalytics',cNavAttendance:'navAttendance',cNavDocuments:'navDocuments',cNavResults:'navResults',cNavSchedule:'navSchedule',cNavSchool:'navSchool',cNavTicket:'navTicket',cNavBackup:'navBackup',cNavCustomize:'navCustomize',cBtnSaveStudent:'btnSaveStudent',cBtnClear:'btnClear',cBtnBulk:'btnBulk',cBtnPaste:'btnPaste',cBtnAddExam:'btnAddExam',cBtnPrintCurrent:'btnPrintCurrent',cBtnPrintAll:'btnPrintAll',cStudentName:'studentName',cStandard:'standard',cDivision:'division',cRollNo:'rollNo',cGRNo:'grNo',cMobile:'mobile',cCTSId:'ctsId',cStudentPhoto:'studentPhoto',cExamDate:'examDate',cTime:'time',cSubject:'subject',cSchoolName:'schoolName',cSchoolPhone:'schoolPhone',cAddress:'address',cExamName:'examName',cPrincipal:'principal',cFooter:'footer',cTicketTitle:'ticketTitle',cScheduleTitle:'scheduleTitle',cPhotoPlaceholder:'photoPlaceholder',cSupervisor:'supervisor',cPrimaryColor:'primaryColor',cDarkColor:'darkColor',cGreenColor:'greenColor',cLightColor:'lightColor',cFont:'font',cTicketFont:'ticketFont'};
   Object.entries(map).forEach(([id,key])=>setVal(id,c[key]));
   ['cShowDiv','cShowGR','cShowMobile','cShowPhoto','cShowQR'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.checked=[c.showDiv,c.showGR,c.showMobile,c.showPhoto,c.showQR][i];});
   setVal('cAdminPassword',c.adminPassword||'1234');setVal('cAutoRoll',String(c.autoRoll!==false));setVal('cPortal',String(c.portal!==false));
@@ -1061,7 +1111,7 @@ function loadCustomizeForm(){
 }
 function saveCustomize(){
   const c={};
-  const map={cNavDashboard:'navDashboard',cNavStudents:'navStudents',cNavDatabase:'navDatabase',cNavResults:'navResults',cNavSchedule:'navSchedule',cNavSchool:'navSchool',cNavTicket:'navTicket',cNavBackup:'navBackup',cNavCustomize:'navCustomize',cBtnSaveStudent:'btnSaveStudent',cBtnClear:'btnClear',cBtnBulk:'btnBulk',cBtnPaste:'btnPaste',cBtnAddExam:'btnAddExam',cBtnPrintCurrent:'btnPrintCurrent',cBtnPrintAll:'btnPrintAll',cStudentName:'studentName',cStandard:'standard',cDivision:'division',cRollNo:'rollNo',cGRNo:'grNo',cMobile:'mobile',cCTSId:'ctsId',cStudentPhoto:'studentPhoto',cExamDate:'examDate',cTime:'time',cSubject:'subject',cSchoolName:'schoolName',cSchoolPhone:'schoolPhone',cAddress:'address',cExamName:'examName',cPrincipal:'principal',cFooter:'footer',cTicketTitle:'ticketTitle',cScheduleTitle:'scheduleTitle',cPhotoPlaceholder:'photoPlaceholder',cSupervisor:'supervisor',cPrimaryColor:'primaryColor',cDarkColor:'darkColor',cGreenColor:'greenColor',cLightColor:'lightColor',cFont:'font',cTicketFont:'ticketFont'};
+  const map={cNavDashboard:'navDashboard',cNavRooms:'navRooms',cNavPortal:'navPortal',cNavMarksEntry:'navMarksEntry',cNavResultPrint:'navResultPrint',cNavStudents:'navStudents',cNavDatabase:'navDatabase',cNavStudentReports:'navStudentReports',cNavFees:'navFees',cNavBusFees:'navBusFees',cNavHallReceipt:'navHallReceipt',cNavOnline:'navOnline',cNavResultAnalytics:'navResultAnalytics',cNavAttendance:'navAttendance',cNavDocuments:'navDocuments',cNavResults:'navResults',cNavSchedule:'navSchedule',cNavSchool:'navSchool',cNavTicket:'navTicket',cNavBackup:'navBackup',cNavCustomize:'navCustomize',cBtnSaveStudent:'btnSaveStudent',cBtnClear:'btnClear',cBtnBulk:'btnBulk',cBtnPaste:'btnPaste',cBtnAddExam:'btnAddExam',cBtnPrintCurrent:'btnPrintCurrent',cBtnPrintAll:'btnPrintAll',cStudentName:'studentName',cStandard:'standard',cDivision:'division',cRollNo:'rollNo',cGRNo:'grNo',cMobile:'mobile',cCTSId:'ctsId',cStudentPhoto:'studentPhoto',cExamDate:'examDate',cTime:'time',cSubject:'subject',cSchoolName:'schoolName',cSchoolPhone:'schoolPhone',cAddress:'address',cExamName:'examName',cPrincipal:'principal',cFooter:'footer',cTicketTitle:'ticketTitle',cScheduleTitle:'scheduleTitle',cPhotoPlaceholder:'photoPlaceholder',cSupervisor:'supervisor',cPrimaryColor:'primaryColor',cDarkColor:'darkColor',cGreenColor:'greenColor',cLightColor:'lightColor',cFont:'font',cTicketFont:'ticketFont'};
   Object.entries(map).forEach(([id,key])=>c[key]=document.getElementById(id).value);
   c.ticketFont=Math.max(10,Math.min(24,Number(c.ticketFont)||12));c.studentFields={...structuredClone(defaultCustomize.studentFields)};
   document.querySelectorAll('[data-student-field]').forEach(el=>{const key={sName:'name',sStd:'std',sDiv:'div',sRoll:'roll',sGR:'gr',sMobile:'mobile',sCTSId:'ctsId',sDOB:'dob',sGender:'gender',sCategory:'category',sReligion:'religion',sVillage:'village',sParent:'parent',sParentMobile:'parentMobile',sEmergency:'emergency',sAddress:'address',sEmail:'email',sBlood:'blood',sAdmissionDate:'admissionDate',sStatus:'status',sPhoto:'photo'}[el.dataset.studentField];if(key)c.studentFields[key]=el.checked;});  c.bulkFields={...structuredClone(defaultCustomize.bulkFields)};document.querySelectorAll('#page-customize [data-bulk-field]').forEach(el=>{c.bulkFields[el.dataset.bulkField]=el.checked;});
@@ -1111,7 +1161,7 @@ async function cloudPull(){
     if(!r.data?.data)throw new Error('આ School Key માટે Cloud data હજી નથી. પ્રથમ sync માટે Upload Current Data વાપરો.');
     if(!confirm('Cloud data download કરીને હાલના browser dataને replace કરવું?'))return;
     db=r.data.data;db.customize={...structuredClone(defaultCustomize),...(db.customize||{})};
-    db.students=Array.isArray(db.students)?db.students:[];db.seatSeries=db.seatSeries&&typeof db.seatSeries==='object'?db.seatSeries:{};db.exams=Array.isArray(db.exams)?db.exams:[];db.rooms=Array.isArray(db.rooms)?db.rooms:[];db.generated=Array.isArray(db.generated)?db.generated:[];db.fees=Array.isArray(db.fees)?db.fees:[];db.busFees=Array.isArray(db.busFees)?db.busFees:[];db.results=db.results&&typeof db.results==='object'?db.results:{};
+    db.students=Array.isArray(db.students)?db.students:[];db.seatSeries=db.seatSeries&&typeof db.seatSeries==='object'?db.seatSeries:{};db.exams=Array.isArray(db.exams)?db.exams:[];db.rooms=Array.isArray(db.rooms)?db.rooms:[];db.generated=Array.isArray(db.generated)?db.generated:[];db.fees=Array.isArray(db.fees)?db.fees:[];db.busFees=Array.isArray(db.busFees)?db.busFees:[];db.attendance=Array.isArray(db.attendance)?db.attendance:[];db.studentDocuments=Array.isArray(db.studentDocuments)?db.studentDocuments:[];db.results=db.results&&typeof db.results==='object'?db.results:{};
     localStorage.setItem(STORAGE_KEY,JSON.stringify(db));localStorage.setItem('hall_ticket_cloud_autosync','1');renderAll();applyCustomize();
     cloudStatus('Cloud data downloaded • '+new Date(r.data.updated_at).toLocaleString('en-IN')+' • Auto-sync ON',true);updateTopCloudStatus(true,sess.data.session.user.email);alert('Cloud data restored successfully.');
   }catch(e){cloudStatus('Download error: '+e.message);alert('Download error: '+e.message);}
@@ -1241,6 +1291,26 @@ document.getElementById('btnUpdateAuthPassword')?.addEventListener('click',updat
 
 document.getElementById('btnCloudConnect')?.addEventListener('click',cloudConnect);document.getElementById('btnCloudPush')?.addEventListener('click',cloudPush);document.getElementById('btnCloudPull')?.addEventListener('click',cloudPull);document.getElementById('btnCloudLogout')?.addEventListener('click',cloudLogout);document.getElementById('btnSavePortalUrl')?.addEventListener('click',()=>{localStorage.setItem('hall_ticket_online_portal_url',document.getElementById('sbPortalUrl').value.trim());localStorage.setItem('hall_ticket_online_school_key',document.getElementById('sbSchoolKey').value.trim()||'main-school');alert('Portal URL saved.');});
 function loadCloudForm(){const c=cloudConfig();document.getElementById('sbUrl').value=c.url;document.getElementById('sbKey').value=c.key;document.getElementById('sbSchoolKey').value=c.schoolKey;document.getElementById('sbPortalUrl').value=localStorage.getItem('hall_ticket_online_portal_url')||'';}
+function resultAnalysisRows(){const std=document.getElementById('raStd')?.value||'',stream=document.getElementById('raStream')?.value||'',div=document.getElementById('raDiv')?.value||'',q=(document.getElementById('raSearch')?.value||'').toLowerCase().trim();if(!std)return [];const exams=(db.exams||[]).filter(e=>String(Number(e.std))===String(Number(std))&&(!['11','12'].includes(String(Number(std)))||!stream||String(e.stream||'')===stream));return (db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!['11','12'].includes(String(Number(std)))||!stream||String(s.stream||'')===stream)&&(!div||String(s.div||'')===div)&&(!q||[s.name,s.roll,s.seatNo,s.gr,s.ctsId].some(v=>String(v||'').toLowerCase().includes(q)))).map(s=>{const studentExams=exams.filter(e=>!['11','12'].includes(String(Number(std)))||stream||String(e.stream||'')===String(s.stream||''));let total=0,outOf=0,entered=0,failed=false;const subjectMarks=[];studentExams.forEach(e=>{const r=(db.results?.[String(e.id)]||{})[String(s.id)]||{};if(r.marks!==''&&r.marks!==null&&r.marks!==undefined&&Number.isFinite(Number(r.marks))){const cap=Number(e.maxMarks)||resultStandardCap(std),pass=(['9','11'].includes(String(Number(std)))?18:(Number(e.passMarks)||33)),m=Number(r.marks);total+=m;outOf+=cap;entered++;if(m<pass)failed=true;subjectMarks.push(`${e.subject}: ${m}/${cap}`);}});const pct=outOf?total/outOf*100:0;return {s,total,outOf,entered,expected:studentExams.length,pct,result:!entered?'INCOMPLETE':(entered<studentExams.length?'INCOMPLETE':failed?'FAIL':'PASS'),subjectMarks};}).sort((a,b)=>{const ar=a.result==='INCOMPLETE'?2:a.result==='FAIL'?1:0,br=b.result==='INCOMPLETE'?2:b.result==='FAIL'?1:0;return ar-br||b.pct-a.pct||a.s.name.localeCompare(b.s.name);});}
+function renderResultAnalysis(){const stdEl=document.getElementById('raStd');if(!stdEl)return;const std=stdEl.value;document.getElementById('raStreamWrap').classList.toggle('hidden',!['11','12'].includes(String(Number(std))));const divEl=document.getElementById('raDiv');if(divEl){const cur=divEl.value,divs=[...new Set((db.students||[]).filter(s=>!std||String(Number(s.std))===String(Number(std))).map(s=>String(s.div||'')).filter(Boolean))].sort();divEl.innerHTML='<option value="">All Divisions</option>'+divs.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('');if(divs.includes(cur))divEl.value=cur;}const rows=resultAnalysisRows();const entered=rows.filter(r=>r.entered),passed=rows.filter(r=>r.result==='PASS'),failed=rows.filter(r=>r.result==='FAIL'),incomplete=rows.filter(r=>r.result==='INCOMPLETE'),avg=entered.length?entered.reduce((a,r)=>a+r.pct,0)/entered.length:0;document.getElementById('raStats').innerHTML=`<div class="stat"><b>${rows.length}</b><span>Students</span></div><div class="stat"><b>${passed.length}</b><span>Pass</span></div><div class="stat"><b>${failed.length}</b><span>Fail</span></div><div class="stat"><b>${incomplete.length}</b><span>Incomplete</span></div><div class="stat"><b>${avg.toFixed(1)}%</b><span>Average % (with marks)</span></div>`;document.getElementById('raTableBody').innerHTML=rows.map((r,i)=>`<tr><td>${r.entered?i+1:'-'}</td><td>${esc(r.s.name||'')}</td><td>${esc(r.s.std||'')}/${esc(r.s.div||'')}</td><td>${esc(r.s.seatNo||r.s.roll||'')}</td><td>${esc(r.s.gr||'')}</td><td>${r.entered}/${r.expected}</td><td>${r.total.toFixed(2).replace(/\.00$/,'')}</td><td>${r.outOf}</td><td>${r.outOf?r.pct.toFixed(2)+'%':'-'}</td><td class="${r.result==='PASS'?'fee-paid':r.result==='FAIL'?'fee-pending':''}">${r.result}</td><td>${esc(r.subjectMarks.join(' | ')||'-')}</td></tr>`).join('')||'<tr><td colspan="11">Standard પસંદ કરો અથવા matching students નથી.</td></tr>';}
+function exportResultAnalysis(){const rows=resultAnalysisRows(),header=['Rank','Student','Standard','Division','Seat/Roll','GR No','Subjects Entered','Total','Out Of','Percentage','Result','Subject Marks'];const all=[header,...rows.map((r,i)=>[r.entered?i+1:'',r.s.name,r.s.std,r.s.div,r.s.seatNo||r.s.roll,r.s.gr,r.entered,r.total,r.outOf,r.outOf?r.pct.toFixed(2):'',r.result,r.subjectMarks.join(' | ')])];const csv=all.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='SVD_Result_Analysis.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
+function fillSelectKeep(id,placeholder,items,current){const el=document.getElementById(id);if(!el)return;const cur=current!==undefined?current:el.value;el.innerHTML=`<option value="">${esc(placeholder)}</option>`+items.map(x=>`<option value="${esc(x.value)}">${esc(x.label)}</option>`).join('');if(items.some(x=>String(x.value)===String(cur)))el.value=cur;}
+function renderAttendance(){
+  const standards=[...new Set((db.students||[]).map(s=>String(s.std||'')).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  fillSelectKeep('attStd','Select Standard',standards.map(x=>({value:x,label:'Std '+x})));fillSelectKeep('attReportStd','All Standards',standards.map(x=>({value:x,label:'Std '+x})));fillSelectKeep('docFilterStd','All Standards',standards.map(x=>({value:x,label:'Std '+x})));
+  const students=(db.students||[]).slice().sort((a,b)=>Number(a.roll)-Number(b.roll));fillSelectKeep('docStudent','Select Student',students.map(s=>({value:s.id,label:`${s.name} — Std ${s.std||''}${s.div?' '+s.div:''} — GR ${s.gr||''}`})));
+  const date=document.getElementById('attDate');if(date&&!date.value)date.value=localISODate();
+  const div=document.getElementById('attDiv');if(div){const cur=div.value, std=document.getElementById('attStd')?.value||'';const divs=[...new Set(students.filter(s=>!std||String(s.std)===std).map(s=>String(s.div||'')).filter(Boolean))].sort();div.innerHTML='<option value="">All Divisions</option>'+divs.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');if(divs.includes(cur))div.value=cur;}
+  renderAttendanceTable();renderDocuments();
+}
+function attendanceStudents(){const std=document.getElementById('attStd')?.value||'',div=document.getElementById('attDiv')?.value||'',q=(document.getElementById('attSearch')?.value||'').toLowerCase().trim();return (db.students||[]).filter(s=>(!std||String(s.std)===std)&&(!div||String(s.div||'')===div)&&(!q||[s.name,s.roll,s.gr,s.ctsId].some(v=>String(v||'').toLowerCase().includes(q)))).sort((a,b)=>Number(a.roll)-Number(b.roll));}
+function renderAttendanceTable(){const date=document.getElementById('attDate')?.value||'',list=attendanceStudents(),records=db.attendance||[];const tb=document.getElementById('attendanceTableBody');if(!tb)return;tb.innerHTML=list.map(s=>{const rec=records.find(a=>String(a.studentId)===String(s.id)&&a.date===date);const status=rec?.status||'';return `<tr data-att-student="${esc(s.id)}"><td>${esc(s.roll||'')}</td><td>${esc(s.name||'')}</td><td>${esc(s.gr||'')}</td><td><select class="att-status"><option value="" ${!status?'selected':''}>Select Status</option><option ${status==='Present'?'selected':''}>Present</option><option ${status==='Absent'?'selected':''}>Absent</option><option ${status==='Late'?'selected':''}>Late</option><option ${status==='Leave'?'selected':''}>Leave</option></select></td><td><input class="att-remarks" value="${esc(rec?.remarks||'')}" placeholder="Optional"></td></tr>`;}).join('')||'<tr><td colspan="5">No students found. Select a standard and load students.</td></tr>';const visibleIds=new Set(list.map(s=>String(s.id)));const saved=records.filter(a=>a.date===date&&visibleIds.has(String(a.studentId)));const present=saved.filter(a=>a.status==='Present').length,absent=saved.filter(a=>a.status==='Absent').length,late=saved.filter(a=>a.status==='Late').length;document.getElementById('attendanceStats').innerHTML=`<div class="stat"><b>${list.length}</b><span>Students shown</span></div><div class="stat"><b>${present}</b><span>Present saved</span></div><div class="stat"><b>${absent}</b><span>Absent saved</span></div><div class="stat"><b>${late}</b><span>Late saved</span></div>`;}
+function saveAttendance(){const date=document.getElementById('attDate').value;if(!date){alert('Attendance date પસંદ કરો.');return;}const rows=[...document.querySelectorAll('#attendanceTableBody tr[data-att-student]')];if(!rows.length){alert('પહેલાં students load કરો.');return;}const pending=rows.map(row=>({row,studentId:row.dataset.attStudent,status:row.querySelector('.att-status').value,remarks:row.querySelector('.att-remarks').value.trim()}));if(pending.some(x=>!['Present','Absent','Late','Leave'].includes(x.status))){alert('બધા દેખાતા વિદ્યાર્થીઓ માટે હાજરીની સ્થિતિ પસંદ કરો.');return;}db.attendance=db.attendance||[];pending.forEach(({studentId,status,remarks})=>{const i=db.attendance.findIndex(a=>String(a.studentId)===String(studentId)&&a.date===date);const rec={studentId,date,status,remarks,updatedAt:new Date().toISOString()};if(i>=0)db.attendance[i]=rec;else db.attendance.push(rec);});saveDB();alert('Attendance saved.');}
+function renderAttendanceSummary(){const std=document.getElementById('attReportStd').value,from=document.getElementById('attReportFrom').value,to=document.getElementById('attReportTo').value;const rec=(db.attendance||[]).filter(a=>(!from||a.date>=from)&&(!to||a.date<=to));const students=(db.students||[]).filter(s=>!std||String(s.std)===std);document.getElementById('attendanceSummaryBody').innerHTML=students.map(s=>{const xs=rec.filter(a=>String(a.studentId)===String(s.id)),p=xs.filter(a=>a.status==='Present').length,ab=xs.filter(a=>a.status==='Absent').length,l=xs.filter(a=>a.status==='Late').length,eligible=p+ab+l;return `<tr><td>${esc(s.name)}</td><td>${esc(s.std)}</td><td>${p}</td><td>${ab}</td><td>${l}</td><td>${eligible?Math.round((p+l)/eligible*100):0}%</td></tr>`;}).join('')||'<tr><td colspan="6">No records found.</td></tr>';}
+function renderDocuments(){const tb=document.getElementById('documentsTableBody');if(!tb)return;const q=(document.getElementById('docSearch')?.value||'').toLowerCase().trim(),std=document.getElementById('docFilterStd')?.value||'';const list=(db.studentDocuments||[]).slice().reverse().filter(d=>{const s=db.students.find(x=>String(x.id)===String(d.studentId))||{};return (!std||String(s.std)===std)&&(!q||[s.name,s.ctsId,s.gr,d.title,d.type,d.fileName].join(' ').toLowerCase().includes(q));});tb.innerHTML=list.map(d=>{const st=db.students.find(x=>String(x.id)===String(d.studentId))||{};const safeDataUrl=/^data:(application\/pdf|image\/(jpeg|png|webp));base64,[A-Za-z0-9+/=\r\n]+$/.test(String(d.dataUrl||''));const download=safeDataUrl?`<a href="${d.dataUrl}" download="${esc(d.fileName||'document')}">Download</a>`:'<span>Invalid/missing file</span>';return `<tr><td>${esc(st.name||'Student not found')}<br><small>${esc(st.ctsId||'')}</small></td><td>${esc(st.std||'')}/${esc(st.div||'')}</td><td>${esc(d.title||d.type||'Document')}<br><small>${esc(d.type||'')}</small></td><td>${esc(d.date||'')}</td><td>${esc(d.fileName||'')}</td><td>${download} <button class="btn btn-danger" onclick="deleteStudentDocument('${esc(d.id)}')">Delete</button></td></tr>`;}).join('')||'<tr><td colspan="6">No documents found.</td></tr>';}
+function saveStudentDocument(){const studentId=document.getElementById('docStudent').value,file=document.getElementById('docFile').files[0];if(!studentId||!file){alert('Student અને file પસંદ કરો.');return;}if(file.size>800*1024){alert('File 800 KBથી નાની હોવી જોઈએ. PDF/JPG/PNG/WebP વાપરો.');return;}const allowedMime=['application/pdf','image/jpeg','image/png','image/webp'];if(!allowedMime.includes(file.type)){alert('માત્ર PDF, JPG, PNG અથવા WebP ફાઇલ સ્વીકાર્ય છે.');return;}const estimatedCurrentBytes=new Blob([JSON.stringify(db)]).size;if(estimatedCurrentBytes+Math.ceil(file.size*1.4)>3.5*1024*1024){alert('Browser storage સુરક્ષિત રાખવા માટે આ ફાઇલ ઉમેરતાં database લગભગ 3.5 MBથી મોટો થઈ જશે. પહેલાં Backup લો અથવા જૂના/મોટા દસ્તાવેજો દૂર કરો.');return;}const title=document.getElementById('docTitle').value.trim()||file.name,type=document.getElementById('docType').value,date=document.getElementById('docDate').value;const reader=new FileReader();reader.onload=()=>{db.studentDocuments=db.studentDocuments||[];db.studentDocuments.push({id:'doc_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),studentId,title,type,date,fileName:file.name,mimeType:file.type,dataUrl:String(reader.result),size:file.size,createdAt:new Date().toISOString()});saveDB();document.getElementById('docTitle').value='';document.getElementById('docDate').value='';document.getElementById('docFile').value='';alert('Student document saved. Backupમાં આ ફાઇલનો data પણ સામેલ થશે.');};reader.readAsDataURL(file);}
+function deleteStudentDocument(id){if(!confirm('આ દસ્તાવેજ delete કરવો?'))return;db.studentDocuments=(db.studentDocuments||[]).filter(d=>String(d.id)!==String(id));saveDB();}
+function exportDocumentList(){const rows=[['Student','CTS ID','Standard','Division','Document Type','Title','Date','File Name'],...(db.studentDocuments||[]).map(d=>{const s=db.students.find(x=>String(x.id)===String(d.studentId))||{};return [s.name,s.ctsId,s.std,s.div,d.type,d.title,d.date,d.fileName];})];const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='SVD_Student_Documents.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
 function renderAll(){
   applyCustomize();
   document.getElementById('statStudents').textContent=db.students.length;
@@ -1249,7 +1319,7 @@ function renderAll(){
   const stds=[...new Set(db.students.map(s=>s.std).filter(Boolean))];
   document.getElementById('statStd').textContent=stds.join(', ')||'-';
   document.getElementById('statGenerated').textContent=db.generated?.length||0; document.getElementById('statPending').textContent=Math.max(0,db.students.length-(db.generated?.length||0));
-  renderStudents(); renderStudentDatabase(); renderStudentReports(); renderExams(); renderSchool(); renderRolls();
+  renderStudents(); renderStudentDatabase(); renderStudentReports(); renderExams(); renderSchool(); renderRolls(); renderAttendance(); renderDocuments(); renderResultAnalysis();
 }
 
 function renderStudents(){
@@ -2076,27 +2146,28 @@ btnPrintAll.addEventListener('click',()=>{
 
 btnExportBackup.addEventListener('click',()=>{
   const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Hall_Ticket_Database_Backup.json';a.click();URL.revokeObjectURL(a.href);
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='SVD_School_Management_Backup_'+localISODate()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500);
 });
 backupFile.addEventListener('change',e=>{
   const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);db.customize={...structuredClone(defaultCustomize),...(db.customize||{})};db.rooms=db.rooms||[];db.generated=db.generated||[];db.fees=db.fees||[];db.busFees=db.busFees||[];db.students=(db.students||[]).map(st=>({status:'Active',admissionNo:'',dob:'',gender:'',parent:'',parentMobile:'',emergency:'',address:'',email:'',blood:'',admissionDate:'',...st}));saveDB();renderAllocations();alert('Backup restored.');}catch(err){alert('Invalid backup file.');}};r.readAsText(f);
+  const r=new FileReader();r.onload=()=>{try{const parsed=JSON.parse(r.result);if(!parsed||!Array.isArray(parsed.students)||!Array.isArray(parsed.exams))throw new Error('Backup JSON structure not recognized');if(!confirm('Restore will replace the current browser database. Before continuing, download a backup of the current data. Continue?'))return;db={...structuredClone(initialData),...parsed};db.customize={...structuredClone(defaultCustomize),...(db.customize||{})};db.rooms=Array.isArray(db.rooms)?db.rooms:[];db.generated=Array.isArray(db.generated)?db.generated:[];db.fees=Array.isArray(db.fees)?db.fees:[];db.busFees=Array.isArray(db.busFees)?db.busFees:[];db.attendance=Array.isArray(db.attendance)?db.attendance:[];db.studentDocuments=Array.isArray(db.studentDocuments)?db.studentDocuments:[];db.results=(db.results&&typeof db.results==='object')?db.results:{};db.students=(db.students||[]).map(st=>({status:'Active',admissionNo:'',dob:'',gender:'',parent:'',parentMobile:'',emergency:'',address:'',email:'',blood:'',admissionDate:'',...st}));saveDB();renderAllocations();alert('Backup restored locally. Supabase data was not changed unless you explicitly upload it.');}catch(err){alert('Invalid backup file: '+err.message);}};r.readAsText(f);
 });
 btnReset.addEventListener('click',()=>{
-  const ok=confirm('આ browserના બધા Student, Exam, Room/Seat, Result/Marks, Fee, Bus Fee અને Hall Ticket Generated testing records કાઢી નાખવામાં આવશે. School Settings અને Customize જળવાશે. Cloud data આપમેળે બદલાશે નહીં. આગળ વધવું?');
+  const ok=confirm('આ browserના બધા Student, Exam, Room/Seat, Result/Marks, Fee, Bus Fee, Attendance, Student Documents અને Hall Ticket Generated testing records કાઢી નાખવામાં આવશે. School Settings અને Customize જળવાશે. Cloud data આપમેળે બદલાશે નહીં. આગળ વધવું?');
   if(!ok)return;
   localStorage.removeItem('hall_ticket_cloud_autosync');
-  db={...db,students:[],exams:[],rooms:[],generated:[],fees:[],busFees:[],results:{}};
+  db={...db,students:[],exams:[],rooms:[],generated:[],fees:[],busFees:[],attendance:[],studentDocuments:[],results:{}};
   saveDB();
   cloudStatus('Local testing data cleared. Cloud data unchanged. First sync માટે Upload Current Data દબાવો; Cloudમાં જૂનો record હશે તો overwrite confirmation આવશે.');
   alert('Local testing data cleared. School settings and customization are preserved. Cloud data has not been changed.');
 });
 
 document.getElementById('studentSearch')?.addEventListener('input',renderStudents);document.getElementById('studentSearchStd')?.addEventListener('change',renderStudents);document.getElementById('studentSearchDiv')?.addEventListener('change',renderStudents);document.getElementById('btnClearSearch')?.addEventListener('click',()=>{studentSearch.value='';studentSearchStd.value='';studentSearchDiv.value='';renderStudents();});
-document.getElementById('btnAddResultSubject')?.addEventListener('click',addResultSubject);document.getElementById('btnEditResultSubject')?.addEventListener('click',editResultSubject);document.getElementById('btnRemoveResultSubject')?.addEventListener('click',removeResultSubject);document.getElementById('subjectManageStd')?.addEventListener('change',e=>{document.getElementById('resultStd').value=e.target.value;renderResultPage();});document.getElementById('btnLoadMarks')?.addEventListener('click',loadMarksTable);document.getElementById('btnSaveMarks')?.addEventListener('click',saveMarks);document.getElementById('resultExam')?.addEventListener('change',loadMarksTable);document.getElementById('resultStd')?.addEventListener('change',()=>{const cur=document.getElementById('resultExam')?.value;refreshResultExamOptions(cur);loadMarksTable();});document.getElementById('resultDiv')?.addEventListener('change',loadMarksTable);document.getElementById('resultStream')?.addEventListener('change',()=>{refreshResultExamOptions();loadMarksTable();renderResultStudents();});document.getElementById('sStd')?.addEventListener('change',syncStudentStreamField);document.getElementById('subjectManageStd')?.addEventListener('change',e=>{document.getElementById('subjectStreamWrap')?.classList.toggle('hidden',!['11','12'].includes(String(Number(e.target.value))));});document.getElementById('subjectManageStream')?.addEventListener('change',()=>{const st=document.getElementById('subjectManageStd').value;if(['11','12'].includes(String(Number(st))))ensureStreamSubjects(st,document.getElementById('subjectManageStream').value);renderResultPage();});document.getElementById('resultPrintStd')?.addEventListener('change',()=>{document.getElementById('resultStudentSearch').value='';renderResultStudents();document.getElementById('resultPreview').innerHTML='';});document.getElementById('resultStudentSearch')?.addEventListener('input',renderResultStudents);document.getElementById('btnPreviewResult')?.addEventListener('click',previewResult);document.getElementById('btnPrintResult')?.addEventListener('click',printResult);document.getElementById('btnWhatsAppResult')?.addEventListener('click',whatsappResult);document.getElementById('btnPrintTestReport')?.addEventListener('click',printTestReport);document.getElementById('bulkWaStd')?.addEventListener('change',renderBulkWaStudents);document.getElementById('bulkWaStream')?.addEventListener('change',renderBulkWaStudents);document.getElementById('btnLoadBulkWaStudents')?.addEventListener('click',renderBulkWaStudents);document.getElementById('btnSelectAllBulkWa')?.addEventListener('click',()=>{const xs=[...document.querySelectorAll('#bulkWaStudents input[data-bulk-wa-id]')],all=xs.some(x=>!x.checked);xs.forEach(x=>x.checked=all);});document.getElementById('btnStartBulkWa')?.addEventListener('click',startBulkWhatsAppQueue);document.getElementById('btnOpenNextBulkWa')?.addEventListener('click',openNextBulkWhatsApp);document.getElementById('btnResetBulkWa')?.addEventListener('click',()=>{bulkWaQueue=[];bulkWaIndex=0;document.getElementById('bulkWaStatus').textContent='Queue reset થઈ.';});document.getElementById('btnResultPrintAll')?.addEventListener('click',printAllResults);
+document.getElementById('btnAddResultSubject')?.addEventListener('click',addResultSubject);document.getElementById('btnEditResultSubject')?.addEventListener('click',editResultSubject);document.getElementById('btnRemoveResultSubject')?.addEventListener('click',removeResultSubject);document.getElementById('subjectManageStd')?.addEventListener('change',e=>{document.getElementById('resultStd').value=e.target.value;renderResultPage();});document.getElementById('btnLoadMarks')?.addEventListener('click',loadMarksTable);document.getElementById('btnSaveMarks')?.addEventListener('click',saveMarks);document.getElementById('resultExam')?.addEventListener('change',loadMarksTable);document.getElementById('resultStd')?.addEventListener('change',()=>{const cur=document.getElementById('resultExam')?.value;refreshResultExamOptions(cur);loadMarksTable();});document.getElementById('resultDiv')?.addEventListener('change',loadMarksTable);document.getElementById('resultStream')?.addEventListener('change',()=>{refreshResultExamOptions();loadMarksTable();renderResultStudents();});document.getElementById('sStd')?.addEventListener('change',syncStudentStreamField);document.getElementById('subjectManageStd')?.addEventListener('change',e=>{document.getElementById('subjectStreamWrap')?.classList.toggle('hidden',!['11','12'].includes(String(Number(e.target.value))));});document.getElementById('subjectManageStream')?.addEventListener('change',()=>{const st=document.getElementById('subjectManageStd').value;if(['11','12'].includes(String(Number(st))))ensureStreamSubjects(st,document.getElementById('subjectManageStream').value);renderResultPage();});document.getElementById('resultPrintStd')?.addEventListener('change',()=>{document.getElementById('resultStudentSearch').value='';renderResultStudents();document.getElementById('resultPreview').innerHTML='';});document.getElementById('resultStudentSearch')?.addEventListener('input',renderResultStudents);document.getElementById('btnPreviewResult')?.addEventListener('click',previewResult);document.getElementById('btnPrintResult')?.addEventListener('click',printResult);document.getElementById('bulkResultPrintStd')?.addEventListener('change',()=>{syncBulkResultPrintFilters();});document.getElementById('bulkResultPrintStream')?.addEventListener('change',updateBulkResultPrintStatus);document.getElementById('bulkResultPrintDiv')?.addEventListener('change',updateBulkResultPrintStatus);document.getElementById('btnBulkResultPrint')?.addEventListener('click',printBulkResultsByStandard);document.getElementById('btnWhatsAppResult')?.addEventListener('click',whatsappResult);document.getElementById('btnPrintTestReport')?.addEventListener('click',printTestReport);document.getElementById('bulkWaStd')?.addEventListener('change',renderBulkWaStudents);document.getElementById('bulkWaStream')?.addEventListener('change',renderBulkWaStudents);document.getElementById('btnLoadBulkWaStudents')?.addEventListener('click',renderBulkWaStudents);document.getElementById('btnSelectAllBulkWa')?.addEventListener('click',()=>{const xs=[...document.querySelectorAll('#bulkWaStudents input[data-bulk-wa-id]')],all=xs.some(x=>!x.checked);xs.forEach(x=>x.checked=all);});document.getElementById('btnStartBulkWa')?.addEventListener('click',startBulkWhatsAppQueue);document.getElementById('btnOpenNextBulkWa')?.addEventListener('click',openNextBulkWhatsApp);document.getElementById('btnResetBulkWa')?.addEventListener('click',()=>{bulkWaQueue=[];bulkWaIndex=0;document.getElementById('bulkWaStatus').textContent='Queue reset થઈ.';});document.getElementById('btnResultPrintAll')?.addEventListener('click',printAllResults);
 document.getElementById('btnStudentFeeReport')?.addEventListener('click',printStudentFeeReport);
 document.getElementById('btnSaveBusFee')?.addEventListener('click',saveBusFee);document.getElementById('btnClearBusFee')?.addEventListener('click',clearBusFeeForm);document.getElementById('btnBusReceipt')?.addEventListener('click',()=>{const id=window.editingBusFeeId||window.lastSavedBusFeeId||((db.busFees||[]).length?db.busFees[db.busFees.length-1].id:null);if(id)printBusFeeReceipt(id);else alert('Save a bus fee entry first.');});document.getElementById('busSearch')?.addEventListener('input',renderBusFeesTable);document.getElementById('busFilterMode')?.addEventListener('change',renderBusFeesTable);document.getElementById('busFilterStatus')?.addEventListener('change',renderBusFeesTable);document.getElementById('btnBusPrintList')?.addEventListener('click',printBusFeeList);
 document.getElementById('btnSaveFee')?.addEventListener('click',saveFee);document.getElementById('btnClearFee')?.addEventListener('click',clearFeeForm);document.getElementById('btnFeeReceipt')?.addEventListener('click',()=>{const id=window.editingFeeId||window.lastSavedFeeId||((db.fees||[]).length?db.fees[db.fees.length-1].id:null);if(id)printFeeReceipt(id);else alert('Save a fee entry first.');});document.getElementById('feeSearch')?.addEventListener('input',renderFeesTable);document.getElementById('feeFilterMode')?.addEventListener('change',renderFeesTable);document.getElementById('feeFilterStatus')?.addEventListener('change',renderFeesTable);document.getElementById('btnFeePrintList')?.addEventListener('click',printFeeList);document.getElementById('feeStudent')?.addEventListener('change',()=>{});
+document.getElementById('btnGenerateResultAnalysis')?.addEventListener('click',renderResultAnalysis);['raStd','raStream','raDiv'].forEach(id=>document.getElementById(id)?.addEventListener('change',renderResultAnalysis));document.getElementById('raSearch')?.addEventListener('input',renderResultAnalysis);document.getElementById('btnExportResultAnalysis')?.addEventListener('click',exportResultAnalysis);document.getElementById('btnPrintResultAnalysis')?.addEventListener('click',()=>{renderResultAnalysis();const w=window.open('','_blank');if(!w)return;w.document.write('<html><head><title>Result Analysis</title><style>body{font-family:Arial;padding:16px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #777;padding:4px;font-size:10px}h2{text-align:center}</style></head><body><h2>'+esc(db.school?.name||'School')+'</h2><h3>Result Analysis — Std '+esc(document.getElementById('raStd').value)+'</h3>'+document.getElementById('page-resultanalytics').querySelector('.card:last-child').outerHTML+'</body></html>');w.document.close();w.print();});document.getElementById('btnLoadAttendance')?.addEventListener('click',renderAttendanceTable);document.getElementById('btnSaveAttendance')?.addEventListener('click',saveAttendance);document.getElementById('btnMarkAllPresent')?.addEventListener('click',()=>document.querySelectorAll('#attendanceTableBody .att-status').forEach(x=>x.value='Present'));document.getElementById('btnMarkAllAbsent')?.addEventListener('click',()=>document.querySelectorAll('#attendanceTableBody .att-status').forEach(x=>x.value='Absent'));['attDate','attStd','attDiv','attSearch'].forEach(id=>document.getElementById(id)?.addEventListener(id==='attSearch'?'input':'change',renderAttendanceTable));document.getElementById('btnAttendanceReport')?.addEventListener('click',renderAttendanceSummary);document.getElementById('btnPrintAttendance')?.addEventListener('click',()=>{renderAttendanceTable();const html=document.getElementById('page-attendance').querySelector('.card:nth-of-type(2)').outerHTML;const w=window.open('','_blank');if(!w)return;w.document.write('<html><head><title>Attendance Register</title><style>body{font-family:Arial;padding:16px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #777;padding:6px}select,input{border:0}</style></head><body><h2>'+esc(db.school?.name||'School')+'</h2><h3>Attendance Register — '+esc(document.getElementById('attDate').value)+'</h3>'+html+'</body></html>');w.document.close();w.print();});document.getElementById('btnSaveDocument')?.addEventListener('click',saveStudentDocument);document.getElementById('btnClearDocument')?.addEventListener('click',()=>{document.getElementById('docTitle').value='';document.getElementById('docDate').value='';document.getElementById('docFile').value='';});document.getElementById('docSearch')?.addEventListener('input',renderDocuments);document.getElementById('docFilterStd')?.addEventListener('change',renderDocuments);document.getElementById('btnExportDocuments')?.addEventListener('click',exportDocumentList);
 document.getElementById('btnAutoAllocate')?.addEventListener('click',autoAllocate);document.getElementById('btnClearAlloc')?.addEventListener('click',clearAlloc);document.getElementById('allocExam')?.addEventListener('change',renderAllocations);
 document.getElementById('dbSearch')?.addEventListener('input',renderStudentDatabase);document.getElementById('dbStd')?.addEventListener('change',renderStudentDatabase);document.getElementById('dbDiv')?.addEventListener('change',renderStudentDatabase);document.getElementById('dbStatus')?.addEventListener('change',renderStudentDatabase);document.getElementById('btnDbClear')?.addEventListener('click',()=>{dbSearch.value='';dbStd.value='';dbDiv.value='';dbStatus.value='';renderStudentDatabase();});document.getElementById('btnDbExportCsv')?.addEventListener('click',exportStudentCSV);
 document.getElementById('btnSaveSeatSeries')?.addEventListener('click',saveSeatSeriesSettings);
@@ -2138,7 +2209,25 @@ function resultExamsForStandard(std){const stream=document.getElementById('resul
 const streamSubjects={'11':{'Arts':['ગુજરાતી','હિન્દી','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા','સમાજશાસ્ત્ર','ભૂગોળ','કમ્પ્યુટર'],'Commerce':['ગુજરાતી','નામાનાં મુળતત્વો','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા','S.P & C.C','આંકડાશાસ્ત્ર','કમ્પ્યુટર']},'12':{'Arts':['ગુજરાતી','હિન્દી','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા','સમાજશાસ્ત્ર','ભૂગોળ'],'Commerce':['ગુજરાતી','નામાનાં મુળતત્વો','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા','S.P & C.C','આંકડાશાસ્ત્ર']}};
 function syncStudentStreamField(){const std=String(Number(document.getElementById('sStd')?.value||0));document.getElementById('studentStreamWrap')?.classList.toggle('hidden',!['11','12'].includes(std));}
 function ensureStreamSubjects(std,stream){if(!stream||!streamSubjects[String(std)]?.[stream])return;db.exams=db.exams||[];const names=streamSubjects[String(std)][stream];names.forEach(name=>{if(!db.exams.some(e=>String(Number(e.std))===String(Number(std))&&String(e.stream||'')===stream&&String(e.subject||'').trim()===name)){db.exams.push({id:nextId(db.exams),date:'',time:'',subject:name,std:String(std),stream,div:'All',type:'Result'});}});saveDB();}
-function resultExamsForStudent(s){return (db.exams||[]).filter(e=>String(Number(e.std))===String(Number(s.std))&&(!e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase()));}
+function resultExamsForStudent(s){
+  const std=String(Number(s.std));
+  const isSenior=['11','12'].includes(std);
+  const stream=String(s.stream||'').trim();
+  const streamKey=stream.toLowerCase();
+  const allowedNames=isSenior?(streamSubjects[std]?.[stream]||[]):null;
+  const normalizeSubject=v=>String(v||'').normalize('NFC').toLocaleLowerCase().replace(/[\s().&+\-]/g,'');
+  const allowedKeys=allowedNames?new Set(allowedNames.map(normalizeSubject)):null;
+  return (db.exams||[]).filter(e=>{
+    if(String(Number(e.std))!==std)return false;
+    if(isSenior){
+      // Match both the student's stream and that stream's official subject list.
+      // This prevents legacy/mis-tagged records from leaking the other stream's subjects.
+      if(!streamKey || String(e.stream||'').trim().toLowerCase()!==streamKey)return false;
+      if(!allowedKeys || !allowedKeys.has(normalizeSubject(e.subject)))return false;
+    }
+    return !e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase();
+  }).sort((a,b)=>String(a.subject||'').localeCompare(String(b.subject||''),'gu'));
+}
 function renderResultPage(){
   const stdSel=document.getElementById('resultStd'),divSel=document.getElementById('resultDiv'),examSel=document.getElementById('resultExam');
   if(!stdSel||!divSel||!examSel)return;
@@ -2227,9 +2316,9 @@ function resultHTML(s){
   const exams=resultExamsForStudent(s);
   const rows=exams.map(e=>{const rec=(db.results?.[String(e.id)]||{})[String(s.id)]||{};const marks=rec.marks===''||rec.marks==null?'':Number(rec.marks);return {e,marks,remarks:rec.remarks||'',cap:resultStandardCap(s.std)};});
   const valid=rows.filter(x=>x.marks!==''),total=valid.reduce((a,x)=>a+x.marks,0),max=valid.reduce((a,x)=>a+x.cap,0),pct=max?total/max*100:0;
-  const failed=valid.some(x=>x.marks<(x.cap===50?17:33)),status=valid.length===rows.length&&rows.length>0&&!failed?'PASS':(failed?'FAIL':'INCOMPLETE');
+  const failed=valid.some(x=>x.marks<(x.cap===50?18:33)),status=valid.length===rows.length&&rows.length>0&&!failed?'PASS':(failed?'FAIL':'INCOMPLETE');
   const seat=generatedSeatNo(s)||s.seatNo||'-',rank=resultRankForStudent(s);
-  return `<div class="result-sheet"><div class="result-head">${db.customize.logo?`<img src="${db.customize.logo}" style="max-height:65px;max-width:120px"><br>`:''}<div class="result-school-name">${esc(db.school.name)}</div><h2>${esc(db.school.examName)} — RESULT</h2><div>${esc(db.school.address)}</div></div><div class="result-meta"><div class="result-student-info"><div><b>Name</b><br>${esc(s.name)}</div><div><b>Seat No.</b><br>${esc(seat)}</div><div><b>G.R. No.</b><br>${esc(s.gr||s.grNo||'-')}</div><div><b>CTS ID</b><br>${esc(s.ctsId||'-')}</div><div><b>Standard / Div.</b><br>${esc(s.std)} / ${esc(s.div)}</div>${rank?`<div class="result-rank"><b>Class Rank</b><br>${rank}</div>`:''}</div><div class="result-student-photo">${s.photo?`<img src="${s.photo}" alt="Student Photo">`:`<span>Student<br>Photo</span>`}</div></div><table class="result-table"><thead><tr><th>Subject</th><th>Out Of</th><th>Marks Obtained</th><th>Remarks</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.e.subject)}</td><td>${x.cap}</td><td>${x.marks===''?'-':x.marks}</td><td>${esc(x.remarks)}</td></tr>`).join('')||'<tr><td colspan="4">No subjects scheduled for this standard.</td></tr>'}<tr class="result-sum-row"><th>Total</th><th>${max||'-'}</th><th>${total}</th><th></th></tr></tbody></table><div class="result-total"><div><b>Percentage:</b> ${max?pct.toFixed(2):'-'}% &nbsp; | &nbsp; <span class="result-grade">${status}</span> ${max?' | Grade: '+gradeFor(pct):''}</div></div><div class="result-signatures"><div>Class Teacher</div><div class="result-principal-sign">${db.school.principalSignature?`<img src="${db.school.principalSignature}" alt="Principal Signature"><br>`:''}${esc(db.school.principal||'Principal')}<br><span>${db.school.principalSignature?'Principal Signature':''}</span></div></div></div>`;
+  return `<div class="result-sheet"><div class="result-head">${db.customize.logo?`<img src="${db.customize.logo}" style="max-height:65px;max-width:120px"><br>`:''}<div class="result-school-name">${esc(db.school.name)}</div><div class="result-school-address">${esc(db.school.address||'')}</div><h2 class="result-exam-title">${esc(db.school.examName)} — RESULT</h2></div><div class="result-meta"><div class="result-student-info"><div><b>Name</b><br>${esc(s.name)}</div><div><b>Seat No.</b><br>${esc(seat)}</div><div><b>G.R. No.</b><br>${esc(s.gr||s.grNo||'-')}</div><div><b>CTS ID</b><br>${esc(s.ctsId||'-')}</div><div><b>Standard / Div.</b><br>${esc(s.std)} / ${esc(s.div)}${['11','12'].includes(String(Number(s.std)))&&s.stream?' — '+esc(s.stream):''}</div>${rank?`<div class="result-rank"><b>Class Rank</b><br>${rank}</div>`:''}</div><div class="result-student-photo">${s.photo?`<img src="${s.photo}" alt="Student Photo">`:`<span>Student<br>Photo</span>`}</div></div><table class="result-table"><thead><tr><th>Subject</th><th>Out Of</th><th>Marks Obtained</th><th>Remarks</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.e.subject)}</td><td>${x.cap}</td><td>${x.marks===''?'-':x.marks}</td><td>${esc(x.remarks)}</td></tr>`).join('')||'<tr><td colspan="4">No subjects scheduled for this standard.</td></tr>'}<tr class="result-sum-row"><th>Total</th><th>${max||'-'}</th><th>${total}</th><th></th></tr></tbody></table><div class="result-total"><div><b>Percentage:</b> ${max?pct.toFixed(2):'-'}% &nbsp; | &nbsp; <span class="result-grade">${status}</span> ${max?' | Grade: '+gradeFor(pct):''}</div></div><div class="result-signatures"><div>Class Teacher</div><div class="result-principal-sign">${db.school.principalSignature?`<img src="${db.school.principalSignature}" alt="Principal Signature"><br>`:''}${esc(db.school.principal||'Principal')}<br><span>${db.school.principalSignature?'Principal Signature':''}</span></div></div></div>`;
 }
 function studentResultHTML(s){return resultHTML(s);}
 function previewResult(){const s=db.students.find(x=>String(x.id)===String(document.getElementById('resultStudent').value));if(s)document.getElementById('resultPreview').innerHTML=resultHTML(s);}
@@ -2276,6 +2365,36 @@ function openNextBulkWhatsApp(){
   window.open(url,'_blank','noopener');bulkWaIndex++;
   document.getElementById('bulkWaStatus').textContent=`${bulkWaIndex} / ${bulkWaQueue.length} chats ખોલ્યા. WhatsAppમાં Send કર્યા પછી આગળનો chat ખોલો.`;
 }
+function syncBulkResultPrintFilters(){
+  const std=document.getElementById('bulkResultPrintStd')?.value||'';
+  const isSenior=['11','12'].includes(String(Number(std)));
+  document.getElementById('bulkResultPrintStreamWrap')?.classList.toggle('hidden',!isSenior);
+  const streamSel=document.getElementById('bulkResultPrintStream');
+  if(!isSenior&&streamSel)streamSel.value='';
+  const divSel=document.getElementById('bulkResultPrintDiv');
+  if(divSel){const current=divSel.value;const divs=[...new Set((db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!isSenior||!streamSel?.value||String(s.stream||'').toLowerCase()===String(streamSel.value).toLowerCase())).map(s=>String(s.div||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));divSel.innerHTML='<option value="">All Divisions</option>'+divs.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('');if(divs.includes(current))divSel.value=current;}
+  updateBulkResultPrintStatus();
+}
+function updateBulkResultPrintStatus(){
+  const std=document.getElementById('bulkResultPrintStd')?.value||'',stream=document.getElementById('bulkResultPrintStream')?.value||'',div=document.getElementById('bulkResultPrintDiv')?.value||'';
+  const status=document.getElementById('bulkResultPrintStatus');if(!status)return;
+  if(!std){status.textContent='પહેલાં Standard પસંદ કરો.';return;}
+  if(['11','12'].includes(String(Number(std)))&&!stream){status.textContent='ધોરણ '+std+' માટે Arts અથવા Commerce Stream પસંદ કરો.';return;}
+  const list=(db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!['11','12'].includes(String(Number(std)))||String(s.stream||'').toLowerCase()===stream.toLowerCase())&&(!div||String(s.div||'')===div));
+  status.textContent=`પસંદગી: Std ${std}${stream?' — '+stream:''}${div?' / Div '+div:''}. કુલ ${list.length} વિદ્યાર્થીઓના Result પ્રિન્ટ થશે.`;
+}
+function printBulkResultsByStandard(){
+  const std=document.getElementById('bulkResultPrintStd')?.value||'',stream=document.getElementById('bulkResultPrintStream')?.value||'',div=document.getElementById('bulkResultPrintDiv')?.value||'';
+  if(!std){alert('Bulk Print માટે Standard પસંદ કરો.');return;}
+  if(['11','12'].includes(String(Number(std)))&&!stream){alert('ધોરણ '+std+' માટે Arts અથવા Commerce Stream પસંદ કરો.');return;}
+  const list=(db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!['11','12'].includes(String(Number(std)))||String(s.stream||'').toLowerCase()===stream.toLowerCase())&&(!div||String(s.div||'')===div)).slice().sort((a,b)=>String(a.div||'').localeCompare(String(b.div||''),undefined,{numeric:true})||Number(a.roll||0)-Number(b.roll||0)||String(a.name||'').localeCompare(String(b.name||'')));
+  if(!list.length){alert('પસંદ કરેલા Standard / Stream / Divisionમાં કોઈ વિદ્યાર્થી મળ્યો નથી.');return;}
+  const missing=list.filter(s=>!resultExamsForStudent(s).length);
+  if(missing.length&&!confirm(`${list.length} વિદ્યાર્થીઓમાંથી ${missing.length} વિદ્યાર્થી માટે વિષયો સેટ નથી. તેમનાં Resultમાં વિષય ન હોવાની નોંધ આવશે. Bulk Print ચાલુ રાખવું?`))return;
+  document.getElementById('resultPreview').innerHTML=list.map(resultHTML).join('');
+  document.getElementById('bulkResultPrintStatus').textContent=`પ્રિન્ટ માટે ${list.length} પરિણામ તૈયાર છે: Std ${std}${stream?' — '+stream:''}${div?' / Div '+div:''}.`;
+  printOnly('print-result');
+}
 function printAllResults(){
   const std=document.getElementById('resultStd')?.value||'',div=document.getElementById('resultDiv')?.value||'';
   const stream=document.getElementById('resultStream')?.value||'';const list=db.students.filter(s=>(!std||String(Number(s.std))===String(Number(std)))&&(!['11','12'].includes(String(Number(std)))||!stream||String(s.stream||'')===stream)&&(!div||String(s.div)===String(div)));
@@ -2288,7 +2407,7 @@ function printTestReport(){
   const cap=std?resultStandardCap(std):resultStandardCap(ex.std||9);
   const stream=document.getElementById('resultStream')?.value||'';const list=db.students.filter(s=>(!std||String(Number(s.std))===String(Number(std)))&&(!['11','12'].includes(String(Number(std||ex.std)))||!stream||String(s.stream||'')===stream)&&(!div||String(s.div)===String(div))&&String(Number(s.std))===String(Number(ex.std))&&(!ex.stream||String(s.stream||'')===String(ex.stream))).sort((a,b)=>Number(a.roll)-Number(b.roll));
   const rec=db.results?.[String(ex.id)]||{};
-  const rows=list.map((s,i)=>{const r=rec[String(s.id)]||{};const m=r.marks===''||r.marks==null?'-':r.marks;const pass=Number(r.marks)>=(cap===50?17:33);return `<tr><td>${i+1}</td><td>${esc(s.roll)}</td><td>${esc(s.name)}</td><td>${esc(s.std)}-${esc(s.div)}</td><td>${m}</td><td>${cap}</td><td>${m==='-'?'':(pass?'PASS':'FAIL')}</td><td>${esc(r.remarks||'')}</td></tr>`}).join('');
+  const rows=list.map((s,i)=>{const r=rec[String(s.id)]||{};const m=r.marks===''||r.marks==null?'-':r.marks;const pass=Number(r.marks)>=(cap===50?18:33);return `<tr><td>${i+1}</td><td>${esc(s.roll)}</td><td>${esc(s.name)}</td><td>${esc(s.std)}-${esc(s.div)}</td><td>${m}</td><td>${cap}</td><td>${m==='-'?'':(pass?'PASS':'FAIL')}</td><td>${esc(r.remarks||'')}</td></tr>`}).join('');
   document.getElementById('resultPreview').innerHTML=`<div class="result-sheet"><div class="result-head">${db.customize.logo?`<img src="${db.customize.logo}" style="max-height:65px;max-width:120px"><br>`:''}<div>${esc(db.school.name)}</div><h2>${esc(ex.type||'Test')} Report — ${esc(ex.subject)}</h2><div>Standard ${esc(std||ex.std||'All')} ${div?'Division '+esc(div):''}</div></div><table class="result-table"><thead><tr><th>#</th><th>Roll</th><th>Student</th><th>Std/Div</th><th>Marks</th><th>Out Of</th><th>Status</th><th>Remarks</th></tr></thead><tbody>${rows}</tbody></table><div style="display:flex;justify-content:flex-end;margin-top:35px">${db.school.principalSignature?`<img src="${db.school.principalSignature}" style="max-height:55px;max-width:150px"><br>`:''}</div></div>`;
   printOnly('print-result');
 }
@@ -2457,6 +2576,9 @@ renderAll();renderBulkStreamStudents();syncStudentStreamField();document.getElem
   color: #17212b;
 }
 .result-head { flex: 0 0 auto; text-align:center; border-bottom:2px solid #1f4e78; padding-bottom:5mm; margin-bottom:6mm; }
+.result-school-name{font-family:"Hind Vadodara","Nirmala UI",sans-serif!important;font-size:22pt!important;font-weight:700!important;letter-spacing:.1px!important;line-height:1.25!important;color:#17365d!important;}
+.result-school-address{font-family:"Hind Vadodara","Nirmala UI",sans-serif!important;font-size:10pt!important;line-height:1.35!important;color:#526778!important;margin:1.2mm 0 2mm!important;}
+.result-exam-title{margin:2mm auto 0!important;display:table;padding:1.5mm 8mm!important;border-radius:7px!important;background:#17365d!important;color:#fff!important;border:1px solid #d4b66b!important;font-family:"Hind Vadodara","Nirmala UI",sans-serif!important;font-size:16pt!important;line-height:1.3!important;}
 .result-head h2 { margin:2mm 0; color:#17365d; font-size:18pt; }
 .result-school-name{font-family:Georgia,"Nirmala UI",serif!important;font-size:22pt!important;font-weight:900!important;letter-spacing:.3px!important;line-height:1.25!important;color:#17365d!important;}
 .result-meta { display:grid; grid-template-columns:minmax(0,1fr) 28mm; gap:6mm; align-items:start; margin-bottom:7mm; }
@@ -2500,7 +2622,9 @@ renderAll();renderBulkStreamStudents();syncStudentStreamField();document.getElem
   body.print-result .result-sheet:last-child { break-after:auto !important; page-break-after:auto !important; }
   body.print-result .result-head { margin-bottom:5mm !important; padding-bottom:4mm !important; }
   body.print-result .result-head h2 { font-size:17pt !important; }
- body.print-result .result-school-name{font-size:22pt!important;font-family:Georgia,"Nirmala UI",serif!important;font-weight:900!important;}
+ body.print-result .result-school-name{font-size:22pt!important;font-family:"Hind Vadodara","Nirmala UI",sans-serif!important;font-weight:700!important;}
+  body.print-result .result-school-address{font-family:"Hind Vadodara","Nirmala UI",sans-serif!important;font-size:9.5pt!important;margin:1mm 0 1.5mm!important;}
+  body.print-result .result-exam-title{font-size:15pt!important;margin-top:1.5mm!important;}
  body.print-result .result-sum-row th{background:#e6f0f6!important;font-weight:900!important;}
   body.print-result .result-meta { grid-template-columns:minmax(0,1fr) 27mm !important; margin-bottom:5mm !important; }
   body.print-result .result-student-photo { width:25mm !important; height:32mm !important; }
@@ -2531,6 +2655,105 @@ body.print-result .result-head, body.print-result .result-total, body.print-resu
  body.print-result .app, body.print-result main.main, body.print-result #page-results, body.print-result #resultPreview { display:block !important; position:static !important; width:100% !important; max-width:none !important; min-width:0 !important; margin:0 !important; padding:0 !important; transform:none !important; overflow:visible !important; }
  body.print-result .result-sheet { width:100% !important; max-width:none !important; min-width:0 !important; height:280mm !important; min-height:280mm !important; margin:0 !important; padding:7mm !important; break-after:page !important; page-break-after:always !important; }
  body.print-result .result-sheet:last-child { break-after:auto !important; page-break-after:auto !important; }
+}
+</style>
+
+
+
+<style id="result-professional-color-theme-v172">
+/* Professional school result card: preview and color-print friendly. */
+#resultPreview { background:#edf3f8; padding:16px; border-radius:14px; }
+.result-sheet {
+  position:relative !important; isolation:isolate;
+  background:linear-gradient(180deg,#ffffff 0%,#fbfdff 100%) !important;
+  border:2px solid #17365d !important; border-radius:10px !important;
+  box-shadow:0 8px 24px rgba(23,54,93,.14) !important;
+  color:#172b42 !important;
+}
+.result-sheet::before {
+  content:""; position:absolute; left:0; right:0; top:0; height:5px;
+  background:linear-gradient(90deg,#17365d 0%,#247ba0 55%,#d4a64a 100%);
+  z-index:-1;
+}
+.result-head {
+  border-bottom:3px solid #1f5b7a !important;
+  padding:5mm 3mm 4mm !important; margin-bottom:5mm !important;
+  background:linear-gradient(180deg,#eef6fb 0%,#ffffff 100%) !important;
+  border-radius:5px 5px 0 0;
+}
+.result-school-name { color:#17365d !important; text-shadow:0 1px 0 #fff; }
+.result-head h2 {
+  display:inline-block; padding:2mm 7mm; margin:3mm 0 2mm !important;
+  background:#17365d !important; color:#fff !important;
+  border:1px solid #d4a64a; border-radius:20px; letter-spacing:.7px;
+}
+.result-head > div:last-child { color:#50677c !important; font-size:10pt; }
+.result-meta { padding:3mm; background:#f1f6fa !important; border:1px solid #d4e0e9; border-left:4px solid #247ba0; border-radius:6px; }
+.result-student-info { gap:3mm 5mm !important; }
+.result-student-info > div { padding:2mm 2.5mm; background:#fff; border:1px solid #dbe5ed; border-radius:4px; }
+.result-student-info b { color:#1f5b7a !important; font-size:9pt; text-transform:uppercase; letter-spacing:.25px; }
+.result-rank { background:#fff8e6 !important; border-color:#e4c16b !important; color:#78550a !important; }
+.result-student-photo { border:2px solid #247ba0 !important; border-radius:5px; background:#fff !important; box-shadow:0 2px 6px rgba(23,54,93,.10); }
+.result-table { border:1.5px solid #17365d !important; border-radius:5px; overflow:hidden; }
+.result-table th { background:#17365d !important; color:#fff !important; border-color:#345b7e !important; padding:3mm 2mm !important; }
+.result-table td { background:#fff !important; color:#20364b !important; border-color:#c8d7e2 !important; padding:3mm 2mm !important; }
+.result-table tbody tr:nth-child(even):not(.result-sum-row) td { background:#edf5fa !important; }
+.result-table tbody tr.result-sum-row th { background:#d9e9f2 !important; color:#17365d !important; border-color:#8caec2 !important; font-weight:900 !important; }
+.result-total { margin-top:5mm !important; padding:4mm !important; justify-content:center !important; background:#e8f4f2 !important; border:1px solid #9ac9c1 !important; border-left:4px solid #208477 !important; border-radius:6px; color:#164c48 !important; font-weight:700; }
+.result-grade { display:inline-block; padding:1.5mm 4mm; border-radius:16px; background:#17365d !important; color:#fff !important; letter-spacing:.4px; }
+.result-signatures { border-top:1px dashed #9eb4c4; margin-top:auto !important; padding-top:12mm !important; color:#29465d; font-weight:600; }
+.result-principal-sign img { filter:none; }
+@media screen {
+  #resultPreview .result-sheet { margin:0 auto 16px !important; }
+}
+@media print {
+  /* Enable the designed background colors in Chrome/Edge print dialog. */
+  html, body, body.print-result, body.print-result #resultPreview,
+  body.print-result .result-sheet, body.print-result .result-head,
+  body.print-result .result-meta, body.print-result .result-table th,
+  body.print-result .result-table td, body.print-result .result-total,
+  body.print-result .result-grade, body.print-result .result-head h2 {
+    -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important;
+  }
+  body.print-result #resultPreview { background:#fff !important; padding:0 !important; }
+  body.print-result .result-sheet {
+    background:#fff !important; border:2px solid #17365d !important;
+    border-radius:0 !important; box-shadow:none !important;
+  }
+  body.print-result .result-head { background:#eef6fb !important; border-bottom:3px solid #1f5b7a !important; }
+  body.print-result .result-head h2 { background:#17365d !important; color:#fff !important; }
+  body.print-result .result-meta { background:#f1f6fa !important; }
+  body.print-result .result-table th { background:#17365d !important; color:#fff !important; }
+  body.print-result .result-table tbody tr:nth-child(even):not(.result-sum-row) td { background:#edf5fa !important; }
+  body.print-result .result-table tbody tr.result-sum-row th { background:#d9e9f2 !important; color:#17365d !important; }
+  body.print-result .result-total { background:#e8f4f2 !important; }
+  body.print-result .result-grade { background:#17365d !important; color:#fff !important; }
+}
+</style>
+
+<style id="result-hind-vadodara-all-fonts-v1-7-4">
+/* Embed supplied Hind Vadodara font files locally so Result View and Print use the same Gujarati font offline. */
+@font-face{font-family:"Hind Vadodara";src:url("./HindVadodara-Light.ttf") format("truetype");font-weight:300;font-style:normal;font-display:swap}
+@font-face{font-family:"Hind Vadodara";src:url("./HindVadodara-Regular.ttf") format("truetype");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Hind Vadodara";src:url("./HindVadodara-Medium.ttf") format("truetype");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Hind Vadodara";src:url("./HindVadodara-SemiBold.ttf") format("truetype");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"Hind Vadodara";src:url("./HindVadodara-Bold.ttf") format("truetype");font-weight:700 900;font-style:normal;font-display:swap}
+/* Apply the requested font to every element in the Result View/Print card, including labels, marks, totals and signature captions. */
+#resultPreview .result-sheet,
+#resultPreview .result-sheet *,
+body.print-result #resultPreview .result-sheet,
+body.print-result #resultPreview .result-sheet *,
+#resultPrintPanel .result-sheet,
+#resultPrintPanel .result-sheet * {
+  font-family:"Hind Vadodara",sans-serif !important;
+}
+@media print{
+  body.print-result #resultPreview .result-sheet,
+  body.print-result #resultPreview .result-sheet *{
+    font-family:"Hind Vadodara",sans-serif !important;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
 }
 </style>
 

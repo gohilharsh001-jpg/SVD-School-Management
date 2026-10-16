@@ -1,18 +1,20 @@
-HALL TICKET SYSTEM - RELEASE CHECKLIST
+SVD SCHOOL MANAGEMENT - RELEASE CHECKLIST (v1.7.1)
 
-[ ] Export/backup current data
-[ ] Record current application version
-[ ] Test new release on a test copy
-[ ] Apply only new migration files
-[ ] Do not delete/recreate production database
-[ ] Verify Admin Login
-[ ] Verify Student Database + CTS ID
-[ ] Verify Hall Ticket + QR
-[ ] Verify Hall Ticket Receipt/Signature List
-[ ] Verify Result
-[ ] Verify Student Fee
-[ ] Verify Bus Fee
-[ ] Verify Advanced Student Reports
-[ ] Verify Student Portal
-[ ] Update VERSION.json + CHANGELOG.md
-[ ] Keep previous release ZIP for rollback
+[ ] Export JSON backup from current website
+[ ] Keep the previous ZIP for rollback
+[ ] Test this release in a separate copy/browser first
+[ ] Verify Admin Login and Customize / Settings
+[ ] Verify Student Entry, Database, reports, photos and CTS ID
+[ ] Verify Hall Ticket, QR, receipt/signature list and A4 print
+[ ] Verify Marks Entry, Std 9-12 passing thresholds, Result View / Print and Result Analysis
+[ ] Verify attendance: all statuses required, save, filter, summary and print
+[ ] Verify student documents with valid/invalid file types and storage size guard
+[ ] Verify Fee Collection and Bus Fee receipts/reports
+[ ] Verify Exam Schedule, room/seat allocation and student portal
+[ ] Verify Backup/Restore on test data only
+[ ] Verify Supabase sign-in, upload, download and autosync using test records
+[ ] Confirm no data loss across browsers/devices when using cloud sync
+[ ] Confirm WhatsApp messages and manual-send flow
+[ ] Test Chrome A4 print layouts and responsive layout
+[ ] Publish only after all tests pass; never reset production database as part of an app update
+[ ] Android app remains pending

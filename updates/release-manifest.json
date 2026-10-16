@@ -1,7 +1,10 @@
 {
-  "currentVersion": "1.2.0",
+  "currentVersion": "1.7.1",
   "minimumSupportedSchema": 1,
   "migrationDirectory": "updates/migrations",
   "rollbackPolicy": "application-files-only-first",
-  "dataPolicy": "never-delete-production-data-during-app-update"
+  "dataPolicy": "never-delete-production-data-during-app-update",
+  "version": "1.7.6",
+  "name": "SVD School Management System",
+  "releaseNote": "Added standard-wise bulk Result View/Print with stream and division filters."
 }

@@ -1,3 +1,38 @@
+## v1.7.6 — 2026-10-16
+- Added Standard-wise Bulk Result Print in Result View / Print.
+- Added Standard, Stream (required for Std 11/12), and Division filters.
+- Shows the number of matching students before printing and sorts results by division, roll number, and name.
+- Keeps the existing stream-specific subject filtering and Hind Vadodara result font styling.
+- No Supabase schema or production data changes.
+
+## v1.7.3 — Result Header Typography and Order (2026-10-16)
+- Moved the school address directly below the school name in Result View / Print.
+- Moved the exam name / RESULT title below the address.
+- Applied Hind Vadodara font to the school name, address and exam title, with Gujarati-friendly system fallbacks. Google Fonts is used when internet is available.
+- Kept the existing student details, marks table, result status, signature area, and Supabase data structure unchanged.
+- Static checks only; browser print preview and printer output should be verified before live deployment.
+
+# Changelog
+
+## v1.7.1 — Audit and reliability fixes (2026-10-16)
+- Corrected the passing threshold for 50-mark subjects from 17 to 18 in result status and result print.
+- Improved attendance safety: status is no longer silently preselected as Present, saving is blocked until every visible student has a valid status, and daily counters respect the currently filtered student list.
+- Attendance default date now uses the browser's local calendar date rather than UTC conversion.
+- Student document downloads now accept only recognized PDF/JPEG/PNG/WebP data URLs; file MIME type is checked and a storage-size guard warns before large files risk browser storage limits.
+- Backup filename now includes the local date and object-URL cleanup is delayed to avoid interrupting the download.
+- Expanded Customize / Settings to edit labels for all major navigation menus, including Rooms, Student Portal, Marks Entry, Result Print, Student Reports, Fees, Bus Fees, Hall Ticket Receipt and Online Sync.
+- No Supabase schema changes, database resets, or Android app work.
+- Validation: JavaScript syntax check passed; duplicate HTML IDs not found; static menu/section mapping reviewed. Live browser interaction and real Supabase sync could not be completed in this environment and remain required before publishing.
+
+## v1.7.0 — School Management Features (2026-10-16)
+- Added Advanced Result Analysis: standard/stream/division filtering, subject-wise marks, total, percentage, PASS/FAIL/INCOMPLETE counts, print and CSV export.
+- Added Student Attendance: date/standard/division filters, present/absent/late/leave marking, remarks, summary and print register.
+- Added Student Documents: attach PDF/JPG/PNG/WebP files to a student, filter/search, download, delete and export document list CSV (file size limit 800 KB).
+- Backup restore now validates the basic JSON structure, asks for confirmation before replacing local data, normalizes newer arrays, and clarifies that local restore does not modify Supabase until an explicit upload.
+- Existing Fee Collection, Bus Fee, Exam Schedule, Student Reports, Result/WhatsApp workflow and Customize/Settings are retained.
+- New attendance/document records are stored in the existing app database object and therefore included in JSON backups and existing Supabase school_state sync. No Supabase schema migration was added.
+- Android app remains pending.
+
 ## v1.6.4 — Bulk WhatsApp Result to Parent Mobile
 - Added a bulk WhatsApp panel to Result View / Print.
 - Filter students by Standard and (for Std 11/12) Arts/Commerce Stream.
@@ -426,3 +461,23 @@ Every future feature must:
 
 ## v1.6.6
 - Fixed Result Print isolation: print only the selected result sheet; hide dashboard, student list, menus, and other app content so they do not appear on page 2+.
+
+
+## v1.7.2 — Professional Result Color Theme (2026-10-16)
+- Added a polished navy, teal, and gold result-sheet theme for Result View / Print preview.
+- Styled school heading, student details, photo frame, subject table, total row, percentage/status, and signature area.
+- Added print-color adjustment rules so supported browsers retain the intended colors on color printers.
+- Kept the existing A4 portrait sizing and result-print isolation rules.
+- Note: Browser print dialog must have Background graphics enabled for the most accurate color output.
+
+
+## v1.7.4 — Hind Vadodara for all Result View/Print text
+- Bundled the supplied Hind Vadodara Light, Regular, Medium, SemiBold, and Bold font files locally.
+- Applied Hind Vadodara to all descendants of the Result View/Print sheet, including labels, student details, marks table, totals, grade/status, and signature captions.
+- Kept existing website features and Supabase schema unchanged; no database migration added.
+
+
+## v1.7.5 — Stream-specific result subjects
+- Fixed Result View/Print so Std 11 and 12 students see only subjects assigned to their own stream (Arts or Commerce).
+- Result totals, percentage, PASS/FAIL and rank calculations now use that same stream-specific subject list.
+- No Supabase schema or existing student/marks data was changed.
