@@ -16,3 +16,6 @@ See AUDIT_REPORT_v1.7.1.md for the audit scope, fixes, checks, and remaining liv
 Android application development is pending.
 
 Version 1.7.2 adds a professional navy/teal/gold theme for Result View / Print. For color printing in Chrome/Edge, enable More settings > Background graphics.
+
+
+Version 1.7.7 update: Std 11 Computer and Std 10 સ્વા. અને શા. શિક્ષણ appear at the bottom of the Result and receive a grade from marks. These subjects are not included in total marks, percentage, pass/fail, or class rank.

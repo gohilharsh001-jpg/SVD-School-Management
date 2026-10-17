@@ -1,3 +1,23 @@
+# v1.8.1 — Standard-wise Subject Maximum Marks Fix (2026-10-17)
+
+- Standard 9: 50 marks per subject.
+- Standard 10: 80 marks per subject.
+- Standard 11: 50 marks per subject.
+- Standard 12: 100 marks per subject.
+- Enforced the standard-based maximum consistently across marks entry, result view/print, result analysis and standard-wise result register, ignoring stale per-exam maximum values.
+
+## v1.7.8 — Standard-wise Result Register (2026-10-17)
+- Added a separate Result Register in Result View / Print for standard-wise school records.
+- Includes each student's subject-wise marks, total, percentage, PASS/FAIL, and rank in one table.
+- Added Standard, Division, and Std 11/12 Arts/Commerce stream filters.
+- Added print-ready A4 landscape report and CSV export.
+- Grade-only subjects remain excluded from totals and percentage; grade is shown with the subject marks.
+
+## v1.7.7 — 2026-10-17
+- Std 11 Computer subject is placed at the end of Result View/Print. Its marks display a generated grade and are excluded from total marks, percentage, pass/fail and class rank calculations.
+- Std 10 “સ્વા. અને શા. શિક્ષણ” subject is handled the same way.
+- Advanced Result Analysis and WhatsApp Result totals exclude these grade-only subjects; the WhatsApp result shows their grade separately.
+
 ## v1.7.6 — 2026-10-16
 - Added Standard-wise Bulk Result Print in Result View / Print.
 - Added Standard, Stream (required for Std 11/12), and Division filters.
@@ -481,3 +501,7 @@ Every future feature must:
 - Fixed Result View/Print so Std 11 and 12 students see only subjects assigned to their own stream (Arts or Commerce).
 - Result totals, percentage, PASS/FAIL and rank calculations now use that same stream-specific subject list.
 - No Supabase schema or existing student/marks data was changed.
+
+## v1.7.9 — Standard-wise Result Register Print Fix
+- Fixed blank PDF/print output by printing an isolated clone of the generated register.
+- Applied A4 landscape print layout, table header repetition, and row split protection.

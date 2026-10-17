@@ -1,6 +1,7 @@
 {
-  "version": "1.7.6",
-  "name": "SVD School Management",
-  "date": "2026-10-16",
-  "releaseNote": "Added standard-wise bulk Result View/Print with stream and division filters."
+  "version": "1.8.1",
+  "name": "Standard-wise Subject Maximum Marks Fix",
+  "date": "2026-10-17",
+  "releaseNote": "Fixed Result View/Print, Result Analysis, and Standard-wise Result Register to display generated Seat No. instead of Roll No. where available, with fallback to stored Seat No. and then Roll No.",
+  "notes": "Standard 9=50, Standard 10=80, Standard 11=50, Standard 12=100 marks per subject consistently across marks entry, result view/print, analysis and standard-wise result register."
 }
