@@ -1,3 +1,48 @@
+# v1.8.7 — Grade-Only Subjects Out of 50 and Grade Scale (2026-10-30)
+
+- Std 10 `સ્વા. અને શા. શિક્ષણ` and Std 11 `કમ્પ્યુટર અધ્યયન` now use a dedicated maximum of 50 marks in Marks Entry, regardless of the standard's regular-subject maximum.
+- Grade conversion uses the requested scale: 91–100 A1, 81–90 A2, 71–80 B1, 61–70 B2, 51–60 C1, 41–50 C2, 33–40 D, 21–32 E1, 0–20 E2. Conversion is based on the entered mark out of 50.
+- Grade-only subjects remain excluded from total marks, maximum marks, percentage, pass/fail, and class ranking.
+- Result print and WhatsApp result display the grade label, not numeric grade-subject marks.
+- No student data, marks, exam records, or Supabase schema changed.
+- Validation: ZIP integrity and targeted source checks performed; live browser/Supabase testing remains pending.
+
+# v1.8.6 — Grade-Only Subjects Last in Results (2026-10-30)
+
+- Std 10 `સ્વા. અને શા. શિક્ષણ` and Std 11 `કમ્પ્યુટર અધ્યયન` are rendered after all regular subjects in individual and bulk result printouts.
+- Grade-only rows show the derived grade instead of numeric marks and do not show an Out Of value.
+- Grade-only marks remain excluded from total marks, maximum marks, percentage, pass/fail calculation, and class ranking.
+- WhatsApp result text also lists grade-only subjects last and displays the grade.
+- No student data, marks, exam records, or Supabase schema changed.
+- Validation: source-level checks and ZIP integrity checked; live browser/Supabase testing remains pending.
+
+# v1.8.5 — Marks Entry Student Roll Order Fix (2026-10-30)
+
+- Marks Entry student list is sorted by Roll Number across Arts and Commerce together when All Streams is selected.
+- Uses numeric-aware roll comparison, then Stream and Student Name as tie-breakers; stream grouping no longer changes the roll sequence.
+- Display-order-only change; no student data, marks, exam records, or Supabase schema are modified.
+- Validation: source comparator and ZIP integrity checked; live Supabase/browser testing remains pending.
+
+# v1.8.3 — Combined Arts + Commerce Class Reports (2026-10-30)
+
+- Added “All Streams (Arts + Commerce)” to Std 11/12 Bulk Result Print and Standard-wise Result Register.
+- Combined class selection includes all Arts and Commerce students, including all divisions when Division is left as All Divisions.
+- Bulk individual result printing continues to show each student only their own stream subjects and saved marks.
+- Combined Result Register displays a Stream column and a union of subject columns in common-first, Arts-then-Commerce order; non-applicable stream subjects remain blank for each student.
+- Division filters now include divisions from both streams when All Streams is selected. CSV export includes the Stream column.
+- No student records, marks, exam records, or Supabase schema were deleted or rewritten.
+- Validation: JavaScript syntax and static filter/subject-order checks passed; live cloud/browser/physical print testing remains pending.
+
+# v1.8.2 — Std 11 Stream-wise Subject Order and Duplicate Fix (2026-10-30)
+
+- Std 11 Arts and Commerce now share the same first five subjects in the same order: ગુજરાતી, અંગ્રેજી, અર્થશાસ્ત્ર, વાણિજ્ય વ્યવસ્થા અને સંચાલન, કમ્પ્યુટર અધ્યયન.
+- Arts-only subjects follow: હિન્દી, સમાજશાસ્ત્ર, ભૂગોળ. Commerce-only subjects follow: આંકડાશાસ્ત્ર, નામાનાં મૂળ તત્વો, S.P & C.C.
+- Marks Entry subject dropdown removes duplicate/legacy subject variants and follows the official stream order.
+- Student Result, Bulk Result Print, Standard-wise Result Register and Result Analysis use the same filtered subject list and order.
+- Legacy aliases are normalized for display without deleting or rewriting their exam records; duplicate exam entries are resolved in favor of the entry with the most saved student marks.
+- No Supabase schema changes, database reset, student record edits, or marks deletion.
+- Validation: JavaScript syntax check passed; live Supabase/browser/print verification remains for the school to confirm before deployment.
+
 # v1.8.1 — Standard-wise Subject Maximum Marks Fix (2026-10-17)
 
 - Standard 9: 50 marks per subject.
@@ -505,3 +550,9 @@ Every future feature must:
 ## v1.7.9 — Standard-wise Result Register Print Fix
 - Fixed blank PDF/print output by printing an isolated clone of the generated register.
 - Applied A4 landscape print layout, table header repetition, and row split protection.
+
+## v1.8.4 — All Streams Common Marks Entry
+- Added All Streams (Common Subjects) option to Std 11/12 Marks Entry.
+- Shows Arts and Commerce students together for common subjects only.
+- Saves each student marks to their own stream-specific subject record.
+- Preserves existing student records and marks; no Supabase schema migration.

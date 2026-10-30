@@ -1,0 +1,10 @@
+{
+  "currentVersion": "1.7.1",
+  "minimumSupportedSchema": 1,
+  "migrationDirectory": "updates/migrations",
+  "rollbackPolicy": "application-files-only-first",
+  "dataPolicy": "never-delete-production-data-during-app-update",
+  "version": "1.8.3",
+  "name": "SVD School Management System",
+  "releaseNote": "Added combined Arts + Commerce All Streams selection for Std 11/12 bulk result printing and standard-wise result register."
+}

@@ -657,7 +657,7 @@ section[id^="page-"].hidden { display:none !important; }
         <div class="grid">
           <div><label>Exam / Subject</label><select id="resultExam"></select></div>
           <div><label>Standard</label><select id="resultStd"><option value="">Select Standard</option></select></div>
-          <div id="resultStreamWrap" class="hidden"><label>Stream</label><select id="resultStream"><option value="">Select Stream</option><option value="Arts">Arts</option><option value="Commerce">Commerce</option></select></div>
+          <div id="resultStreamWrap" class="hidden"><label>Stream</label><select id="resultStream"><option value="">Select Stream</option><option value="ALL">All Streams (Common Subjects)</option><option value="Arts">Arts</option><option value="Commerce">Commerce</option></select></div>
           <div><label>Division</label><select id="resultDiv"><option value="">All</option></select></div>
           <div><label>Max Marks</label><input id="resultMaxMarks" type="number" min="1" value="100"></div>
           <div><label>Pass Marks</label><input id="resultPassMarks" type="number" min="0" value="33"></div><div><label>Subject Name (Std 11/12 માટે edit કરી શકો)</label><input id="resultSubjectName" type="text" placeholder="Subject name"></div>
@@ -677,10 +677,10 @@ section[id^="page-"].hidden { display:none !important; }
         <div class="grid result-print-filters" style="grid-template-columns: minmax(180px,1fr) minmax(220px,1.5fr);margin-bottom:10px"><div><label for="resultPrintStd">Result Print માટે Standard પસંદ કરો</label><select id="resultPrintStd"><option value="">All Standards</option><option value="9">Std 9</option><option value="10">Std 10</option><option value="11">Std 11</option><option value="12">Std 12</option></select></div><div><label for="resultStudentSearch">CTS ID / Seat No. / Student Nameથી શોધો</label><input id="resultStudentSearch" type="search" placeholder="CTS ID, Seat No. અથવા વિદ્યાર્થીનું નામ લખો"></div></div><div class="searchbar"><select id="resultStudent" aria-label="Select student for result"></select><button class="btn btn-primary" id="btnPreviewResult">Preview Result</button><button class="btn btn-light" id="btnPrintResult">Print Result</button><button class="btn btn-green" id="btnWhatsAppResult">📱 WhatsApp Result</button></div>
         <div class="card" id="bulkResultPrintPanel" style="margin-top:14px;background:#f4f8fc;border:1px solid #c8d9e8">
           <h4>🖨️ Standard-wise Bulk Result Print</h4>
-          <p class="muted">એક સાથે પસંદ કરેલા ધોરણના બધા વિદ્યાર્થીઓના Result અલગ-અલગ પેજ પર પ્રિન્ટ કરો. ધોરણ 11/12 માટે Stream પસંદ કરવું જરૂરી છે.</p>
+          <p class="muted">એક સાથે પસંદ કરેલા ધોરણના બધા વિદ્યાર્થીઓના Result અલગ-અલગ પેજ પર પ્રિન્ટ કરો. ધોરણ 11/12 માટે Arts, Commerce અથવા બંને સાથે All Streams પસંદ કરો.</p>
           <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px">
             <div><label for="bulkResultPrintStd">Standard *</label><select id="bulkResultPrintStd"><option value="">Select Standard</option><option value="9">Std 9</option><option value="10">Std 10</option><option value="11">Std 11</option><option value="12">Std 12</option></select></div>
-            <div id="bulkResultPrintStreamWrap" class="hidden"><label for="bulkResultPrintStream">Stream *</label><select id="bulkResultPrintStream"><option value="">Select Stream</option><option value="Arts">Arts</option><option value="Commerce">Commerce</option></select></div>
+            <div id="bulkResultPrintStreamWrap" class="hidden"><label for="bulkResultPrintStream">Stream *</label><select id="bulkResultPrintStream"><option value="">Select Stream</option><option value="ALL">All Streams (Arts + Commerce)</option><option value="Arts">Arts</option><option value="Commerce">Commerce</option></select></div>
             <div><label for="bulkResultPrintDiv">Division</label><select id="bulkResultPrintDiv"><option value="">All Divisions</option></select></div>
           </div>
           <div class="result-actions" style="margin-top:10px"><button class="btn btn-primary" id="btnBulkResultPrint">🖨️ Print All Results for Selected Standard</button></div>
@@ -691,7 +691,7 @@ section[id^="page-"].hidden { display:none !important; }
           <p class="muted">એક જ રિપોર્ટમાં દરેક વિદ્યાર્થીના વિષયવાર ગુણ, કુલ ગુણ, ટકાવારી, PASS/FAIL અને Rank. શાળાના રેકોર્ડમાં પ્રિન્ટ કરીને સાચવવા માટે.</p>
           <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px">
             <div><label for="standardReportStd">Standard *</label><select id="standardReportStd"><option value="">Select Standard</option><option value="9">Std 9</option><option value="10">Std 10</option><option value="11">Std 11</option><option value="12">Std 12</option></select></div>
-            <div id="standardReportStreamWrap" class="hidden"><label for="standardReportStream">Stream *</label><select id="standardReportStream"><option value="">Select Stream</option><option value="Arts">Arts</option><option value="Commerce">Commerce</option></select></div>
+            <div id="standardReportStreamWrap" class="hidden"><label for="standardReportStream">Stream *</label><select id="standardReportStream"><option value="">Select Stream</option><option value="ALL">All Streams (Arts + Commerce)</option><option value="Arts">Arts</option><option value="Commerce">Commerce</option></select></div>
             <div><label for="standardReportDiv">Division</label><select id="standardReportDiv"><option value="">All Divisions</option></select></div>
           </div>
           <div class="result-actions" style="margin-top:10px"><button class="btn btn-primary" id="btnGenerateStandardResultReport">📊 Generate Result Register</button><button class="btn btn-light" id="btnPrintStandardResultReport">🖨️ Print School Record</button><button class="btn btn-green" id="btnExportStandardResultReport">⬇️ Export CSV</button></div>
@@ -1303,7 +1303,15 @@ document.getElementById('btnUpdateAuthPassword')?.addEventListener('click',updat
 
 document.getElementById('btnCloudConnect')?.addEventListener('click',cloudConnect);document.getElementById('btnCloudPush')?.addEventListener('click',cloudPush);document.getElementById('btnCloudPull')?.addEventListener('click',cloudPull);document.getElementById('btnCloudLogout')?.addEventListener('click',cloudLogout);document.getElementById('btnSavePortalUrl')?.addEventListener('click',()=>{localStorage.setItem('hall_ticket_online_portal_url',document.getElementById('sbPortalUrl').value.trim());localStorage.setItem('hall_ticket_online_school_key',document.getElementById('sbSchoolKey').value.trim()||'main-school');alert('Portal URL saved.');});
 function loadCloudForm(){const c=cloudConfig();document.getElementById('sbUrl').value=c.url;document.getElementById('sbKey').value=c.key;document.getElementById('sbSchoolKey').value=c.schoolKey;document.getElementById('sbPortalUrl').value=localStorage.getItem('hall_ticket_online_portal_url')||'';}
-function resultAnalysisRows(){const std=document.getElementById('raStd')?.value||'',stream=document.getElementById('raStream')?.value||'',div=document.getElementById('raDiv')?.value||'',q=(document.getElementById('raSearch')?.value||'').toLowerCase().trim();if(!std)return [];const exams=(db.exams||[]).filter(e=>String(Number(e.std))===String(Number(std))&&(!['11','12'].includes(String(Number(std)))||!stream||String(e.stream||'')===stream));return (db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!['11','12'].includes(String(Number(std)))||!stream||String(s.stream||'')===stream)&&(!div||String(s.div||'')===div)&&(!q||[s.name,s.roll,s.seatNo,s.gr,s.ctsId].some(v=>String(v||'').toLowerCase().includes(q)))).map(s=>{const studentExams=exams.filter(e=>(!['11','12'].includes(String(Number(std)))||stream||String(e.stream||'')===String(s.stream||''))&&!isGradeOnlySubject(std,e.subject));let total=0,outOf=0,entered=0,failed=false;const subjectMarks=[];studentExams.forEach(e=>{const r=(db.results?.[String(e.id)]||{})[String(s.id)]||{};if(r.marks!==''&&r.marks!==null&&r.marks!==undefined&&Number.isFinite(Number(r.marks))){const cap=resultStandardCap(std),pass=(['9','11'].includes(String(Number(std)))?18:(Number(e.passMarks)||33)),m=Number(r.marks);total+=m;outOf+=cap;entered++;if(m<pass)failed=true;subjectMarks.push(`${e.subject}: ${m}/${cap}`);}});const pct=outOf?total/outOf*100:0;return {s,total,outOf,entered,expected:studentExams.length,pct,result:!entered?'INCOMPLETE':(entered<studentExams.length?'INCOMPLETE':failed?'FAIL':'PASS'),subjectMarks};}).sort((a,b)=>{const ar=a.result==='INCOMPLETE'?2:a.result==='FAIL'?1:0,br=b.result==='INCOMPLETE'?2:b.result==='FAIL'?1:0;return ar-br||b.pct-a.pct||a.s.name.localeCompare(b.s.name);});}
+function resultAnalysisRows(){
+  const std=document.getElementById('raStd')?.value||'',stream=document.getElementById('raStream')?.value||'',div=document.getElementById('raDiv')?.value||'',q=(document.getElementById('raSearch')?.value||'').toLowerCase().trim();
+  if(!std)return [];
+  return (db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!['11','12'].includes(String(Number(std)))||!stream||String(s.stream||'').toLowerCase()===stream.toLowerCase())&&(!div||String(s.div||'')===div)&&(!q||[s.name,s.roll,s.seatNo,s.gr,s.ctsId].some(v=>String(v||'').toLowerCase().includes(q)))).map(s=>{
+    const studentExams=resultExamsForStudent(s).filter(e=>!isGradeOnlySubject(std,e.subject));let total=0,outOf=0,entered=0,failed=false;const subjectMarks=[];
+    studentExams.forEach(e=>{const r=(db.results?.[String(e.id)]||{})[String(s.id)]||{};if(r.marks!==''&&r.marks!==null&&r.marks!==undefined&&Number.isFinite(Number(r.marks))){const cap=resultStandardCap(std),pass=(['9','11'].includes(String(Number(std)))?18:(Number(e.passMarks)||33)),m=Number(r.marks);total+=m;outOf+=cap;entered++;if(m<pass)failed=true;subjectMarks.push(`${e.subject}: ${m}/${cap}`);}});
+    const pct=outOf?total/outOf*100:0;return {s,total,outOf,entered,expected:studentExams.length,pct,result:!entered?'INCOMPLETE':(entered<studentExams.length?'INCOMPLETE':failed?'FAIL':'PASS'),subjectMarks};
+  }).sort((a,b)=>{const ar=a.result==='INCOMPLETE'?2:a.result==='FAIL'?1:0,br=b.result==='INCOMPLETE'?2:b.result==='FAIL'?1:0;return ar-br||b.pct-a.pct||a.s.name.localeCompare(b.s.name);});
+}
 function renderResultAnalysis(){const stdEl=document.getElementById('raStd');if(!stdEl)return;const std=stdEl.value;document.getElementById('raStreamWrap').classList.toggle('hidden',!['11','12'].includes(String(Number(std))));const divEl=document.getElementById('raDiv');if(divEl){const cur=divEl.value,divs=[...new Set((db.students||[]).filter(s=>!std||String(Number(s.std))===String(Number(std))).map(s=>String(s.div||'')).filter(Boolean))].sort();divEl.innerHTML='<option value="">All Divisions</option>'+divs.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('');if(divs.includes(cur))divEl.value=cur;}const rows=resultAnalysisRows();const entered=rows.filter(r=>r.entered),passed=rows.filter(r=>r.result==='PASS'),failed=rows.filter(r=>r.result==='FAIL'),incomplete=rows.filter(r=>r.result==='INCOMPLETE'),avg=entered.length?entered.reduce((a,r)=>a+r.pct,0)/entered.length:0;document.getElementById('raStats').innerHTML=`<div class="stat"><b>${rows.length}</b><span>Students</span></div><div class="stat"><b>${passed.length}</b><span>Pass</span></div><div class="stat"><b>${failed.length}</b><span>Fail</span></div><div class="stat"><b>${incomplete.length}</b><span>Incomplete</span></div><div class="stat"><b>${avg.toFixed(1)}%</b><span>Average % (with marks)</span></div>`;document.getElementById('raTableBody').innerHTML=rows.map((r,i)=>`<tr><td>${r.entered?i+1:'-'}</td><td>${esc(r.s.name||'')}</td><td>${esc(r.s.std||'')}/${esc(r.s.div||'')}</td><td>${esc(generatedSeatNo(r.s)||r.s.seatNo||r.s.roll||'')}</td><td>${esc(r.s.gr||'')}</td><td>${r.entered}/${r.expected}</td><td>${r.total.toFixed(2).replace(/\.00$/,'')}</td><td>${r.outOf}</td><td>${r.outOf?r.pct.toFixed(2)+'%':'-'}</td><td class="${r.result==='PASS'?'fee-paid':r.result==='FAIL'?'fee-pending':''}">${r.result}</td><td>${esc(r.subjectMarks.join(' | ')||'-')}</td></tr>`).join('')||'<tr><td colspan="11">Standard પસંદ કરો અથવા matching students નથી.</td></tr>';}
 function exportResultAnalysis(){const rows=resultAnalysisRows(),header=['Rank','Student','Standard','Division','Seat/Roll','GR No','Subjects Entered','Total','Out Of','Percentage','Result','Subject Marks'];const all=[header,...rows.map((r,i)=>[r.entered?i+1:'',r.s.name,r.s.std,r.s.div,generatedSeatNo(r.s)||r.s.seatNo||r.s.roll,r.s.gr,r.entered,r.total,r.outOf,r.outOf?r.pct.toFixed(2):'',r.result,r.subjectMarks.join(' | ')])];const csv=all.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='SVD_Result_Analysis.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
 function fillSelectKeep(id,placeholder,items,current){const el=document.getElementById(id);if(!el)return;const cur=current!==undefined?current:el.value;el.innerHTML=`<option value="">${esc(placeholder)}</option>`+items.map(x=>`<option value="${esc(x.value)}">${esc(x.label)}</option>`).join('');if(items.some(x=>String(x.value)===String(cur)))el.value=cur;}
@@ -2217,28 +2225,69 @@ function printFeeList(){const fees=(db.fees||[]).slice();const rows=fees.map(f=>
 function renderBulkStreamStudents(){const std=document.getElementById('bulkStreamStd')?.value||'11',tb=document.getElementById('bulkStreamStudents');if(!tb)return;const list=(db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))).sort((a,b)=>Number(a.roll)-Number(b.roll));tb.innerHTML=list.map(s=>`<tr><td><input type="checkbox" class="bulk-stream-check" value="${s.id}"></td><td>${esc(s.roll)}</td><td>${esc(s.name)}</td><td>${esc(s.std)}-${esc(s.div)}</td><td>${esc(s.stream||'Not assigned')}</td></tr>`).join('')||'<tr><td colspan="5">આ ધોરણમાં વિદ્યાર્થીઓ મળ્યા નથી.</td></tr>';document.getElementById('bulkStreamSelectAll').checked=false;}
 document.getElementById('btnLoadStreamStudents')?.addEventListener('click',renderBulkStreamStudents);document.getElementById('bulkStreamStd')?.addEventListener('change',renderBulkStreamStudents);document.getElementById('bulkStreamSelectAll')?.addEventListener('change',e=>document.querySelectorAll('.bulk-stream-check').forEach(c=>c.checked=e.target.checked));document.getElementById('btnAssignBulkStream')?.addEventListener('click',()=>{const ids=[...document.querySelectorAll('.bulk-stream-check:checked')].map(c=>String(c.value));if(!ids.length){alert('પહેલાં વિદ્યાર્થીઓને tick કરો.');return;}const stream=document.getElementById('bulkStreamValue').value;db.students.forEach(s=>{if(ids.includes(String(s.id)))s.stream=stream;});ensureStreamSubjects(document.getElementById('bulkStreamStd').value,stream);saveDB();renderBulkStreamStudents();alert(`${ids.length} વિદ્યાર્થીઓને ${stream} Stream આપવામાં આવી.`);});
 function resultStandardCap(std){const n=String(Number(std));if(['9','11'].includes(n))return 50;if(n==='10')return 80;if(n==='12')return 100;return 100;}
-function resultExamsForStandard(std){const stream=document.getElementById('resultStream')?.value||'';return (db.exams||[]).filter(e=>std?String(Number(e.std))===String(Number(std))&&(!['11','12'].includes(String(Number(std)))||!stream||String(e.stream||'')===stream):false);}
-const streamSubjects={'11':{'Arts':['ગુજરાતી','હિન્દી','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા','સમાજશાસ્ત્ર','ભૂગોળ','કમ્પ્યુટર'],'Commerce':['ગુજરાતી','નામાનાં મુળતત્વો','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા','S.P & C.C','આંકડાશાસ્ત્ર','કમ્પ્યુટર']},'12':{'Arts':['ગુજરાતી','હિન્દી','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા','સમાજશાસ્ત્ર','ભૂગોળ'],'Commerce':['ગુજરાતી','નામાનાં મુળતત્વો','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા','S.P & C.C','આંકડાશાસ્ત્ર']}};
+function resultExamsForStandard(std){
+  const stream=document.getElementById('resultStream')?.value||'',senior=['11','12'].includes(String(Number(std)));
+  const list=(db.exams||[]).filter(e=>std?String(Number(e.std))===String(Number(std))&&(!senior||!stream||stream==='ALL'||String(e.stream||'').toLowerCase()===stream.toLowerCase()):false);
+  if(senior&&stream==='ALL'){
+    const arts=streamSubjects[String(Number(std))]?.Arts||[],commerce=streamSubjects[String(Number(std))]?.Commerce||[];
+    const common=arts.filter(n=>commerce.some(c=>subjectMatchKey(canonicalStreamSubject(std,c))===subjectMatchKey(canonicalStreamSubject(std,n))));
+    return common.map(name=>({name,arts:findStreamExamForSubject(std,'Arts',name),commerce:findStreamExamForSubject(std,'Commerce',name)})).filter(x=>x.arts&&x.commerce).map(x=>({...x.arts,subject:x.name}));
+  }
+  return senior&&stream?orderedUniqueStreamExams(std,stream,list):list;
+}
+function findStreamExamForSubject(std,stream,subject){
+ const key=subjectMatchKey(canonicalStreamSubject(std,subject));
+ const matches=(db.exams||[]).filter(e=>String(Number(e.std))===String(Number(std))&&String(e.stream||'').trim().toLowerCase()===String(stream).toLowerCase()&&subjectMatchKey(canonicalStreamSubject(std,e.subject))===key);
+ return matches.sort((a,b)=>Object.keys((db.results||{})[String(b.id)]||{}).length-Object.keys((db.results||{})[String(a.id)]||{}).length)[0]||null;
+}
+const streamSubjects={'11':{'Arts':['ગુજરાતી','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા અને સંચાલન','કમ્પ્યુટર અધ્યયન','હિન્દી','સમાજશાસ્ત્ર','ભૂગોળ'],'Commerce':['ગુજરાતી','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા અને સંચાલન','કમ્પ્યુટર અધ્યયન','આંકડાશાસ્ત્ર','નામાનાં મૂળ તત્વો','S.P & C.C']},'12':{'Arts':['ગુજરાતી','હિન્દી','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા','સમાજશાસ્ત્ર','ભૂગોળ'],'Commerce':['ગુજરાતી','નામાનાં મુળતત્વો','અંગ્રેજી','અર્થશાસ્ત્ર','વાણિજ્ય વ્યવસ્થા','S.P & C.C','આંકડાશાસ્ત્ર']}};
 function syncStudentStreamField(){const std=String(Number(document.getElementById('sStd')?.value||0));document.getElementById('studentStreamWrap')?.classList.toggle('hidden',!['11','12'].includes(std));}
-function ensureStreamSubjects(std,stream){if(!stream||!streamSubjects[String(std)]?.[stream])return;db.exams=db.exams||[];const names=streamSubjects[String(std)][stream];names.forEach(name=>{if(!db.exams.some(e=>String(Number(e.std))===String(Number(std))&&String(e.stream||'')===stream&&String(e.subject||'').trim()===name)){db.exams.push({id:nextId(db.exams),date:'',time:'',subject:name,std:String(std),stream,div:'All',type:'Result'});}});saveDB();}
+function subjectMatchKey(v){return String(v||'').normalize('NFC').toLocaleLowerCase('gu').replace(/[\s().&+\-]/g,'').replace(/મુળ/g,'મૂળ').replace(/કમ્પ્યૂટર/g,'કમ્પ્યુટર');}
+function canonicalStreamSubject(std,subject){
+  const key=subjectMatchKey(subject),st=String(Number(std));
+  if(st!=='11')return subject;
+  const aliases={
+    'વાણિજ્યવ્યવસ્થા':'વાણિજ્ય વ્યવસ્થા અને સંચાલન',
+    'કમ્પ્યુટર':'કમ્પ્યુટર અધ્યયન',
+    'નામાનાંમૂળતત્વો':'નામાનાં મૂળ તત્વો'
+  };
+  return aliases[key]||subject;
+}
+function orderedUniqueStreamExams(std,stream,source){
+  const names=streamSubjects[String(Number(std))]?.[stream]||[];
+  if(!names.length)return (source||[]).slice();
+  const order=new Map(names.map((n,i)=>[subjectMatchKey(n),i]));
+  const candidates=(source||[]).filter(e=>order.has(subjectMatchKey(canonicalStreamSubject(std,e.subject))));
+  const chosen=new Map();
+  candidates.forEach(e=>{
+    const key=subjectMatchKey(canonicalStreamSubject(std,e.subject));
+    const existing=chosen.get(key);
+    const markCount=Object.keys((db.results||{})[String(e.id)]||{}).length;
+    const oldCount=existing?Object.keys((db.results||{})[String(existing.id)]||{}).length:-1;
+    if(!existing||markCount>oldCount)chosen.set(key,e);
+  });
+  return [...chosen.entries()].sort((a,b)=>(order.get(a[0])??999)-(order.get(b[0])??999)).map(x=>({...x[1],subject:names[order.get(x[0])]||x[1].subject}));
+}
+function ensureStreamSubjects(std,stream){
+  if(!stream||!streamSubjects[String(std)]?.[stream])return;
+  db.exams=db.exams||[];
+  const names=streamSubjects[String(std)][stream];
+  names.forEach(name=>{
+    const key=subjectMatchKey(canonicalStreamSubject(std,name));
+    const exists=db.exams.some(e=>String(Number(e.std))===String(Number(std))&&String(e.stream||'').trim().toLowerCase()===stream.toLowerCase()&&subjectMatchKey(canonicalStreamSubject(std,e.subject))===key);
+    if(!exists)db.exams.push({id:nextId(db.exams),date:'',time:'',subject:name,std:String(std),stream,div:'All',type:'Result'});
+  });
+  saveDB();
+}
 function resultExamsForStudent(s){
-  const std=String(Number(s.std));
-  const isSenior=['11','12'].includes(std);
-  const stream=String(s.stream||'').trim();
-  const streamKey=stream.toLowerCase();
-  const allowedNames=isSenior?(streamSubjects[std]?.[stream]||[]):null;
-  const normalizeSubject=v=>String(v||'').normalize('NFC').toLocaleLowerCase().replace(/[\s().&+\-]/g,'');
-  const allowedKeys=allowedNames?new Set(allowedNames.map(normalizeSubject)):null;
-  return (db.exams||[]).filter(e=>{
+  const std=String(Number(s.std)),isSenior=['11','12'].includes(std),stream=String(s.stream||'').trim();
+  const list=(db.exams||[]).filter(e=>{
     if(String(Number(e.std))!==std)return false;
-    if(isSenior){
-      // Match both the student's stream and that stream's official subject list.
-      // This prevents legacy/mis-tagged records from leaking the other stream's subjects.
-      if(!streamKey || String(e.stream||'').trim().toLowerCase()!==streamKey)return false;
-      if(!allowedKeys || !allowedKeys.has(normalizeSubject(e.subject)))return false;
-    }
+    if(isSenior){if(!stream||String(e.stream||'').trim().toLowerCase()!==stream.toLowerCase())return false;}
     return !e.div||String(e.div).toLowerCase()==='all'||String(e.div).toLowerCase()===String(s.div||'').toLowerCase();
-  }).sort((a,b)=>String(a.subject||'').localeCompare(String(b.subject||''),'gu'));
+  });
+  if(isSenior)return orderedUniqueStreamExams(std,stream,list);
+  return list;
 }
 function renderResultPage(){
   const stdSel=document.getElementById('resultStd'),divSel=document.getElementById('resultDiv'),examSel=document.getElementById('resultExam');
@@ -2254,7 +2303,7 @@ function renderResultPage(){
 }
 function refreshResultExamOptions(preferred){
   const stdNow=document.getElementById('resultStd')?.value||'', streamNow=document.getElementById('resultStream')?.value||'';
-  if(['11','12'].includes(String(Number(stdNow)))&&streamNow)ensureStreamSubjects(stdNow,streamNow);
+  if(['11','12'].includes(String(Number(stdNow)))&&streamNow){if(streamNow==='ALL'){ensureStreamSubjects(stdNow,'Arts');ensureStreamSubjects(stdNow,'Commerce');}else ensureStreamSubjects(stdNow,streamNow);}
   const examSel=document.getElementById('resultExam');if(!examSel)return;
   const std=document.getElementById('resultStd')?.value||'';
   const exams=resultExamsForStandard(std);
@@ -2265,45 +2314,28 @@ function refreshResultExamOptions(preferred){
 }
 function currentResultExam(){return (db.exams||[]).find(e=>String(e.id)===String(document.getElementById('resultExam')?.value))||null;}
 function loadMarksTable(){
-  const stdSel=document.getElementById('resultStd'),examSel=document.getElementById('resultExam');
-  if(!stdSel||!examSel)return;
-  const ex=currentResultExam();
-  const std=stdSel.value,div=document.getElementById('resultDiv').value;
-  if(!ex){document.getElementById('marksTable').innerHTML='<tr><td colspan="5" class="muted">આ Standard માટે Exam Schedule માં Subjects ઉમેરો.</td></tr>';return;}
-  const cap=std?resultStandardCap(std):resultStandardCap(ex.std||9);
-  document.getElementById('resultMaxMarks').value=cap;
-  document.getElementById('resultMaxMarks').readOnly=true;
-  document.getElementById('resultMaxMarks').max=cap;
-  document.getElementById('resultPassMarks').value=['9','11'].includes(String(Number(std||ex.std)))?18:33;
-  const subjectInput=document.getElementById('resultSubjectName');
-  if(subjectInput){subjectInput.value=ex.subject||'';subjectInput.disabled=!(std==='11'||std==='12'||(!std&&['11','12'].includes(String(Number(ex.std)))));}
-  const stream=document.getElementById('resultStream')?.value||'';const list=(db.students||[]).filter(s=>String(Number(s.std))===String(Number(std||ex.std))&&(!['11','12'].includes(String(Number(std||ex.std)))||!stream||String(s.stream||'')===stream)&&(!div||String(s.div)===String(div))&&String(Number(s.std))===String(Number(ex.std))&&(!ex.div||String(ex.div).toLowerCase()==='all'||String(ex.div).toLowerCase()===String(s.div||'').toLowerCase())).sort((a,b)=>Number(a.roll)-Number(b.roll));
-  const rec=db.results?.[String(ex.id)]||{};
-  document.getElementById('marksTable').innerHTML=list.map(s=>{const r=rec[String(s.id)]||{};return `<tr data-student-id="${s.id}"><td>${esc(s.roll)}</td><td>${esc(s.ctsId||'')}</td><td style="text-align:left">${esc(s.name)}</td><td><input class="marks-input result-mark" type="number" min="0" max="${cap}" step="0.01" value="${r.marks??''}" oninput="if(Number(this.value)>${cap})this.value='${cap}';if(Number(this.value)<0)this.value=0"></td><td><input class="result-remark" value="${esc(r.remarks||'')}"></td></tr>`}).join('')||'<tr><td colspan="5" class="muted">આ Subject / Standard માટે વિદ્યાર્થીઓ મળ્યા નથી.</td></tr>';
+ const stdSel=document.getElementById('resultStd'),examSel=document.getElementById('resultExam');if(!stdSel||!examSel)return;
+ const ex=currentResultExam(),std=stdSel.value,div=document.getElementById('resultDiv').value,stream=document.getElementById('resultStream')?.value||'';
+ if(!ex){document.getElementById('marksTable').innerHTML='<tr><td colspan="5" class="muted">આ Standard / Stream માટે Subject ઉપલબ્ધ નથી. પહેલાં Subject Management તપાસો.</td></tr>';return;}
+ const cap=isGradeOnlySubject(std||ex.std,ex.subject)?50:(std?resultStandardCap(std):resultStandardCap(ex.std||9));document.getElementById('resultMaxMarks').value=cap;document.getElementById('resultMaxMarks').readOnly=true;document.getElementById('resultMaxMarks').max=cap;document.getElementById('resultPassMarks').value=['9','11'].includes(String(Number(std||ex.std)))?18:33;
+ const subjectInput=document.getElementById('resultSubjectName');if(subjectInput){subjectInput.value=ex.subject||'';subjectInput.disabled=!(std==='11'||std==='12'||(!std&&['11','12'].includes(String(Number(ex.std)))));}
+ const senior=['11','12'].includes(String(Number(std||ex.std))),allStreams=senior&&stream==='ALL';
+ const list=(db.students||[]).filter(s=>String(Number(s.std))===String(Number(std||ex.std))&&(!senior||allStreams||String(s.stream||'').toLowerCase()===stream.toLowerCase())&&(!div||String(s.div)===String(div))&&String(Number(s.std))===String(Number(ex.std))&&(!ex.div||String(ex.div).toLowerCase()==='all'||String(ex.div).toLowerCase()===String(s.div||'').toLowerCase())).sort((a,b)=>String(a.roll??'').localeCompare(String(b.roll??''),undefined,{numeric:true,sensitivity:'base'})||String(a.stream||'').localeCompare(String(b.stream||''),undefined,{sensitivity:'base'})||String(a.name||'').localeCompare(String(b.name||''),undefined,{sensitivity:'base'}));
+ document.getElementById('marksTable').innerHTML=list.map(s=>{const target=allStreams?findStreamExamForSubject(std,s.stream,ex.subject):ex,rec=target?(db.results?.[String(target.id)]||{}):{},r=rec[String(s.id)]||{};return `<tr data-student-id="${s.id}" data-exam-id="${target?.id||''}"><td>${esc(s.roll)}</td><td>${esc(s.ctsId||'')}</td><td style="text-align:left">${esc(s.name)}${allStreams?` <small>(${esc(s.stream||'')})</small>`:''}</td><td><input class="marks-input result-mark" type="number" min="0" max="${cap}" step="0.01" value="${r.marks??''}" ${target?'':'disabled title="આ Stream માટે આ Common Subject Schedule માં નથી"'} oninput="if(Number(this.value)>${cap})this.value='${cap}';if(Number(this.value)<0)this.value=0"></td><td><input class="result-remark" value="${esc(r.remarks||'')}" ${target?'':'disabled'}></td></tr>`}).join('')||'<tr><td colspan="5" class="muted">આ Subject / Standard માટે વિદ્યાર્થીઓ મળ્યા નથી.</td></tr>';
 }
+
 function renderManagedSubjects(){const std=document.getElementById('subjectManageStd')?.value;const sel=document.getElementById('resultExam');if(!sel)return;const current=sel.value;refreshResultExamOptions(current);}
 function addResultSubject(){const std=document.getElementById('subjectManageStd').value,stream=['11','12'].includes(String(Number(document.getElementById('subjectManageStd').value)))?(document.getElementById('subjectManageStream')?.value||''): '',name=document.getElementById('subjectManageName').value.trim();if(!std){alert('પહેલાં Standard પસંદ કરો.');return;}if(!name){alert('Subject Name લખો.');return;}if((db.exams||[]).some(e=>String(Number(e.std))===String(Number(std))&&String(e.stream||'')===stream&&String(e.subject||'').trim().toLowerCase()===name.toLowerCase())){alert('આ Standardમાં આ Subject પહેલેથી છે.');return;}db.exams=db.exams||[];db.exams.push({id:nextId(db.exams),date:'',time:'',subject:name,std:String(std),stream,div:'All',type:'Result'});saveDB();document.getElementById('resultStd').value=String(std);document.getElementById('subjectManageName').value='';renderResultPage();document.getElementById('subjectManageStd').value=String(std);alert('Std '+std+' માટે Subject ઉમેરાયો.');}
 function editResultSubject(){const ex=currentResultExam();if(!ex){alert('Edit કરવા Subject પસંદ કરો.');return;}const std=document.getElementById('resultStd').value;if(!std||String(Number(ex.std))!==String(Number(std))){alert('પહેલાં યોગ્ય Standard પસંદ કરો.');return;}const name=document.getElementById('subjectManageName').value.trim()||prompt('નવું Subject Name લખો:',ex.subject);if(!name||!name.trim())return;ex.subject=name.trim();saveDB();renderResultPage();document.getElementById('subjectManageStd').value=String(std);document.getElementById('subjectManageName').value=ex.subject;alert('Subject Name update થયું.');}
 function removeResultSubject(){const ex=currentResultExam();if(!ex){alert('Remove કરવા Subject પસંદ કરો.');return;}if(!confirm('શું '+ex.subject+' subject અને તેની marks entries delete કરવી છે?'))return;db.exams=(db.exams||[]).filter(e=>String(e.id)!==String(ex.id));if(db.results)delete db.results[String(ex.id)];saveDB();renderResultPage();alert('Subject remove થયો.');}
 function saveMarks(){
-  const ex=currentResultExam();if(!ex){alert('Subject select કરો.');return;}
-  const std=document.getElementById('resultStd').value||ex.std||'9';
-  const cap=resultStandardCap(std);
-  if(['11','12'].includes(String(Number(std)))){
-    const name=document.getElementById('resultSubjectName')?.value.trim();
-    if(name){ex.subject=name;}
-  }
-  ex.maxMarks=cap;ex.passMarks=['9','11'].includes(String(Number(std)))?18:33;
-  db.results=db.results||{};db.results[String(ex.id)]=db.results[String(ex.id)]||{};
-  let invalid=false;
-  document.querySelectorAll('#marksTable tr[data-student-id]').forEach(tr=>{
-    const id=tr.dataset.studentId,input=tr.querySelector('.result-mark'),m=input.value,remarks=tr.querySelector('.result-remark').value.trim();
-    if(m!==''&&(Number(m)<0||Number(m)>cap)){invalid=true;input.focus();return;}
-    db.results[String(ex.id)][String(id)]={marks:m===''?'':Number(m),remarks};
-  });
-  if(invalid){alert('Marks 0 થી '+cap+' વચ્ચે જ દાખલ કરો.');return;}
-  saveDB();renderResultPage();alert('Marks saved successfully. Subject: '+ex.subject+' (Out of '+cap+').');
+ const ex=currentResultExam();if(!ex){alert('Subject select કરો.');return;}const std=document.getElementById('resultStd').value||ex.std||'9',cap=isGradeOnlySubject(std,ex.subject)?50:resultStandardCap(std),stream=document.getElementById('resultStream')?.value||'',allStreams=['11','12'].includes(String(Number(std)))&&stream==='ALL',name=document.getElementById('resultSubjectName')?.value.trim();
+ if(['11','12'].includes(String(Number(std)))&&name){if(allStreams){['Arts','Commerce'].forEach(st=>{const target=findStreamExamForSubject(std,st,ex.subject);if(target)target.subject=name;});ex.subject=name;}else ex.subject=name;}
+ db.results=db.results||{};let invalid=false,saved=0;
+ document.querySelectorAll('#marksTable tr[data-student-id]').forEach(tr=>{const id=tr.dataset.studentId,input=tr.querySelector('.result-mark'),m=input?.value,remarks=tr.querySelector('.result-remark')?.value.trim()||'';if(!input||input.disabled)return;if(m!==''&&(Number(m)<0||Number(m)>cap)){invalid=true;input.focus();return;}const targetId=allStreams?tr.dataset.examId:ex.id;if(!targetId)return;db.results[String(targetId)]=db.results[String(targetId)]||{};db.results[String(targetId)][String(id)]={marks:m===''?'':Number(m),remarks};const target=(db.exams||[]).find(e=>String(e.id)===String(targetId));if(target){target.maxMarks=cap;target.passMarks=['9','11'].includes(String(Number(std)))?18:33;}saved++;});
+ if(invalid){alert('Marks 0 થી '+cap+' વચ્ચે જ દાખલ કરો.');return;}saveDB();renderResultPage();alert('Marks saved successfully. Subject: '+(name||ex.subject)+(allStreams?' (Arts + Commerce બંને Streams)':'')+' — '+saved+' entries (Out of '+cap+').');
 }
+
 function renderResultStudents(){
   const sel=document.getElementById('resultStudent');if(!sel)return;
   const printStd=document.getElementById('resultPrintStd')?.value||'';
@@ -2319,6 +2351,8 @@ function renderResultStudents(){
   if(cur&&list.some(s=>String(s.id)===String(cur)))sel.value=cur;
 }
 function gradeFor(p){if(p>=90)return'A+';if(p>=80)return'A';if(p>=70)return'B+';if(p>=60)return'B';if(p>=50)return'C';if(p>=33)return'D';return'F';}
+function gradeOnlyMarkCap(std,subject){return isGradeOnlySubject(std,subject)?50:resultStandardCap(std);}
+function gradeOnlyLetterGrade(marks){if(marks===''||marks===null||marks===undefined||!Number.isFinite(Number(marks)))return'';const pct=Number(marks)/50*100;if(pct>=91)return'A1';if(pct>=81)return'A2';if(pct>=71)return'B1';if(pct>=61)return'B2';if(pct>=51)return'C1';if(pct>=41)return'C2';if(pct>=33)return'D';if(pct>=21)return'E1';return'E2';}
 function isGradeOnlySubject(std,subject){const n=String(subject||'').normalize('NFC').toLocaleLowerCase('gu').replace(/[\s().&+\-]/g,'');const st=String(Number(std));if(st==='11')return n.includes('કમ્પ્યુટર')||n.includes('કમ્પ્યૂટર')||n.includes('computer');if(st==='10')return (n.includes('સ્વા')||n.includes('સ્વાસ્થ્ય'))&&(n.includes('શા')||n.includes('શારીરિક'))&&(n.includes('શિક્ષણ')||n.includes('શિક્ષણ'));return false;}
 function resultRankForStudent(student){
   const calc=(st)=>{const exs=resultExamsForStudent(st).filter(e=>!isGradeOnlySubject(st.std,e.subject));let total=0,max=0;for(const e of exs){const rec=(db.results?.[String(e.id)]||{})[String(st.id)]||{};if(rec.marks!==''&&rec.marks!=null&&Number.isFinite(Number(rec.marks))){total+=Number(rec.marks);max+=resultStandardCap(st.std);}}return {total,max,pct:max?total/max*100:-1};};
@@ -2326,12 +2360,12 @@ function resultRankForStudent(student){
   const idx=ranked.findIndex(x=>x.id===String(student.id));return idx>=0&&idx<10?idx+1:null;
 }
 function resultHTML(s){
-  const exams=resultExamsForStudent(s).slice().sort((a,b)=>Number(isGradeOnlySubject(s.std,a.subject))-Number(isGradeOnlySubject(s.std,b.subject))||String(a.subject||'').localeCompare(String(b.subject||''),'gu'));
-  const rows=exams.map(e=>{const rec=(db.results?.[String(e.id)]||{})[String(s.id)]||{};const marks=rec.marks===''||rec.marks==null?'':Number(rec.marks);const gradeOnly=isGradeOnlySubject(s.std,e.subject);const cap=resultStandardCap(s.std);const grade=gradeOnly&&marks!==''&&cap>0?gradeFor(marks/cap*100):'';return {e,marks,remarks:gradeOnly?(grade?`Grade: ${grade}${rec.remarks?' | '+rec.remarks:''}`:(rec.remarks||'Grade pending')):(rec.remarks||''),cap,gradeOnly,grade};});
+  const exams=resultExamsForStudent(s); // Keep regular subjects first and grade-only subjects at the end.
+  const rows=exams.map(e=>{const rec=(db.results?.[String(e.id)]||{})[String(s.id)]||{};const marks=rec.marks===''||rec.marks==null?'':Number(rec.marks);const gradeOnly=isGradeOnlySubject(s.std,e.subject);const cap=resultStandardCap(s.std);const grade=gradeOnly?gradeOnlyLetterGrade(marks):'';return {e,marks,remarks:gradeOnly?(rec.remarks||''):(rec.remarks||''),cap,gradeOnly,grade};}).sort((a,b)=>Number(a.gradeOnly)-Number(b.gradeOnly));
   const valid=rows.filter(x=>!x.gradeOnly&&x.marks!==''),total=valid.reduce((a,x)=>a+x.marks,0),max=valid.reduce((a,x)=>a+x.cap,0),pct=max?total/max*100:0;
   const regularRows=rows.filter(x=>!x.gradeOnly),failed=valid.some(x=>x.marks<(x.cap===50?18:33)),status=valid.length===regularRows.length&&regularRows.length>0&&!failed?'PASS':(failed?'FAIL':'INCOMPLETE');
   const seat=generatedSeatNo(s)||s.seatNo||'-',rank=resultRankForStudent(s);
-  return `<div class="result-sheet"><div class="result-head">${db.customize.logo?`<img src="${db.customize.logo}" style="max-height:65px;max-width:120px"><br>`:''}<div class="result-school-name">${esc(db.school.name)}</div><div class="result-school-address">${esc(db.school.address||'')}</div><h2 class="result-exam-title">${esc(db.school.examName)} — RESULT</h2></div><div class="result-meta"><div class="result-student-info"><div><b>Name</b><br>${esc(s.name)}</div><div><b>Seat No.</b><br>${esc(seat)}</div><div><b>G.R. No.</b><br>${esc(s.gr||s.grNo||'-')}</div><div><b>CTS ID</b><br>${esc(s.ctsId||'-')}</div><div><b>Standard / Div.</b><br>${esc(s.std)} / ${esc(s.div)}${['11','12'].includes(String(Number(s.std)))&&s.stream?' — '+esc(s.stream):''}</div>${rank?`<div class="result-rank"><b>Class Rank</b><br>${rank}</div>`:''}</div><div class="result-student-photo">${s.photo?`<img src="${s.photo}" alt="Student Photo">`:`<span>Student<br>Photo</span>`}</div></div><table class="result-table"><thead><tr><th>Subject</th><th>Out Of</th><th>Marks Obtained</th><th>Remarks</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.e.subject)}</td><td>${x.cap}</td><td>${x.marks===''?'-':x.marks}</td><td>${esc(x.remarks)}</td></tr>`).join('')||'<tr><td colspan="4">No subjects scheduled for this standard.</td></tr>'}<tr class="result-sum-row"><th>Total</th><th>${max||'-'}</th><th>${total}</th><th></th></tr></tbody></table><div class="result-total"><div><b>Percentage:</b> ${max?pct.toFixed(2):'-'}% &nbsp; | &nbsp; <span class="result-grade">${status}</span> ${max?' | Grade: '+gradeFor(pct):''}</div></div><div class="result-signatures"><div>Class Teacher</div><div class="result-principal-sign">${db.school.principalSignature?`<img src="${db.school.principalSignature}" alt="Principal Signature"><br>`:''}${esc(db.school.principal||'Principal')}<br><span>${db.school.principalSignature?'Principal Signature':''}</span></div></div></div>`;
+  return `<div class="result-sheet"><div class="result-head">${db.customize.logo?`<img src="${db.customize.logo}" style="max-height:65px;max-width:120px"><br>`:''}<div class="result-school-name">${esc(db.school.name)}</div><div class="result-school-address">${esc(db.school.address||'')}</div><h2 class="result-exam-title">${esc(db.school.examName)} — RESULT</h2></div><div class="result-meta"><div class="result-student-info"><div><b>Name</b><br>${esc(s.name)}</div><div><b>Seat No.</b><br>${esc(seat)}</div><div><b>G.R. No.</b><br>${esc(s.gr||s.grNo||'-')}</div><div><b>CTS ID</b><br>${esc(s.ctsId||'-')}</div><div><b>Standard / Div.</b><br>${esc(s.std)} / ${esc(s.div)}${['11','12'].includes(String(Number(s.std)))&&s.stream?' — '+esc(s.stream):''}</div>${rank?`<div class="result-rank"><b>Class Rank</b><br>${rank}</div>`:''}</div><div class="result-student-photo">${s.photo?`<img src="${s.photo}" alt="Student Photo">`:`<span>Student<br>Photo</span>`}</div></div><table class="result-table"><thead><tr><th>Subject</th><th>Out Of</th><th>Marks Obtained</th><th>Remarks</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.e.subject)}</td><td>${x.gradeOnly?'-':x.cap}</td><td>${x.gradeOnly?(x.grade||'-'):(x.marks===''?'-':x.marks)}</td><td>${esc(x.gradeOnly?(x.grade?'Grade':'Grade pending')+(x.remarks?' | '+x.remarks:''):x.remarks)}</td></tr>`).join('')||'<tr><td colspan="4">No subjects scheduled for this standard.</td></tr>'}<tr class="result-sum-row"><th>Total</th><th>${max||'-'}</th><th>${total}</th><th></th></tr></tbody></table><div class="result-total"><div><b>Percentage:</b> ${max?pct.toFixed(2):'-'}% &nbsp; | &nbsp; <span class="result-grade">${status}</span> ${max?' | Grade: '+gradeFor(pct):''}</div></div><div class="result-signatures"><div>Class Teacher</div><div class="result-principal-sign">${db.school.principalSignature?`<img src="${db.school.principalSignature}" alt="Principal Signature"><br>`:''}${esc(db.school.principal||'Principal')}<br><span>${db.school.principalSignature?'Principal Signature':''}</span></div></div></div>`;
 }
 function studentResultHTML(s){return resultHTML(s);}
 function previewResult(){const s=db.students.find(x=>String(x.id)===String(document.getElementById('resultStudent').value));if(s)document.getElementById('resultPreview').innerHTML=resultHTML(s);}
@@ -2354,8 +2388,8 @@ function renderBulkWaStudents(){
   document.getElementById('bulkWaStatus').textContent=`${list.length} વિદ્યાર્થી મળ્યા. મોકલવાના વિદ્યાર્થીઓને ટિક કરો.`;
 }
 function makeWhatsAppResultText(s){
-  const exams=resultExamsForStudent(s).slice().sort((a,b)=>Number(isGradeOnlySubject(s.std,a.subject))-Number(isGradeOnlySubject(s.std,b.subject))||String(a.subject||'').localeCompare(String(b.subject||''),'gu'));
-  const rows=exams.map(e=>{const r=(db.results?.[String(e.id)]||{})[String(s.id)]||{};const marks=r.marks===''||r.marks==null?null:Number(r.marks),cap=resultStandardCap(s.std);return isGradeOnlySubject(s.std,e.subject)?`${e.subject}: ${marks==null?'Not entered':marks+'/'+cap+' | Grade: '+gradeFor(marks/cap*100)}`:`${e.subject}: ${marks==null?'Not entered':marks+'/'+cap}`;});
+  const exams=resultExamsForStudent(s).slice().sort((a,b)=>Number(isGradeOnlySubject(s.std,a.subject))-Number(isGradeOnlySubject(s.std,b.subject))); // Grade-only subjects appear last.
+  const rows=exams.map(e=>{const r=(db.results?.[String(e.id)]||{})[String(s.id)]||{};const marks=r.marks===''||r.marks==null?null:Number(r.marks),cap=resultStandardCap(s.std);return isGradeOnlySubject(s.std,e.subject)?`${e.subject}: ${marks==null?'Not entered':'Grade '+gradeOnlyLetterGrade(marks)}`:`${e.subject}: ${marks==null?'Not entered':marks+'/'+cap}`;});
   const entered=exams.filter(e=>!isGradeOnlySubject(s.std,e.subject)).map(e=>{const r=(db.results?.[String(e.id)]||{})[String(s.id)]||{};return r.marks!==''&&r.marks!=null?{marks:Number(r.marks),cap:resultStandardCap(s.std)}:null;}).filter(Boolean);
   const total=entered.reduce((a,x)=>a+x.marks,0),max=entered.reduce((a,x)=>a+x.cap,0),pct=max?total/max*100:0;
   const regularExams=exams.filter(e=>!isGradeOnlySubject(s.std,e.subject));const failed=entered.some(x=>x.marks<(x.cap===50?18:33));
@@ -2385,44 +2419,44 @@ function syncBulkResultPrintFilters(){
   const streamSel=document.getElementById('bulkResultPrintStream');
   if(!isSenior&&streamSel)streamSel.value='';
   const divSel=document.getElementById('bulkResultPrintDiv');
-  if(divSel){const current=divSel.value;const divs=[...new Set((db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!isSenior||!streamSel?.value||String(s.stream||'').toLowerCase()===String(streamSel.value).toLowerCase())).map(s=>String(s.div||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));divSel.innerHTML='<option value="">All Divisions</option>'+divs.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('');if(divs.includes(current))divSel.value=current;}
+  if(divSel){const current=divSel.value;const divs=[...new Set((db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!isSenior||!streamSel?.value||streamSel.value==='ALL'||String(s.stream||'').toLowerCase()===String(streamSel.value).toLowerCase())).map(s=>String(s.div||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));divSel.innerHTML='<option value="">All Divisions</option>'+divs.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('');if(divs.includes(current))divSel.value=current;}
   updateBulkResultPrintStatus();
 }
 function updateBulkResultPrintStatus(){
   const std=document.getElementById('bulkResultPrintStd')?.value||'',stream=document.getElementById('bulkResultPrintStream')?.value||'',div=document.getElementById('bulkResultPrintDiv')?.value||'';
   const status=document.getElementById('bulkResultPrintStatus');if(!status)return;
   if(!std){status.textContent='પહેલાં Standard પસંદ કરો.';return;}
-  if(['11','12'].includes(String(Number(std)))&&!stream){status.textContent='ધોરણ '+std+' માટે Arts અથવા Commerce Stream પસંદ કરો.';return;}
-  const list=(db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!['11','12'].includes(String(Number(std)))||String(s.stream||'').toLowerCase()===stream.toLowerCase())&&(!div||String(s.div||'')===div));
-  status.textContent=`પસંદગી: Std ${std}${stream?' — '+stream:''}${div?' / Div '+div:''}. કુલ ${list.length} વિદ્યાર્થીઓના Result પ્રિન્ટ થશે.`;
+  if(['11','12'].includes(String(Number(std)))&&!stream){status.textContent='ધોરણ '+std+' માટે Arts, Commerce અથવા All Streams પસંદ કરો.';return;}
+  const list=(db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!['11','12'].includes(String(Number(std)))||stream==='ALL'||String(s.stream||'').toLowerCase()===stream.toLowerCase())&&(!div||String(s.div||'')===div));
+  status.textContent=`પસંદગી: Std ${std}${stream==='ALL'?' — Arts + Commerce (All Streams)':stream?' — '+stream:''}${div?' / Div '+div:''}. કુલ ${list.length} વિદ્યાર્થીઓના Result પ્રિન્ટ થશે.`;
 }
 function printBulkResultsByStandard(){
   const std=document.getElementById('bulkResultPrintStd')?.value||'',stream=document.getElementById('bulkResultPrintStream')?.value||'',div=document.getElementById('bulkResultPrintDiv')?.value||'';
   if(!std){alert('Bulk Print માટે Standard પસંદ કરો.');return;}
-  if(['11','12'].includes(String(Number(std)))&&!stream){alert('ધોરણ '+std+' માટે Arts અથવા Commerce Stream પસંદ કરો.');return;}
-  const list=(db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!['11','12'].includes(String(Number(std)))||String(s.stream||'').toLowerCase()===stream.toLowerCase())&&(!div||String(s.div||'')===div)).slice().sort((a,b)=>String(a.div||'').localeCompare(String(b.div||''),undefined,{numeric:true})||Number(a.roll||0)-Number(b.roll||0)||String(a.name||'').localeCompare(String(b.name||'')));
+  if(['11','12'].includes(String(Number(std)))&&!stream){alert('ધોરણ '+std+' માટે Arts, Commerce અથવા All Streams પસંદ કરો.');return;}
+  const list=(db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!['11','12'].includes(String(Number(std)))||stream==='ALL'||String(s.stream||'').toLowerCase()===stream.toLowerCase())&&(!div||String(s.div||'')===div)).slice().sort((a,b)=>String(a.div||'').localeCompare(String(b.div||''),undefined,{numeric:true})||Number(a.roll||0)-Number(b.roll||0)||String(a.name||'').localeCompare(String(b.name||'')));
   if(!list.length){alert('પસંદ કરેલા Standard / Stream / Divisionમાં કોઈ વિદ્યાર્થી મળ્યો નથી.');return;}
   const missing=list.filter(s=>!resultExamsForStudent(s).length);
   if(missing.length&&!confirm(`${list.length} વિદ્યાર્થીઓમાંથી ${missing.length} વિદ્યાર્થી માટે વિષયો સેટ નથી. તેમનાં Resultમાં વિષય ન હોવાની નોંધ આવશે. Bulk Print ચાલુ રાખવું?`))return;
   document.getElementById('resultPreview').innerHTML=list.map(resultHTML).join('');
-  document.getElementById('bulkResultPrintStatus').textContent=`પ્રિન્ટ માટે ${list.length} પરિણામ તૈયાર છે: Std ${std}${stream?' — '+stream:''}${div?' / Div '+div:''}.`;
+  document.getElementById('bulkResultPrintStatus').textContent=`પ્રિન્ટ માટે ${list.length} પરિણામ તૈયાર છે: Std ${std}${stream==='ALL'?' — Arts + Commerce':stream?' — '+stream:''}${div?' / Div '+div:''}.`;
   printOnly('print-result');
 }
 function standardResultReportData(){
   const std=document.getElementById('standardReportStd')?.value||'',stream=document.getElementById('standardReportStream')?.value||'',div=document.getElementById('standardReportDiv')?.value||'';
   if(!std)return {error:'પહેલાં Standard પસંદ કરો.'};
-  const senior=['11','12'].includes(String(Number(std)));if(senior&&!stream)return {error:'ધોરણ '+std+' માટે Arts અથવા Commerce Stream પસંદ કરો.'};
-  const students=(db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!senior||String(s.stream||'').toLowerCase()===stream.toLowerCase())&&(!div||String(s.div||'')===div)).slice().sort((a,b)=>String(a.div||'').localeCompare(String(b.div||''),undefined,{numeric:true})||Number(a.roll||0)-Number(b.roll||0)||String(a.name||'').localeCompare(String(b.name||''),'gu'));
+  const senior=['11','12'].includes(String(Number(std)));if(senior&&!stream)return {error:'ધોરણ '+std+' માટે Arts, Commerce અથવા All Streams પસંદ કરો.'};
+  const students=(db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!senior||stream==='ALL'||String(s.stream||'').toLowerCase()===stream.toLowerCase())&&(!div||String(s.div||'')===div)).slice().sort((a,b)=>String(a.div||'').localeCompare(String(b.div||''),undefined,{numeric:true})||Number(a.roll||0)-Number(b.roll||0)||String(a.name||'').localeCompare(String(b.name||''),'gu'));
   const subjects=[];students.forEach(st=>resultExamsForStudent(st).forEach(e=>{if(!subjects.some(x=>String(x.subject).normalize('NFC')===String(e.subject).normalize('NFC')))subjects.push(e);}));
-  subjects.sort((a,b)=>String(a.subject||'').localeCompare(String(b.subject||''),'gu'));
+  if(['11','12'].includes(String(Number(std)))){const streams=stream==='ALL'?['Arts','Commerce']:[stream];const order=[...new Set(streams.flatMap(k=>streamSubjects[String(Number(std))]?.[k]||[]))];subjects.sort((a,b)=>{const ai=order.findIndex(n=>subjectMatchKey(n)===subjectMatchKey(canonicalStreamSubject(std,a.subject))),bi=order.findIndex(n=>subjectMatchKey(n)===subjectMatchKey(canonicalStreamSubject(std,b.subject)));return (ai<0?999:ai)-(bi<0?999:bi);});}else subjects.sort((a,b)=>String(a.subject||'').localeCompare(String(b.subject||''),'gu'));
   const rows=students.map(st=>{const exams=resultExamsForStudent(st);let total=0,outOf=0,entered=0,failed=false,expected=0;const marks={};exams.forEach(e=>{const key=String(e.subject).normalize('NFC'),rec=(db.results?.[String(e.id)]||{})[String(st.id)]||{},gradeOnly=isGradeOnlySubject(st.std,e.subject),cap=resultStandardCap(st.std);expected++;const has=rec.marks!==''&&rec.marks!==null&&rec.marks!==undefined&&Number.isFinite(Number(rec.marks));marks[key]={value:has?Number(rec.marks):null,cap,gradeOnly,grade:has&&gradeOnly?gradeFor(Number(rec.marks)/cap*100):''};if(has){entered++;if(!gradeOnly){total+=Number(rec.marks);outOf+=cap;const pass=Number(e.passMarks)||(['9','11'].includes(String(Number(st.std)))?18:33);if(Number(rec.marks)<pass)failed=true;}}});const status=!entered||entered<expected?'INCOMPLETE':failed?'FAIL':'PASS';return {s:st,marks,total,outOf,pct:outOf?total/outOf*100:null,status,entered,expected,rank:null};});
   const ranked=rows.filter(r=>r.status!=='INCOMPLETE').slice().sort((a,b)=>(b.pct||0)-(a.pct||0)||b.total-a.total||String(a.s.name||'').localeCompare(String(b.s.name||''),'gu'));let lastPct=null,lastRank=0;ranked.forEach((r,i)=>{if(lastPct===null||Math.abs(r.pct-lastPct)>0.000001)lastRank=i+1;r.rank=lastRank;lastPct=r.pct;});
   return {std,stream,div,students,subjects,rows};
 }
 function renderStandardResultReport(){const d=standardResultReportData(),preview=document.getElementById('standardResultReportPreview'),status=document.getElementById('standardResultReportStatus');if(!preview||!status)return;if(d.error){status.textContent=d.error;preview.innerHTML='';return;}if(!d.students.length){status.textContent='પસંદ કરેલા Standard / Stream / Divisionમાં વિદ્યાર્થી મળ્યા નથી.';preview.innerHTML='';return;}
- const escSub=x=>esc(x.subject||'');const header=`<tr><th>ક્રમ</th><th>વિદ્યાર્થીનું નામ</th><th>Seat / Roll No.</th><th>GR No.</th>${d.subjects.map(e=>`<th>${escSub(e)}<br><small>${resultStandardCap(d.std)}માંથી</small></th>`).join('')}<th>કુલ</th><th>ટકાવારી</th><th>પરિણામ</th><th>Rank</th></tr>`;
- const body=d.rows.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.s.name||'')}</td><td>${esc(generatedSeatNo(r.s)||r.s.seatNo||r.s.roll||'')}</td><td>${esc(r.s.gr||r.s.grNo||'')}</td>${d.subjects.map(e=>{const m=r.marks[String(e.subject).normalize('NFC')];if(!m)return '<td>-</td>';if(m.gradeOnly)return `<td>${m.value===null?'-':`${m.value} (${esc(m.grade)})`}</td>`;return `<td>${m.value===null?'-':m.value}</td>`;}).join('')}<td>${r.outOf?`${r.total} / ${r.outOf}`:'-'}</td><td>${r.pct===null?'-':r.pct.toFixed(2)+'%'}</td><td class="${r.status==='PASS'?'fee-paid':r.status==='FAIL'?'fee-pending':''}">${r.status}</td><td>${r.rank??'-'}</td></tr>`).join('');
- preview.innerHTML=`<div class="standard-result-report"><div class="standard-report-heading"><h2>${esc(db.school.name||'શાળા')}</h2><div>${esc(db.school.address||'')}</div><h3>STANDARD-WISE RESULT REGISTER</h3><div>ધોરણ ${esc(d.std)}${d.stream?' — '+esc(d.stream):''}${d.div?' / વિભાગ '+esc(d.div):' / બધા વિભાગો'}</div><div>પરીક્ષા: ${esc(db.school.examName||'')}</div></div><table class="standard-report-table"><thead>${header}</thead><tbody>${body}</tbody></table><div class="standard-report-footer">કુલ વિદ્યાર્થીઓ: ${d.students.length} &nbsp; | &nbsp; પાસ: ${d.rows.filter(r=>r.status==='PASS').length} &nbsp; | &nbsp; નાપાસ: ${d.rows.filter(r=>r.status==='FAIL').length} &nbsp; | &nbsp; અધૂરું: ${d.rows.filter(r=>r.status==='INCOMPLETE').length}</div><div class="standard-report-sign">વર્ગ શિક્ષકની સહી: ____________________ <span>આચાર્યશ્રીની સહી: ____________________</span></div></div>`;
+ const escSub=x=>esc(x.subject||'');const header=`<tr><th>ક્રમ</th><th>વિદ્યાર્થીનું નામ</th><th>Seat / Roll No.</th><th>GR No.</th>${['11','12'].includes(String(Number(d.std)))?'<th>Stream</th>':''}${d.subjects.map(e=>`<th>${escSub(e)}<br><small>${resultStandardCap(d.std)}માંથી</small></th>`).join('')}<th>કુલ</th><th>ટકાવારી</th><th>પરિણામ</th><th>Rank</th></tr>`;
+ const body=d.rows.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.s.name||'')}</td><td>${esc(generatedSeatNo(r.s)||r.s.seatNo||r.s.roll||'')}</td><td>${esc(r.s.gr||r.s.grNo||'')}</td>${['11','12'].includes(String(Number(d.std)))?`<td>${esc(r.s.stream||'-')}</td>`:''}${d.subjects.map(e=>{const m=r.marks[String(e.subject).normalize('NFC')];if(!m)return '<td>-</td>';if(m.gradeOnly)return `<td>${m.value===null?'-':`${m.value} (${esc(m.grade)})`}</td>`;return `<td>${m.value===null?'-':m.value}</td>`;}).join('')}<td>${r.outOf?`${r.total} / ${r.outOf}`:'-'}</td><td>${r.pct===null?'-':r.pct.toFixed(2)+'%'}</td><td class="${r.status==='PASS'?'fee-paid':r.status==='FAIL'?'fee-pending':''}">${r.status}</td><td>${r.rank??'-'}</td></tr>`).join('');
+ preview.innerHTML=`<div class="standard-result-report"><div class="standard-report-heading"><h2>${esc(db.school.name||'શાળા')}</h2><div>${esc(db.school.address||'')}</div><h3>STANDARD-WISE RESULT REGISTER</h3><div>ધોરણ ${esc(d.std)}${d.stream==='ALL'?' — Arts + Commerce (All Streams)':d.stream?' — '+esc(d.stream):''}${d.div?' / વિભાગ '+esc(d.div):' / બધા વિભાગો'}</div><div>પરીક્ષા: ${esc(db.school.examName||'')}</div></div><table class="standard-report-table"><thead>${header}</thead><tbody>${body}</tbody></table><div class="standard-report-footer">કુલ વિદ્યાર્થીઓ: ${d.students.length} &nbsp; | &nbsp; પાસ: ${d.rows.filter(r=>r.status==='PASS').length} &nbsp; | &nbsp; નાપાસ: ${d.rows.filter(r=>r.status==='FAIL').length} &nbsp; | &nbsp; અધૂરું: ${d.rows.filter(r=>r.status==='INCOMPLETE').length}</div><div class="standard-report-sign">વર્ગ શિક્ષકની સહી: ____________________ <span>આચાર્યશ્રીની સહી: ____________________</span></div></div>`;
  status.textContent=`રિપોર્ટ તૈયાર: ${d.students.length} વિદ્યાર્થી, ${d.subjects.length} વિષય. Grade-only વિષયના ગુણ કુલ/ટકાવારીમાં ગણાતા નથી.`;
 }
 function printStandardResultReport(){
@@ -2448,8 +2482,8 @@ function printStandardResultReport(){
  window.addEventListener('afterprint',cleanup,{once:true});
  setTimeout(()=>{window.print();setTimeout(cleanup,1200);},250);
 }
-function exportStandardResultReport(){const d=standardResultReportData();if(d.error||!d.students.length){alert(d.error||'Export માટે વિદ્યાર્થીઓ નથી.');return;}const headers=['ક્રમ','વિદ્યાર્થીનું નામ','Seat / Roll No.','GR No.',...d.subjects.map(e=>e.subject),'કુલ','Out Of','ટકાવારી','પરિણામ','Rank'];const records=d.rows.map((r,i)=>[i+1,r.s.name,generatedSeatNo(r.s)||r.s.seatNo||r.s.roll,r.s.gr||r.s.grNo,...d.subjects.map(e=>{const m=r.marks[String(e.subject).normalize('NFC')];return !m||m.value===null?'':m.gradeOnly?`${m.value} (${m.grade})`:m.value;}),r.total,r.outOf,r.pct===null?'':r.pct.toFixed(2)+'%',r.status,r.rank??'']);const csv=[headers,...records].map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download=`SVD_Std_${d.std}${d.stream?'_'+d.stream:''}_Result_Register.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
-function syncStandardResultReportFilters(){const std=document.getElementById('standardReportStd')?.value||'',senior=['11','12'].includes(String(Number(std)));document.getElementById('standardReportStreamWrap')?.classList.toggle('hidden',!senior);if(!senior)document.getElementById('standardReportStream').value='';const divEl=document.getElementById('standardReportDiv');if(divEl){const old=divEl.value,stream=document.getElementById('standardReportStream')?.value||'',divs=[...new Set((db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!senior||!stream||String(s.stream||'').toLowerCase()===stream.toLowerCase())).map(s=>String(s.div||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));divEl.innerHTML='<option value="">All Divisions</option>'+divs.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(divs.includes(old))divEl.value=old;}document.getElementById('standardResultReportPreview').innerHTML='';document.getElementById('standardResultReportStatus').textContent=std?'પસંદગી તૈયાર. Generate Result Register દબાવો.':'Standard પસંદ કરો.';}
+function exportStandardResultReport(){const d=standardResultReportData();if(d.error||!d.students.length){alert(d.error||'Export માટે વિદ્યાર્થીઓ નથી.');return;}const headers=['ક્રમ','વિદ્યાર્થીનું નામ','Seat / Roll No.','GR No.',...(['11','12'].includes(String(Number(d.std)))?['Stream']:[]),...d.subjects.map(e=>e.subject),'કુલ','Out Of','ટકાવારી','પરિણામ','Rank'];const records=d.rows.map((r,i)=>[i+1,r.s.name,generatedSeatNo(r.s)||r.s.seatNo||r.s.roll,r.s.gr||r.s.grNo,...(['11','12'].includes(String(Number(d.std)))?[r.s.stream||'']:[]),...d.subjects.map(e=>{const m=r.marks[String(e.subject).normalize('NFC')];return !m||m.value===null?'':m.gradeOnly?`${m.value} (${m.grade})`:m.value;}),r.total,r.outOf,r.pct===null?'':r.pct.toFixed(2)+'%',r.status,r.rank??'']);const csv=[headers,...records].map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download=`SVD_Std_${d.std}${d.stream?'_'+d.stream:''}_Result_Register.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
+function syncStandardResultReportFilters(){const std=document.getElementById('standardReportStd')?.value||'',senior=['11','12'].includes(String(Number(std)));document.getElementById('standardReportStreamWrap')?.classList.toggle('hidden',!senior);if(!senior)document.getElementById('standardReportStream').value='';const divEl=document.getElementById('standardReportDiv');if(divEl){const old=divEl.value,stream=document.getElementById('standardReportStream')?.value||'',divs=[...new Set((db.students||[]).filter(s=>String(Number(s.std))===String(Number(std))&&(!senior||!stream||stream==='ALL'||String(s.stream||'').toLowerCase()===stream.toLowerCase())).map(s=>String(s.div||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));divEl.innerHTML='<option value="">All Divisions</option>'+divs.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(divs.includes(old))divEl.value=old;}document.getElementById('standardResultReportPreview').innerHTML='';document.getElementById('standardResultReportStatus').textContent=std?'પસંદગી તૈયાર. Generate Result Register દબાવો.':'Standard પસંદ કરો.';}
 function printAllResults(){
   const std=document.getElementById('resultStd')?.value||'',div=document.getElementById('resultDiv')?.value||'';
   const stream=document.getElementById('resultStream')?.value||'';const list=db.students.filter(s=>(!std||String(Number(s.std))===String(Number(std)))&&(!['11','12'].includes(String(Number(std)))||!stream||String(s.stream||'')===stream)&&(!div||String(s.div)===String(div)));
