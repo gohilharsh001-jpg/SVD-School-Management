@@ -1,3 +1,10 @@
+## Version 1.8.9 — 2026-11-02
+- Std 10 સ્વા. અને શા. શિક્ષણ: grade calculation uses marks out of 50.
+- Std 11 કમ્પ્યુટર: grade calculation uses marks out of 50.
+- Fixed minimum passing marks: Std 9 = 17/50, Std 10 = 26, Std 11 = 17/50, Std 12 = 33/100.
+- Kept grade-only subjects excluded from total, percentage, pass/fail and class rank.
+- No student records, marks, Supabase data or database schema changed.
+
 # v1.8.8 — Left School Students Excluded from Marks and Results (2026-11-02)
 
 - Students whose status is `Left School` no longer appear in Marks Entry or result student selection.

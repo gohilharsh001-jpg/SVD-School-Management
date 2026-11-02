@@ -1,10 +1,11 @@
 {
-  "currentVersion": "1.8.8",
+  "currentVersion": "1.8.9",
   "minimumSupportedSchema": 1,
   "migrationDirectory": "updates/migrations",
   "rollbackPolicy": "application-files-only-first",
   "dataPolicy": "never-delete-production-data-during-app-update",
-  "version": "1.8.8",
-  "name": "SVD School Management System",
-  "releaseNote": "Students with status Left School are excluded from Marks Entry, result analysis averages, class ranking, standard result registers, and bulk result print. Existing marks and student records are retained; no Supabase schema change."
+  "version": "1.8.9",
+  "name": "Grade-only Subjects and Standard-wise Passing Marks Fix",
+  "releaseNote": "Std 10 Swasthya and Physical Education and Std 11 Computer are graded out of 50; fixed passing marks: Std 9=17, Std 10=26, Std 11=17, Std 12=33. Existing records and Supabase schema are unchanged.",
+  "date": "2026-11-02"
 }
