@@ -1,3 +1,13 @@
+# v1.8.8 — Left School Students Excluded from Marks and Results (2026-11-02)
+
+- Students whose status is `Left School` no longer appear in Marks Entry or result student selection.
+- Left School students are excluded from Result Analysis, including class average, and from individual class-rank calculations.
+- Standard-wise result registers, result print lists, and bulk result print exclude Left School students.
+- Existing student records and previously entered marks are preserved; setting the student back to `Active` restores eligibility.
+- Legacy student records with no status are treated as Active. Other statuses (Alumni / Inactive) are unchanged.
+- No Supabase schema, cloud records, or stored marks were modified.
+- Validation: JavaScript syntax and ZIP integrity checks performed; live Supabase/browser testing remains pending.
+
 # v1.8.7 — Grade-Only Subjects Out of 50 and Grade Scale (2026-10-30)
 
 - Std 10 `સ્વા. અને શા. શિક્ષણ` and Std 11 `કમ્પ્યુટર અધ્યયન` now use a dedicated maximum of 50 marks in Marks Entry, regardless of the standard's regular-subject maximum.
