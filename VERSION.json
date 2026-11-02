@@ -1,7 +1,7 @@
 {
-  "version": "1.8.9",
-  "name": "Grade-only Subjects and Standard-wise Passing Marks Fix",
+  "version": "1.9.0",
+  "name": "Fail Result Percentage and Grade Display Fix",
   "date": "2026-11-02",
-  "releaseNote": "Std 10 Swasthya and Physical Education and Std 11 Computer are graded out of 50; fixed passing marks: Std 9=17, Std 10=26, Std 11=17, Std 12=33. Existing records and Supabase schema are unchanged.",
-  "notes": "Grade-only marks remain excluded from total, percentage, pass/fail, and class rank. No student data, marks, exam records, or Supabase schema changed."
+  "releaseNote": "For Std 9 to 12, students with FAIL status now display Percentage as - and Grade as - in individual results, WhatsApp result text, result analysis, standard-wise result register, and CSV exports. Original marks and Supabase data remain unchanged.",
+  "notes": "Fail students retain their marks and result status; only Percentage and Grade display as -. No student data, marks, exam records, or Supabase schema changed."
 }

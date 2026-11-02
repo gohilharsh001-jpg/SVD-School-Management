@@ -573,3 +573,7 @@ Every future feature must:
 - Shows Arts and Commerce students together for common subjects only.
 - Saves each student marks to their own stream-specific subject record.
 - Preserves existing student records and marks; no Supabase schema migration.
+
+## v1.9.0 — 2026-11-02
+- For Std 9–12, students with FAIL status now show Percentage as `-` and Grade as `-` in individual results, WhatsApp result text, result analysis, standard-wise result register, and CSV exports.
+- Original marks and Supabase data are unchanged.
