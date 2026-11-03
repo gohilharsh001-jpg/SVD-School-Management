@@ -1,11 +1,11 @@
 {
-  "currentVersion": "1.9.0",
+  "currentVersion": "1.9.1",
   "minimumSupportedSchema": 1,
   "migrationDirectory": "updates/migrations",
   "rollbackPolicy": "application-files-only-first",
   "dataPolicy": "never-delete-production-data-during-app-update",
-  "version": "1.9.0",
-  "name": "Fail Result Percentage and Grade Display Fix",
-  "releaseNote": "For Std 9 to 12, students with FAIL status now display Percentage as - and Grade as - in individual results, WhatsApp result text, result analysis, standard-wise result register, and CSV exports. Original marks and Supabase data remain unchanged.",
-  "date": "2026-11-02"
+  "version": "1.9.1",
+  "name": "Remove Overall Grade from Std 9 to 12 Results",
+  "releaseNote": "Removed overall percentage-based grade from individual result print, WhatsApp result text, advanced result analysis, standard-wise result register, and CSV export for Std 9 to 12. Percentage, total marks, pass/fail, and subject-specific grade entries remain unchanged.",
+  "date": "2026-11-03"
 }

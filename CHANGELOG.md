@@ -1,3 +1,8 @@
+
+## v1.9.1 — 2026-11-03
+- Removed overall grade from Std 9–12 individual result print, WhatsApp result text, advanced result analysis, standard-wise result register, and CSV export.
+- Kept percentage, total marks, Pass/Fail, and subject-specific grades unchanged.
+- Display-only change; no database or student marks changed.
 ## Version 1.8.9 — 2026-11-02
 - Std 10 સ્વા. અને શા. શિક્ષણ: grade calculation uses marks out of 50.
 - Std 11 કમ્પ્યુટર: grade calculation uses marks out of 50.
