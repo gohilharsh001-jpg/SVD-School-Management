@@ -1,3 +1,9 @@
+## v1.9.2 — 2026-11-03
+- Std 11 and 12 Class Rank now compares all active students in the same standard, across Arts and Commerce (not stream-wise).
+- Rank is based on percentage only; students with equal percentages share the same rank.
+- Removed the previous top-10 rank limit.
+- No database or student data changes.
+
 
 ## v1.9.1 — 2026-11-03
 - Removed overall grade from Std 9–12 individual result print, WhatsApp result text, advanced result analysis, standard-wise result register, and CSV export.

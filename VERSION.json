@@ -1,7 +1,7 @@
 {
-  "version": "1.9.1",
-  "name": "Remove Overall Grade from Std 9 to 12 Results",
+  "version": "1.9.2",
+  "name": "Overall Class Rank Across Arts and Commerce",
   "date": "2026-11-03",
-  "releaseNote": "Removed overall percentage-based grade from individual result print, WhatsApp result text, advanced result analysis, standard-wise result register, and CSV export for Std 9 to 12. Percentage, total marks, pass/fail, and subject-specific grade entries remain unchanged.",
-  "notes": "Display-only update. No student data, marks, exam records, subject-specific grades, or Supabase schema changed."
+  "releaseNote": "For Std 11 and 12 result printouts, Class Rank is calculated across all active students in the same standard, combining Arts and Commerce. Rank is based only on percentage; equal percentages receive the same rank. Rank is no longer limited to the top 10.",
+  "notes": "Display/calculation update only. No student data, marks, exam records, subject-specific grades, Supabase schema, or database records changed."
 }

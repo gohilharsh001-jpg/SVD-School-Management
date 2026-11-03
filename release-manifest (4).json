@@ -1,0 +1,11 @@
+{
+  "currentVersion": "1.9.1",
+  "minimumSupportedSchema": 1,
+  "migrationDirectory": "updates/migrations",
+  "rollbackPolicy": "application-files-only-first",
+  "dataPolicy": "never-delete-production-data-during-app-update",
+  "version": "1.9.2",
+  "name": "Remove Overall Grade from Std 9 to 12 Results",
+  "releaseNote": "Removed overall percentage-based grade from individual result print, WhatsApp result text, advanced result analysis, standard-wise result register, and CSV export for Std 9 to 12. Percentage, total marks, pass/fail, and subject-specific grade entries remain unchanged.",
+  "date": "2026-11-03"
+}
